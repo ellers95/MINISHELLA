@@ -6,7 +6,7 @@
 #    By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2024/09/14 23:57:36 by etaattol         ###   ########.fr        #
+#    Updated: 2024/09/15 00:44:54 by etaattol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,6 @@ SRCFILES 	= 	main.c \
 				utils/terminal_configuration.c \
 
 				signal/signal_handler.c \
-				signal/the_other_sigint.c \
 				
 SRCDIR		=	srcs
 PIPEDIR		=	pipes_are_calling
