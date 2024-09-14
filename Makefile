@@ -52,8 +52,7 @@ SRCFILES 	= 	main.c \
 				utils/string_utils.c \
 				utils/terminal_configuration.c \
 
-				signal/signal_handler.c \
-				signal/the_other_sigint.c \
+				signal/signal_handler.c
 				
 SRCDIR		=	srcs
 PIPEDIR		=	pipes_are_calling
