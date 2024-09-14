@@ -3,46 +3,56 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jbremser <jbremser@student.hive.fi>        +#+  +:+       +#+         #
+#    By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2024/09/09 19:06:43 by jbremser         ###   ########.fr        #
+#    Updated: 2024/09/14 23:57:36 by etaattol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= 	bananapeel
+NAME		= 	minishell
 
-FLAGS		=	-Wall -Wextra -Werror -g #-fsanitize=address
+FLAGS		=	-Wall -Wextra -Werror -g -I. #-fsanitize=address
 
-SRCFILES 	= 	bananapeel.c \
-				signaling.c \
-				little_helpers.c \
-	 			built_ins.c \
-				built_ins_helpers.c \
-	 			parsing.c \
-	 			here_dog.c \
-	 			delimiter.c \
-				token_checker.c \
-				funky_arrows.c \
-				file_handling.c \
-				linked_lists.c \
-				clean_n_exit.c \
-				here_dog_utils.c \
-				cdeeznuts.c \
-				coyotes.c \
-				terminal_configuration.c \
-				broom_n_vacuum.c \
-				dollar_store.c
+SRCFILES 	= 	main.c \
 
-PIPEFILES	=	eleven_pipers_piping.c \
-				arguments.c\
-				clean_n_errors.c \
-				command_line.c \
-				exec_command.c \
-				files.c \
-				init_pipes.c \
-				in_n_out_put.c \
-				pipe_helpers.c
+				executor/executor.c \
+				executor/fd_closer.c \
+				executor/file_redirections.c \
+				executor/path_solver.c \
+				executor/pipe_executor.c \
+				executor/redirection_executor.c \
+				
+				lexer/env_expander.c \
+				lexer/lexer.c \
+				lexer/token_utils.c \
+
+				parser/command_parser.c \
+				parser/heredoc_handler.c \
+				parser/open_files.c \
+				parser/parser.c \
+				parser/redirection_handler.c \
+				
+				builtins/builtin_handler.c \
+				builtins/export_unset.c \
+				builtins/handle_cd.c \
+				builtins/handle_echo.c \
+				builtins/handle_env.c \
+				builtins/handle_exit.c \
+				builtins/handle_pwd.c \
+
+				utils/data_manager.c \
+				utils/env_utils_ops.c \
+				utils/env_utils.c \
+				utils/error_handler.c \
+				utils/heredoc_status.c \
+				utils/memory_utils_array.c \
+				utils/memory_utils.c \
+				utils/signal_handler.c \
+				utils/string_utils.c \
+				utils/terminal_configuration.c \
+
+				signal/signal_handler.c
 				
 SRCDIR		=	srcs
 PIPEDIR		=	pipes_are_calling
@@ -58,7 +68,7 @@ SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES)) \
 PSRCS		=	$(addprefix $(PIPEDIR)/, $(PIPEFILES))
 
 OBJS		= 	$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS)) \
-				$(patsubst $(PIPEDIR)/%.c, $(PIPEDIR)/%.o, $(PSRCS))
+				$(patsubst $(PIPEDIR)/%.c, $(OBJDIR)/%.o, $(PSRCS))
 
 ANSI_CYAN 	:= 	\033[0;36m
 ANSI_BLUE 	:= 	\033[0;34m
