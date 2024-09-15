@@ -6,17 +6,17 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:06:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:11:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void				token_merge(t_data *data);
-void				token_cleaner(t_data *data, int i);
+void			token_merge(t_data *data);
+void			token_cleaner(t_data *data, int i);
 static inline bool	valid(t_data *data, int j);
 static inline void	merge_it(t_data *data, int i, int j);
-bool				check_specials(char *token);
+bool			check_specials(char *token);
 
 /*
 * Merges adjacent tokens that should be considered as a single unit.
@@ -26,6 +26,7 @@ void	token_merge(t_data *data)
 {
 	int	i;
 	int	j;
+
 	i = 0;
 	while (i < data->tok_num)
 	{
@@ -33,23 +34,23 @@ void	token_merge(t_data *data)
 		{
 			j = i + 1;
 			while (valid(data, j))
-				merge_it(data, i, j);	
+				merge_it(data, i, j);
 		}
 		i++;
-
 	}
 }
 
 /*
-
+* Removes the token at index i and shifts remaining tokens.
+* Used to clean up the token array after processing.
 */
-void token_cleaner(t_data *data, int i)
+void	token_cleaner(t_data *data, int i)
 {
 	free(data->token[i]);
 	while (i < data->tok_num - 1)
 	{
 		data->token[i] = data->token[i + 1];
-		i++;	
+		i++;
 	}
 	data->tok_num--;
 	data->token[data->tok_num] = NULL;
@@ -58,37 +59,40 @@ void token_cleaner(t_data *data, int i)
 }
 
 /*
-
+* Checks if the token at index j is eligible for merging.
+* Considers token type and surrounding context.
 */
-static inline bool valid(t_data *data, int j)
+static inline bool	valid(t_data *data, int j)
 {
-	if ((j < data->tok_num) && 
-		(ft_strncmp(data->token[j], "|", 1) != 0) && 
-		(ft_strncmp(data->token[j], "<", 1) != 0) && 
-		(ft_strncmp(data->token[j], ">", 1) != 0))
+	if ((j < data->tok_num)
+		&& (ft_strncmp(data->token[j], "|", 1) != 0)
+		&& (ft_strncmp(data->token[j], "<", 1) != 0)
+		&& (ft_strncmp(data->token[j], ">", 1) != 0))
+	{
+		if (data->is_rdr)
 		{
-			if (data->is_rdr)
-			{
-				if (ft_strncmp(data->token[j], "echo\0", 5) != 0)
-					return (true);
-				else
-					return (false);
-			}
-			return (true);
+			if (ft_strncmp(data->token[j], "echo\0", 5) != 0)
+				return (true);
+			else
+				return (false);
 		}
+		return (true);
+	}
 	else
 		return (false);
 }
 
 /*
-
+* Combines tokens at indices i and j into a single token.
+* Updates the data structure accordingly.
 */
-static inline void merge_it(t_data *data, int i, int j)
+static inline void	merge_it(t_data *data, int i, int j)
 {
 	int		len;
 	char	*new_str;
 
-	if((ft_strncmp(data->token[i], "<", 1)) == 0 || (ft_strncmp(data->token[i], ">", 1) == 0))
+	if ((ft_strncmp(data->token[i], "<", 1)) == 0
+		|| (ft_strncmp(data->token[i], ">", 1) == 0))
 		return ;
 	len = ft_strlen(data->token[i]) + ft_strlen(data->token[j]) + 2;
 	new_str = (char *)ft_calloc(len, sizeof(char));
@@ -101,22 +105,23 @@ static inline void merge_it(t_data *data, int i, int j)
 	ft_strlcat(new_str, " ", len);
 	ft_strlcat(new_str, data->token[j], len);
 	free(data->token[i]);
-	data->token[i] = new_str; 
-	if (j < data->tok_num && ((ft_strcmp(data->token[i], "|") != 0) ||
-	ft_strncmp(data->token[i], "<", 1) != 0 ||
-	ft_strncmp(data->token[i], ">", 1) != 0 ||
-	ft_strncmp(data->token[i], "echo\0", 5) != 0))
-    	token_cleaner(data, j);
+	data->token[i] = new_str;
+	if (j < data->tok_num && ((ft_strcmp(data->token[i], "|") != 0)
+			|| ft_strncmp(data->token[i], "<", 1) != 0
+			|| ft_strncmp(data->token[i], ">", 1) != 0
+			|| ft_strncmp(data->token[i], "echo\0", 5) != 0))
+		token_cleaner(data, j);
 }
 
 /*
-
+* Identifies if a token contains special shell characters.
+* Checks for operators, redirections, etc.
 */
 bool	check_specials(char *token)
 {
-	if (ft_strcmp(token, "|") == 0 
-		|| ft_strcmp(token, ">") == 0 
-			|| ft_strcmp(token, ">>") == 0)
-		return (true);	
+	if (ft_strcmp(token, "|") == 0
+		|| ft_strcmp(token, ">") == 0
+		|| ft_strcmp(token, ">>") == 0)
+		return (true);
 	return (false);
 }

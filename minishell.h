@@ -6,12 +6,12 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:49:39 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:12:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL
-# define MINISHELL
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -30,9 +30,9 @@
 # define IN_HEREDOC 1
 # define OUT_HEREDOC 0
 
-#define SET 0
-#define GET 1
-#define INT_MAX 2147483647
+# define SET 0
+# define GET 1
+# define INT_MAX 2147483647
 
 typedef struct s_node
 {
@@ -67,7 +67,6 @@ typedef struct s_data
 	char	**envp;
 	t_node	*env;
 }	t_data;
-
 
 // builtins:
 void	builtins(t_data *data);
@@ -105,12 +104,12 @@ void	handle_the_doc(const char *delimiter, t_data *data);
 char	*find_delimiter(t_data *data);
 void	open_infile(t_data *data, int i);
 void	open_outfile(t_data *data, int i, bool append);
-bool 	parser(t_data *data);
+bool	parser(t_data *data);
 void	file_handling(t_data *data);
 
 // signal:
-void    signaling(void);
-int 	big_stopping(int get, int newvalue);
+void	signaling(void);
+int		big_stopping(int get, int newvalue);
 
 // utils:
 void	reset_struct(t_data *data);
@@ -122,17 +121,17 @@ t_node	*parse_str(t_node *node, char *str);
 int		stack_len(t_node *stack);
 void	remove_node(t_node *node);
 void	clean_n_errors(t_data *data);
-char    get_heredoc_status(void);
-void    set_heredoc_status(char status);
+char	get_heredoc_status(void);
+void	set_heredoc_status(char status);
 void	free_array(char ***paths, int arc);
-char    *free_char_array(char **array);
+char	*free_char_array(char **array);
 void	free_stuff(char **args, char *path);
 void	free_line(char **paths, int arc);
 void	free_argh(char **argh);
-void 	clean_data(t_data *data);
+void	clean_data(t_data *data);
 void	clean_struct(t_data *data);
 void	free_env(t_node	**env);
-void    exiting(t_data *data, int i);
+void	exiting(t_data *data, int i);
 int		number_checker(char *argv);
 void	setup_terminal(struct termios *original_termios);
 void	restore_terminal(const struct termios *original_termios);

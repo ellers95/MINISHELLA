@@ -6,17 +6,17 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/15 00:05:50 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:57:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool				lexer(char *str, t_data *data);
-static inline int	count_tokens(char *str);
-static inline void	del_quotes(t_data *data);
-static inline int	quote_chk(char *str, char *cur_quo, int i);
-static inline int	empties(char c);
+bool	lexer(char *str, t_data *data);
+int		count_tokens(char *str);
+void	del_quotes(t_data *data);
+int		quote_chk(char *str, char *cur_quo, int i);
+int		empties(char c);
 
 /*
 * Main lexical analysis function.
@@ -36,19 +36,20 @@ bool	lexer(char *str, t_data *data)
 	data->token = ft_calloc((data->tok_num + 1), sizeof(char *));
 	if (!data->token)
 		return (false);
-	while(token_index < data->tok_num && str[i])
+	while (token_index < data->tok_num && str[i])
 	{
 		while (str[i] && empties(str[i]))
 			i++;
-		if(str[i])
+		if (str[i])
 		{
 			start = i;
-			i = quote_chk(str, &cur_quo, i);	
+			i = quote_chk(str, &cur_quo, i);
 			data->token[token_index] = ft_calloc(i - start + 1, sizeof(char));
 			if (!data->token[token_index])
 				return (false);
 			ft_strlcpy(data->token[token_index], &str[start], i - start + 1);
-			data->token[token_index] = env_variable_check(data->token[token_index], data->env, data);
+			data->token[token_index] = env_variable_check
+				(data->token[token_index], data->env, data);
 			token_index++;
 		}
 	}
@@ -70,13 +71,13 @@ static inline int	count_tokens(char *str)
 	i = 0;
 	count = 0;
 	quotes = 0;
-	while (str[i] !=  '\0')
+	while (str[i] != '\0')
 	{
 		while (str[i] != '\0' && empties(str[i]))
 			i++;
 		if (str[i])
 			count++;
-		while(str[i] && (!empties(str[i]) || quotes))
+		while (str[i] && (!empties(str[i]) || quotes))
 		{
 			if (str[i] == '"' || str[i] == '\'')
 			{
@@ -84,7 +85,7 @@ static inline int	count_tokens(char *str)
 					quotes = 0;
 				else if (!quotes)
 				{
-					quotes= 1;
+					quotes = 1;
 					current = str[i];
 				}
 			}
@@ -112,27 +113,22 @@ static inline void	del_quotes(t_data *data)
 		len = ft_strlen(data->token[i]);
 		while (data->token[i][j])
 		{
-			// Check for both single and double quotes
 			if (data->token[i][j] == '\'' || data->token[i][j] == '"')
 			{
 				quote = data->token[i][j];
-				// Remove the opening quote
 				ft_memmove(data->token[i] + j, data->token[i] + j + 1, len - j);
 				len--;
-				// Find the matching closing quote
 				while (data->token[i][j] && data->token[i][j] != quote)
 					j++;
 				if (data->token[i][j] == quote)
 				{
-					// Remove the closing quote
-					ft_memmove(data->token[i] + j, data->token[i] + j + 1, len - j);
+					ft_memmove(data->token[i] + j, data->token[i]
+						+ j + 1, len - j);
 					len--;
 				}
 			}
 			else
-			{
 				j++;
-			}
 		}
 		i++;
 	}
@@ -144,12 +140,12 @@ static inline void	del_quotes(t_data *data)
 */
 static inline int	quote_chk(char *str, char *cur_quo, int i)
 {
-	int quotes;
+	int	quotes;
 
 	quotes = 0;
 	while (str[i] && (!empties(str[i]) || quotes))
 	{
-		if(str[i] == '"' || str[i] == '\'')
+		if (str[i] == '"' || str[i] == '\'')
 		{
 			if (quotes && str[i] == *cur_quo)
 				quotes = 0;
@@ -159,7 +155,7 @@ static inline int	quote_chk(char *str, char *cur_quo, int i)
 				*cur_quo = str[i];
 			}
 		}
-		i++;			
+		i++;
 	}
 	return (i);
 }

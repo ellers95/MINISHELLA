@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:07:26 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:07:20 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@ void	open_outfile(t_data *data, int i, bool append);
 */
 void	open_infile(t_data *data, int i)
 {
-	int	fd;
+	int		fd;
+	char	*delimiter;
 
 	if (ft_strncmp(data->token[i], "<<", 2) == 0)
 	{
 		set_heredoc_status(IN_HEREDOC);
-		char *delimiter = find_delimiter(data);
+		delimiter = find_delimiter(data);
 		if (delimiter)
 		{
 			handle_the_doc(delimiter, data);
@@ -48,7 +49,8 @@ void	open_infile(t_data *data, int i)
 	}
 	else
 	{
-		ft_printf("Error: Unexpected token while in heredoc: %s\n", data->token[i]);
+		ft_printf("Error: Unexpected token while \
+					in heredoc: %s\n", data->token[i]);
 		return ;
 	}
 	data->infile_count++;

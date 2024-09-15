@@ -12,18 +12,18 @@
 
 #include "minishell.h"
 
-void				find_doc(t_data *data, int tk_i);
-void				handle_the_doc(const char *delimiter, t_data *data);
-char				*find_delimiter(t_data *data);
-static inline char	*readline_wrapper(const char *prompt, t_data *data);
-static inline char	*clean_deli(char *str);
+void	find_doc(t_data *data, int tk_i);
+void	handle_the_doc(const char *delimiter, t_data *data);
+char	*find_delimiter(t_data *data);
+char	*readline_wrapper(const char *prompt, t_data *data);
+char	*clean_deli(char *str);
 
 /*
 
 */
 void	find_doc(t_data *data, int tk_i)
-{       
-	char *delimiter;
+{
+	char	*delimiter;
 	char	separate;
 
 	separate = 0;
@@ -47,10 +47,10 @@ void	find_doc(t_data *data, int tk_i)
 */
 void	handle_the_doc(const char *delimiter, t_data *data)
 {
-    char    *line;
+	char	*line;
 	int		fd[2];
-	bool	EOF_encountered;
-	
+	bool	eof_encountered;
+
 	data->original_stdin = dup(STDIN_FILENO);
 	if (data->original_stdin == -1)
 	{
@@ -70,10 +70,10 @@ void	handle_the_doc(const char *delimiter, t_data *data)
 		line = readline_wrapper("here_doc> ", data);
 		if (!line)
 		{
-			if(big_stopping(GET, 0))
+			if (big_stopping(GET, 0))
 				data->heredoc_interrupted = 1;
 			else
-				EOF_encountered = true;
+				eof_encountered = true;
 			break ;
 		}
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
@@ -81,18 +81,18 @@ void	handle_the_doc(const char *delimiter, t_data *data)
 			free (line);
 			break ;
 		}
-		ft_putendl_fd(line,fd[1]);
+		ft_putendl_fd(line, fd[1]);
 		free(line);
 	}
 	close(fd[1]);
 	set_heredoc_status(OUT_HEREDOC);
-	if (data->heredoc_interrupted || EOF_encountered)
+	if (data->heredoc_interrupted || eof_encountered)
 	{
 		close(fd[0]);
-		if (EOF_encountered)
+		if (eof_encountered)
 		{
-			printf("\nminishell: warning: heredoc delimited by end-of-file (wanted `%s')\n", 
-            delimiter);
+			printf("\nminishell: warning: heredoc delimited \
+					by end-of-file (wanted `%s')\n", delimiter);
 		}
 	}
 	else
@@ -115,25 +115,25 @@ char	*find_delimiter(t_data *data)
 {
 	int		i;
 	int		len;
-	char 	*deli;
+	char	*deli;
 
 	i = 0;
-	while(data->token[i])
+	while (data->token[i])
 	{
 		if (!ft_strcmp(data->token[i++], "<<"))
 		{
 			if (!data->token[i])
 				return (ft_strdup(""));
 			len = ft_strlen(data->token[i]);
-			deli = malloc(sizeof(char) * (len  + 1));
-			if(!deli)
+			deli = malloc(sizeof(char) * (len + 1));
+			if (!deli)
 			{
 				clean_struct(data);
 				return (NULL);
 			}
 			ft_strlcpy(deli, data->token[i], len + 1);
 			token_cleaner(data, i);
-			return(deli);
+			return (deli);
 		}
 	}
 	return (NULL);
@@ -144,12 +144,11 @@ char	*find_delimiter(t_data *data)
 */
 char	*readline_wrapper(const char *prompt, t_data *data)
 {
-	char *line;
+	char	*line;
 
 	line = readline(prompt);
 	if (big_stopping(GET, 0))
 	{
-
 		free(line);
 		data->heredoc_interrupted = 1;
 		return (NULL);
@@ -162,18 +161,17 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 */
 static inline char	*clean_deli(char *str)
 {
-	char *copy;
-
-	int i;
+	char	*copy;
+	int		i;
 
 	i = 0;
 	copy = malloc(sizeof(char) * 4);
-	if(!copy)
+	if (!copy)
 	{
 		ft_printf("Error: Malloc fail in doc\n");
 		return (0);
 	}
-	while(str[i] == '<' && str[i] != '\0')
+	while (str[i] == '<' && str[i] != '\0')
 	{
 		copy[i] = str[i];
 		i++;

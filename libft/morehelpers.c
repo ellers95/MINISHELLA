@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   morehelpers.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 09:47:25 by iniska            #+#    #+#             */
-/*   Updated: 2024/05/11 12:37:15 by iniska           ###   ########.fr       */
+/*   Updated: 2024/09/15 19:15:39 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ char	*ft_strcpy(char *dst, const char *src)
 	}
 	dst[i] = '\0';
 	return (dst);
-
 }
 
 char	*ft_strncpy(char *dst, const char *src, size_t len)
@@ -32,7 +31,7 @@ char	*ft_strncpy(char *dst, const char *src, size_t len)
 	size_t	i;
 
 	i = 0;
-	while(src[i] != '\0' && i < len)
+	while (src[i] != '\0' && i < len)
 	{
 		dst[i] = src[i];
 		i++;
@@ -66,8 +65,8 @@ char	*ft_strcat(char *dst, const char *src)
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
+	int	i;
 
-	int i;
 	i = 0;
 	while (s1[i] != '\0' && s1[i] == s2[i])
 		i++;

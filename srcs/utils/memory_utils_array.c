@@ -6,14 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:23:04 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:11:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:04:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	free_array(char ***paths, int arc);
-char    *free_char_array(char **array);
+char	*free_char_array(char **array);
 void	free_stuff(char **args, char *path);
 void	free_line(char **paths, int arc);
 
@@ -51,21 +51,21 @@ void	free_array(char ***paths, int arc)
 /*
 
 */
-char    *free_char_array(char **array)
+char	*free_char_array(char **array)
 {
-    size_t    i;
+	size_t	i;
 
-    if (array == NULL)
-        return (NULL);
-    i = 0;
-    while ((array)[i] != NULL)
-    {
-        free((array)[i]);
-        (array)[i] = NULL;
-        i++;
-    }
-    free(array);
-    return (NULL);
+	if (array == NULL)
+		return (NULL);
+	i = 0;
+	while ((array)[i] != NULL)
+	{
+		free((array)[i]);
+		(array)[i] = NULL;
+		i++;
+	}
+	free(array);
+	return (NULL);
 }
 
 /*
@@ -76,7 +76,7 @@ void	free_stuff(char **args, char *path)
 	int	i;
 
 	i = 0;
-	while(args[i])
+	while (args[i])
 	{
 		free(args[i]);
 		i++;

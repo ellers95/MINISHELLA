@@ -6,20 +6,21 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:56:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:45:51 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:23:18 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char				*get_path(char *path_name, char **envp);
+char			*get_path(char *path_name, char **envp);
 static inline char	**find_path_env(char **envp);
 static inline char	*extract_path(char *path, char **envp);
 static inline char	*const_and_check(char *paths, char *path_name);
 
 /*
 * Resolves the full path of a command.
-* Searches for the command in the directories specified by the PATH environment variable. 
+* Searches for the command in the directories specified
+* by the PATH environment variable. 
 */
 char	*get_path(char *path_name, char **envp)
 {
@@ -67,7 +68,7 @@ static inline char	*extract_path(char *path, char **envp)
 	int	i;
 
 	i = 0;
-	while (envp[i] != NULL)
+	while (envp && envp[i] != NULL)
 	{
 		if (ft_strncmp(path, envp[i], ft_strlen(path)) == 0
 			&& envp[i][ft_strlen(path)] == '=')

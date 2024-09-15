@@ -6,15 +6,15 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/14 23:41:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 16:22:25 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static inline size_t	exit_coder(char *argv);
-static inline void		exiter(t_data *data);
-void					handle_exit(t_data *data);
+static inline void	exiter(t_data *data);
+void			handle_exit(t_data *data);
 
 /*
 * Converts a string argument to an exit code.

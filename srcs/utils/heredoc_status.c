@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-static inline char	*_getstatus(void);
-char    			get_heredoc_status(void);
-void    			set_heredoc_status(char status);
+char	*_getstatus(void);
+char	get_heredoc_status(void);
+void	set_heredoc_status(char status);
 
 /*
 
@@ -22,21 +22,22 @@ void    			set_heredoc_status(char status);
 static inline char	*_getstatus(void)
 {
 	static char	status = 0;
+
 	return (&status);
 }
 
 /*
 
 */
-char    get_heredoc_status(void)
+char	get_heredoc_status(void)
 {
-		return (*_getstatus());
+	return (*_getstatus());
 }
 
 /*
 
 */
-void    set_heredoc_status(char status)
+void	set_heredoc_status(char status)
 {
 	*_getstatus() = status;
 }

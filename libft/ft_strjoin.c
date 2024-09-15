@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 15:51:44 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/04 16:58:18 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:16:15 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*copy;
 
 	if (!s1 || !s2)
-        return (NULL);
+		return (NULL);
 	i = 0;
 	c = 0;
 	copy = (char *)malloc(sizeof(char) * (ft_strlen(s1) + (ft_strlen(s2) +1)));

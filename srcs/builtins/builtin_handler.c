@@ -6,13 +6,13 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:30:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:38:32 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:11:40 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void				builtins(t_data *data);
+void			builtins(t_data *data);
 static inline void	call_builtin_function(t_data *data, char *bi);
 
 /*

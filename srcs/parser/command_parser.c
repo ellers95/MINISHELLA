@@ -6,45 +6,42 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:07:04 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:07:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool 				parse_cmd_args(t_data *data);
-bool				parse_cmd_line(t_data *data, char **envp);
-static inline bool	init_path(t_data *data);
+bool	parse_cmd_args(t_data *data);
+bool	parse_cmd_line(t_data *data, char **envp);
+bool	init_path(t_data *data);
 
 /*
 
 */
-bool parse_cmd_args(t_data *data)
+bool	parse_cmd_args(t_data *data)
 {
-    int		i;
-    char	**args;
+	int		i;
+	char	**args;
 
-    data->cmd_args = ft_calloc(data->tok_num, sizeof(char **));
-    if (!data->cmd_args)
-        return (false);
-
-    i = 0;
-    while (i < data->tok_num - 1)
-    {
-        args = ft_split(data->token[i], ' ');
-    
-        if (!args)
-        {
-            free_array(&(data->cmd_args), i);
-            data->cmd_args = NULL;
-            return (false);
-        }
-        
-        data->cmd_args[i] = *args;
-        i++;
-    }
-    data->cmd_args[i] = NULL;
-    return (true);
+	data->cmd_args = ft_calloc(data->tok_num, sizeof(char **));
+	if (!data->cmd_args)
+		return (false);
+	i = 0;
+	while (i < data->tok_num - 1)
+	{
+		args = ft_split(data->token[i], ' ');
+		if (!args)
+		{
+			free_array(&(data->cmd_args), i);
+			data->cmd_args = NULL;
+			return (false);
+		}
+		data->cmd_args[i] = *args;
+		i++;
+	}
+	data->cmd_args[i] = NULL;
+	return (true);
 }
 
 /*
@@ -59,10 +56,10 @@ bool	parse_cmd_line(t_data *data, char **envp)
 
 	i = 0;
 	new_index = 0;
-	if(!init_path(data))
+	if (!init_path(data))
 		return (false);
 	while (i < data->tok_num)
-	{	
+	{
 		if (check_specials(data->token[i]))
 			token_cleaner(data, i);
 		cmd = ft_split(data->token[i], ' ');

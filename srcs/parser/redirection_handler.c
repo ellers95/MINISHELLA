@@ -6,16 +6,16 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:07:42 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:05:38 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void				file_handling(t_data *data);
-static inline void	to_files(t_data *data, int i);
-static inline void	from_files(t_data *data, int i);
-static inline char	*clean_arrows(char *str);
+void	file_handling(t_data *data);
+void	to_files(t_data *data, int i);
+void	from_files(t_data *data, int i);
+char	*clean_arrows(char *str);
 
 /*
 

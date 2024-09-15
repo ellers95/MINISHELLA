@@ -6,17 +6,17 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:48:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:50:24 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:59:38 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void				pipex(t_data *data);
-static inline int	create_child(t_data *data, char **envp, int index);
-static inline bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index);
-static inline void	redirect_input(t_data *data, int index);
-static inline void	redirect_output(t_data *data, int fd[2], int index);
+void	pipex(t_data *data);
+int		create_child(t_data *data, char **envp, int index);
+bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index);
+void	redirect_input(t_data *data, int index);
+void	redirect_output(t_data *data, int fd[2], int index);
 
 /*
 * Implements pipe functionality for command execution.
@@ -48,9 +48,9 @@ void	pipex(t_data *data)
 		i++;
 	}
 	if (WIFEXITED(status))
-        data->last_exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status)) 
-        data->last_exit_status = 128 + WTERMSIG(status);
+		data->last_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		data->last_exit_status = 128 + WTERMSIG(status);
 }
 
 /*
@@ -64,15 +64,14 @@ static inline int	create_child(t_data *data, char **envp, int index)
 	int		last;
 	int		status;
 
-	last = (index == data->tok_num) -1;
-
+	last = (index == data->tok_num) - 1;
 	if (!fork_it(data, fd, &pid, index))
 		return (false);
 	if (pid == 0)
 	{
-		if(data->is_rdr)
+		if (data->is_rdr)
 		{
-			if(!redirect_file_input(data))
+			if (!redirect_file_input(data))
 				redirect_input(data, index);
 			redirect_file_output(data);
 		}
@@ -88,7 +87,6 @@ static inline int	create_child(t_data *data, char **envp, int index)
 	{
 		if (index > 0)
 			close(data->prev_fd[0]);
-
 		if (!last)
 		{
 			data->prev_fd[0] = fd[0];
@@ -111,13 +109,12 @@ static inline bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index)
 {
 	if (index < data->tok_num)
 	{
-		if(pipe(fd) == -1)
+		if (pipe(fd) == -1)
 		{
 			perror("No pipes to fork the data\n");
 			return (false);
 		}
 	}
-
 	*pid = fork();
 	if (*pid == -1)
 	{

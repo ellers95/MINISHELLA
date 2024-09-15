@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/15 00:12:27 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:48:37 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,16 @@
 /*
 
 */
-int main(int argv, char **argc, char **envp)
+int	main(int argv, char **argc, char **envp)
 {
-	(void)argc;
-	(void)argv;
-
-	t_data		data;
+	t_data			data;
 	char			*input;
 	struct termios	original_termios;
-	
+
+	(void)argc;
+	(void)argv;
 	input = NULL;
-	if(!ft_memset(&data, 0, sizeof(t_data)))
+	if (!ft_memset(&data, 0, sizeof(t_data)))
 	{
 		printf("Error: Memory setting error\n");
 		exit (1);
@@ -51,14 +50,14 @@ int main(int argv, char **argc, char **envp)
 			}
 			add_history(input);
 			reset_struct(&data);
-			if(!lexer(input, &data))
+			if (!lexer(input, &data))
 			{
 				ft_printf("Lexer failed\n");
 				break ;
 			}
 			if (!parser(&data))
 				if (!data.env)
-				 	free_env(&data.env);
+					free_env(&data.env);
 			if (!execution(&data))
 				printf("execution failed\n");
 			if (data.heredoc_interrupted)

@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:05:06 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:11:21 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:36:28 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ void	remove_node(t_node *node);
 */
 void	load_list(t_data *data, char **envp)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (envp[i])
-    {
-        if (add_end(&data->env, envp[i]))
-        {
-            free_env(&data->env);
-            write(1, "Error\n", 6);
-            exit(1);
-        }
-        i++;
-    }
+	i = 0;
+	while (envp[i])
+	{
+		if (add_end(&data->env, envp[i]))
+		{
+			free_env(&data->env);
+			write(1, "Error\n", 6);
+			exit(1);
+		}
+		i++;
+	}
 	return ;
 }
 
@@ -57,27 +57,27 @@ t_node	*find_last(t_node	*stack)
 /*
 
 */
-t_node   *parse_str(t_node *node, char *str)
+t_node	*parse_str(t_node *node, char *str)
 {
-    char *split;
-    int i;
+	char	*split;
+	int		i;
 
-    i = 0;    
-    split = ft_strchr(str, '=');
-    if (!split)
-    {
-        node->value = NULL;
-        node->key = ft_strdup(str);
-    }
-    else
-    {
-        i = split - str;
-        split++;
-        node->value = ft_strdup(split);
-        str[i] = '\0';
-        node->key = ft_strdup(str);
-    }
-    return (node);
+	i = 0;
+	split = ft_strchr(str, '=');
+	if (!split)
+	{
+		node->value = NULL;
+		node->key = ft_strdup(str);
+	}
+	else
+	{
+		i = split - str;
+		split++;
+		node->value = ft_strdup(split);
+		str[i] = '\0';
+		node->key = ft_strdup(str);
+	}
+	return (node);
 }
 
 /*
@@ -104,7 +104,7 @@ int	stack_len(t_node *stack)
 void	remove_node(t_node *node)
 {
 	t_node	*temp;
-	
+
 	if (!node->prev && !node->next)
 	{
 		(void)temp;

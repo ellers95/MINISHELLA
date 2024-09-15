@@ -6,18 +6,17 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:01:53 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:37:57 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 16:22:49 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void				handle_export(t_data *data);
-void				handle_unset(t_data *data, t_node **env);
+void			handle_export(t_data *data);
+void			handle_unset(t_data *data, t_node **env);
 static inline void	lone_export(t_data *data, t_node *env);
 static inline void	add_to_env(t_data *data, t_node *env, char *temp, int len);
 static inline void	search_env(t_data *data, t_node *env, char *temp, int len);
-
 
 /*
 * Handles the 'export' builtin command.

@@ -6,14 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:41:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:50:01 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool    execution(t_data *data);
-bool    handle_commands(t_data *data, char **envp);
+bool	execution(t_data *data);
+bool	handle_commands(t_data *data, char **envp);
 void	execute_command(t_data *data, char **envp, int index);
 
 /*
@@ -21,24 +21,19 @@ void	execute_command(t_data *data, char **envp, int index);
 * Orchestrates the overall command execution process.
 * Handles built-ins, redirections, and piped commands.
 */
-bool execution(t_data *data)
+bool	execution(t_data *data)
 {
-    if (!data->is_rdr && !data->is_pipe)
-        built_ins(data);
-    
-    token_merge(data);
-
-    if (data->is_heredoc)
-        big_stopping(SET, 0);
-    
-    if (data->is_rdr && !data->is_pipe)
-        redirections(data);
-    
-    if (data->tok_num > 0)
-        pipex(data);   
-    
-    clean_struct(data);	
-	return true;
+	if (!data->is_rdr && !data->is_pipe)
+		builtins(data);
+	token_merge(data);
+	if (data->is_heredoc)
+		big_stopping(SET, 0);
+	if (data->is_rdr && !data->is_pipe)
+		redirections(data);
+	if (data->tok_num > 0)
+		pipex(data);
+	clean_struct(data);
+	return (true);
 }
 
 /*
@@ -68,7 +63,7 @@ bool	handle_commands(t_data *data, char **envp)
 */
 void	execute_command(t_data *data, char **envp, int index)
 {
-	char **cmd_args;
+	char	**cmd_args;
 
 	cmd_args = ft_split(data->token[index], ' ');
 	if (cmd_args == NULL || cmd_args[0] == NULL)
@@ -82,12 +77,12 @@ void	execute_command(t_data *data, char **envp, int index)
 		free(cmd_args);
 		exiting(data, 0);
 	}
-	if(data->cmd_paths[index])
+	if (data->cmd_paths[index])
 	{
-			execve(data->cmd_paths[index], cmd_args, envp);
-			ft_printf("Failed to execute command: %s\n", strerror(errno));
-			free_argh(cmd_args);
-			exiting(data, 126);
+		execve(data->cmd_paths[index], cmd_args, envp);
+		ft_printf("Failed to execute command: %s\n", strerror(errno));
+		free_argh(cmd_args);
+		exiting(data, 126);
 	}
 	else
 	{

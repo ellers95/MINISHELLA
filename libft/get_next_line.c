@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 09:04:27 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/14 17:55:41 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 19:12:47 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,3 @@ char	*get_next_line(int fd)
 		return (free(nextline), setitfree(&list, 0, 0), NULL);
 	return (nextline);
 }
-
