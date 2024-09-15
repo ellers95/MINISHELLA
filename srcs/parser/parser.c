@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:03:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:02:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	parser(t_data *data);
 void	create_file_storage(t_data *data);
-void	mallocing(t_data *data);
+void	allocate_file_descriptors(t_data *data);
 void	type_flagger(t_data *data);
 bool	heredoc_check(t_data *data, int i);
 
@@ -39,21 +39,21 @@ static inline void	create_file_storage(t_data *data)
 {
 	int	i;
 
-	data->infile_count = 0;
-	data->outfile_count = 0;
+	data->input_file_count = 0;
+	data->output_file_count = 0;
 	i = 0;
-	while (i < data->tok_num)
+	while (i < data->token_count)
 	{
 		if (ft_strncmp(data->token[i], "<", 1) == 0)
-			data->infile_count++;
+			data->input_file_count++;
 		else if (ft_strncmp(data->token[i], ">", 1) == 0
 			|| ft_strncmp(data->token[i], ">>", 2) == 0)
-			data->outfile_count++;
+			data->output_file_count++;
 		i++;
 	}
-	mallocing(data);
-	data->infile_count = 0;
-	data->outfile_count = 0;
+	allocate_file_descriptors(data);
+	data->input_file_count = 0;
+	data->output_file_count = 0;
 }
 
 /*
@@ -61,19 +61,19 @@ static inline void	create_file_storage(t_data *data)
  * Creates arrays for input and output file descriptors 
  * based on counted redirections.
 */
-static inline void	mallocing(t_data *data)
+static inline void	allocate_file_descriptors(t_data *data)
 {
-	data->in_files = malloc(sizeof(int) * data->infile_count);
-	if (!data->in_files)
+	data->input_file_fds = malloc(sizeof(int) * data->input_file_count);
+	if (!data->input_file_fds)
 	{
-		perror("Error: Malloc in_files failed");
+		perror("Error: Malloc input_file_fds failed");
 		return ;
 	}
-	data->out_files = malloc(sizeof(int) * data->outfile_count);
-	if (!data->out_files)
+	data->output_file_fds = malloc(sizeof(int) * data->output_file_count);
+	if (!data->output_file_fds)
 	{
-		perror("Error: Malloc out_files failed");
-		free(data->in_files);
+		perror("Error: Malloc output_file_fds failed");
+		free(data->input_file_fds);
 		return ;
 	}
 }
@@ -99,7 +99,7 @@ static inline void	type_flagger(t_data *data)
 		if (ft_strncmp(data->token[i], ">>", 2) == 0
 			|| ft_strncmp(data->token[i], ">", 1) == 0
 			|| ft_strncmp(data->token[i], "<", 1) == 0)
-			data->is_rdr = true;
+			data->has_redirection = true;
 		i++;
 	}	
 }
@@ -123,7 +123,7 @@ static inline bool	heredoc_check(t_data *data, int i)
 		}
 		data->is_heredoc = true;
 		find_doc(data, i);
-		if (data->tok_num < 1)
+		if (data->token_count < 1)
 		{
 			clean_struct(data);
 			return (false);

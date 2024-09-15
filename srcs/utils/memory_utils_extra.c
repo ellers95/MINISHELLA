@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 21:04:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:14:08 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:39:31 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * Iterates through the array, freeing each string individually,
  * then frees the array itself.
 */
-void	free_argh(char **argh)
+void	free_args(char **argh)
 {
 	int	i;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:47:35 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 17:16:38 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 02:16:40 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,29 @@
 */
 void	handle_echo(t_data *data)
 {
-	int		i;
-	bool	n_flag;
+	int		token_index;
+	bool	suppress_newline;
 
-	n_flag = false;
-	i = 1;
-	if (data->tok_num == 1)
+	suppress_newline = false;
+	token_index = 1;
+	if (data->token_count == 1)
 		printf("\n");
-	else if (data->tok_num > 1)
+	else if (data->token_count > 1)
 	{
 		if (ft_strcmp(data->token[1], "-n") == 0)
 		{
 			token_cleaner(data, 1);
-			n_flag = true;
+			suppress_newline = true;
 		}
-		while (i <= data->tok_num - 2)
-			printf("%s ", data->token[i++]);
-		if (data->tok_num >= 2)
-			printf("%s", data->token[data->tok_num - 1]);
-		if (n_flag == false)
+		while (token_index <= data->token_count - 2)
+			printf("%s ", data->token[token_index++]);
+		if (data->token_count >= 2)
+			printf("%s", data->token[data->token_count - 1]);
+		if (suppress_newline == false)
 			printf("\n");
 	}
-	while (data->tok_num > 0)
+	while (data->token_count > 0)
 		token_cleaner(data, 0);
-	if (data->is_rdr)
+	if (data->has_redirection)
 		exit (0);
 }

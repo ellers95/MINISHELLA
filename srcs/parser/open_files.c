@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:00:26 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:02:39 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	open_infile(t_data *data, int i)
 			perror("Error!");
 			return ;
 		}
-		data->in_files[data->infile_count] = fd;
+		data->input_file_fds[data->input_file_count] = fd;
 	}
 	else
 	{
@@ -56,7 +56,7 @@ void	open_infile(t_data *data, int i)
 					in heredoc: %s\n", data->token[i]);
 		return ;
 	}
-	data->infile_count++;
+	data->input_file_count++;
 }
 
 /*
@@ -77,6 +77,6 @@ void	open_outfile(t_data *data, int i, bool append)
 		perror("Error!: Error opening output file");
 		return ;
 	}	
-	data->out_files[data->outfile_count] = fd;
-	data->outfile_count++;
+	data->output_file_fds[data->output_file_count] = fd;
+	data->output_file_count++;
 }

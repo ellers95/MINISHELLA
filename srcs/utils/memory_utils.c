@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:15:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:09:03 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	clean_data(t_data *data)
 */
 void	clean_struct(t_data *data)
 {
-	if (data->tok_num > 0)
+	if (data->token_count > 0)
 		token_cleaner(data, 0);
 	clean_files(data);
 	if (data->pipes != NULL)
@@ -45,13 +45,13 @@ void	clean_struct(t_data *data)
 		free(data->pipes);
 		data->pipes = NULL;
 	}
-	data->tok_num = 0;
-	data->infile_count = 0;
-	data->outfile_count = 0;
+	data->token_count = 0;
+	data->input_file_count = 0;
+	data->output_file_count = 0;
 	data->fd_input = -1;
 	data->fd_output = -1;
-	data->prev_fd[0] = -1;
-	data->prev_fd[1] = -1;
+	data->previous_pipe_fd[0] = -1;
+	data->previous_pipe_fd[1] = -1;
 }
 
 /*
@@ -82,15 +82,15 @@ void	free_env(t_node	**env)
 */
 static inline void	clean_files(t_data *data)
 {
-	if (data->in_files != NULL)
+	if (data->input_file_fds != NULL)
 	{
-		free(data->in_files);
-		data->in_files = NULL;
+		free(data->input_file_fds);
+		data->input_file_fds = NULL;
 	}
-	if (data->out_files != NULL)
+	if (data->output_file_fds != NULL)
 	{
-		free(data->out_files);
-		data->out_files = NULL;
+		free(data->output_file_fds);
+		data->output_file_fds = NULL;
 	}
 }
 

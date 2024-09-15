@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 21:06:23 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 23:52:41 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:46:31 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * It ensures that both the read (fd[0]) and write (fd[1])
  *  ends of the pipe are closed.
 */
-void	shut_fd(int fd[2])
+void	close_pipe_fds(int fd[2])
 {
 	close(fd[0]);
 	close(fd[1]);

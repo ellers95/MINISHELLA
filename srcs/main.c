@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/16 00:21:28 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:15:51 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,18 @@
 int	main(int argv, char **argc, char **envp)
 {
 	t_data			data;
-	char			*input;
+	char			*user_input;
 	struct termios	original_termios;
 
 	(void)argc;
 	(void)argv;
-	input = NULL;
+	user_input = NULL;
 	if (!ft_memset(&data, 0, sizeof(t_data)))
 	{
 		printf("Error: Memory setting error\n");
 		exit (1);
 	}
-	data.last_exit_status = 0;
+	data.last_command_exit_status = 0;
 	load_list(&data, envp);
 	setup_terminal(&original_termios);
 	if (1)
@@ -39,20 +39,20 @@ int	main(int argv, char **argc, char **envp)
 		signaling();
 		while (1)
 		{
-			input = readline("✨🧚minishELLA🧚✨:");
-			if (input == NULL)
+			user_input = readline("✨🧚minishELLA🧚✨:");
+			if (user_input == NULL)
 			{
 				write(1, "\n✨🧚 Adios 🧚✨!\n", 26);
 				break ;
 			}
-			if (*input == '\0' || rl_end == 0)
+			if (*user_input == '\0' || rl_end == 0)
 			{
-				free(input);
+				free(user_input);
 				continue ;
 			}
-			add_history(input);
+			add_history(user_input);
 			reset_struct(&data);
-			if (!lexer(input, &data))
+			if (!lexer(user_input, &data))
 			{
 				ft_printf("Lexer failed\n");
 				break ;
@@ -67,7 +67,7 @@ int	main(int argv, char **argc, char **envp)
 				data.heredoc_interrupted = 0;
 				continue ;
 			}
-			free(input);
+			free(user_input);
 		}
 		restore_terminal(&original_termios);
 	}

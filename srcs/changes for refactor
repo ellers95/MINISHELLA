@@ -14,7 +14,7 @@ commnad_search -> execution
 banananice(bana, tokens, token_index);
 	command_search(bana, bana->envp, &bana->env);
 
-	bana->envp = list_to_eepie(&bana->env);
+	bana->envp = env_list_to_array(&bana->env);
 	free_char_array(bana->envp);
 
 

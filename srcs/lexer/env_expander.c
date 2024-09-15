@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env_expander.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:05:09 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/15 19:07:51 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:20:13 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*env_variable_check(char *str, t_node *env, t_data *data);
+char	*env_variable_check(char *input_str, t_node *env, t_data *data);
 t_node	*find_key(char *key, t_node *env);
 char	*expand_var(char *str, t_node *env, t_data *data);
 
@@ -20,7 +20,7 @@ char	*expand_var(char *str, t_node *env, t_data *data);
 * Checks for and expands environment variables in a given string.
 * Handles variable expansion within quotes and special cases like $?.
 */
-char	*env_variable_check(char *str, t_node *env, t_data *data)
+char	*env_variable_check(char *input_str, t_node *env, t_data *data)
 {
 	int		i;
 	int		single_quote;
@@ -31,29 +31,29 @@ char	*env_variable_check(char *str, t_node *env, t_data *data)
 	i = 0;
 	single_quote = 0;
 	double_quote = 0;
-	dollar_ptr = ft_strchr(str, '$');
+	dollar_ptr = ft_strchr(input_str, '$');
 	if (!dollar_ptr)
-		return (str);
-	dollar_pos = dollar_ptr - str;
-	while (str[i])
+		return (input_str);
+	dollar_pos = dollar_ptr - input_str;
+	while (input_str[i])
 	{
-		if (str[i] == '\'' && !double_quote)
+		if (input_str[i] == '\'' && !double_quote)
 			single_quote = !single_quote;
-		else if (str[i] == '"')
+		else if (input_str[i] == '"')
 			double_quote = !double_quote;
 		if (i == dollar_pos)
 		{
 			if (!single_quote || (single_quote && double_quote))
 			{
-				str = expand_var(dollar_ptr, env, data);
-				return (str);
+				input_str = expand_var(dollar_ptr, env, data);
+				return (input_str);
 			}
 			else
-				return (str);
+				return (input_str);
 		}
 		i++;
 	}
-	return (str);
+	return (input_str);
 }
 
 /*
@@ -113,7 +113,7 @@ static inline char	*expand_var(char *str, t_node *env, t_data *data)
 	}
 	else if (ft_strcmp(var_name, "?") == 0)
 	{
-		temp_str = ft_itoa(data->last_exit_status);
+		temp_str = ft_itoa(data->last_command_exit_status);
 		value_len = ft_strlen(temp_str);
 		if (value_len <= ft_strlen(str))
 			ft_strlcpy(str, temp_str, value_len + 1);

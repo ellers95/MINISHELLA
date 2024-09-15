@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:05:06 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:09:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:23:14 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	load_list(t_data *data, char **envp);
 t_node	*find_last(t_node	*stack);
-t_node	*parse_str(t_node *node, char *str);
+t_node	*parse_str(t_node *node, char *env_str);
 int		stack_len(t_node *stack);
 void	remove_node(t_node *node);
 
@@ -59,25 +59,25 @@ t_node	*find_last(t_node	*stack)
  * Parses a string into key and value components for an environment variable.
  * Splits the string at the '=' character, if present.
 */
-t_node	*parse_str(t_node *node, char *str)
+t_node	*parse_str(t_node *node, char *env_str)
 {
 	char	*split;
 	int		i;
 
 	i = 0;
-	split = ft_strchr(str, '=');
+	split = ft_strchr(env_str, '=');
 	if (!split)
 	{
 		node->value = NULL;
-		node->key = ft_strdup(str);
+		node->key = ft_strdup(env_str);
 	}
 	else
 	{
-		i = split - str;
+		i = split - env_str;
 		split++;
 		node->value = ft_strdup(split);
-		str[i] = '\0';
-		node->key = ft_strdup(str);
+		env_str[i] = '\0';
+		node->key = ft_strdup(env_str);
 	}
 	return (node);
 }

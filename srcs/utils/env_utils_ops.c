@@ -6,14 +6,14 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:07:51 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:42:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		add_end(t_node **stack, char *str);
-char	**list_to_eepie(t_node **env);
+char	**env_list_to_array(t_node **env);
 
 /*
  * Adds a new node to the end of the linked list (stack).
@@ -49,7 +49,7 @@ int	add_end(t_node **stack, char *str)
  * Each string in the array is in the format "KEY=VALUE".
  * This array format is typically used for execve() and similar functions.
 */
-char	**list_to_eepie(t_node **env)
+char	**env_list_to_array(t_node **env)
 {
 	int		len;
 	int		i;

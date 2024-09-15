@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:05:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:39:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	file_handling(t_data *data);
 void	to_files(t_data *data, int i);
 void	from_files(t_data *data, int i);
-char	*clean_arrows(char *str);
+char	*clean_arrows(char *token_str);
 
 /*
  * Manages file redirection operations in the shell command.
@@ -27,7 +27,7 @@ void	file_handling(t_data *data)
 	int	i;
 
 	i = 0;
-	while (data->token[i] && data->tok_num > 1)
+	while (data->token[i] && data->token_count > 1)
 	{
 		if (ft_strncmp(data->token[i], "<", 1) == 0)
 			from_files(data, i);
@@ -93,7 +93,7 @@ static inline void	from_files(t_data *data, int i)
  * Cleans redirection symbols from token strings.
  * Removes leading '<' or '>' characters from the given string.
 */
-static inline char	*clean_arrows(char *str)
+static inline char	*clean_arrows(char *token_str)
 {
 	int		i;
 	int		j;
@@ -101,19 +101,19 @@ static inline char	*clean_arrows(char *str)
 
 	i = 0;
 	j = 0;
-	copy = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	copy = malloc(sizeof(char) * (ft_strlen(token_str) + 1));
 	if (!copy)
 	{
 		ft_printf("Malloc fail in arrows");
 		return (NULL);
 	}
-	while (str[i] != '\0')
+	while (token_str[i] != '\0')
 	{
-		while (str[i] == '<' || str[i] == '>')
+		while (token_str[i] == '<' || token_str[i] == '>')
 			i++;
-		while (str[i] != '\0')
+		while (token_str[i] != '\0')
 		{
-			copy[j] = str[i];
+			copy[j] = token_str[i];
 			i++;
 			j++;
 		}

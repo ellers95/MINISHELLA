@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_executor.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 17:55:39 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 02:26:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ static inline void	dupper(t_data *data);
 */
 void	redirections(t_data *data)
 {
-	if (data->tok_num < 2)
+	if (data->token_count < 2)
 	{
 		clean_struct(data);
 		return ;
 	}
 	file_handling(data);
-	if (data->is_heredoc && data->tok_num < 1)
+	if (data->is_heredoc && data->token_count < 1)
 	{
 		clean_struct(data);
 		return ;
@@ -37,7 +37,7 @@ void	redirections(t_data *data)
 	if (!data->is_pipe)
 	{
 		execute_rdr(data, data->envp);
-		while (data->tok_num > 0)
+		while (data->token_count > 0)
 			token_cleaner(data, 0);
 	}
 }
@@ -51,9 +51,9 @@ static inline void	execute_rdr(t_data *data, char **envp)
 	pid_t	pid;
 	int		status;
 	char	*path;
-	char	**cmd_args;
+	char	**command_arguments;
 
-	cmd_args = NULL;
+	command_arguments = NULL;
 	path = NULL;
 	pid = fork();
 	if (pid < 0)
@@ -65,32 +65,32 @@ static inline void	execute_rdr(t_data *data, char **envp)
 	{
 		dupper(data);
 		close_files(data);
-		cmd_args = ft_split(data->token[0], ' ');
-		if (cmd_args == NULL)
+		command_arguments = ft_split(data->token[0], ' ');
+		if (command_arguments == NULL)
 		{
 			ft_printf("Bnanas! Failed to split the command arguments\n");
-			free_stuff(cmd_args, path);
+			free_stuff(command_arguments, path);
 			exiting(data, 1);
 		}
-		path = get_path(cmd_args[0], envp);
+		path = get_command_path(command_arguments[0], envp);
 		if (!path)
 		{
-			printf("%s\n", cmd_args[0]);
+			printf("%s\n", command_arguments[0]);
 			builtins(data);
 			perror("Error: Command is Error:");
-			free_stuff(cmd_args, NULL);
+			free_stuff(command_arguments, NULL);
 			exiting(data, 126);
 		}
 		builtins(data);
 		token_cleaner(data, 0);
-		execve(path, cmd_args, envp);
-		free_stuff(cmd_args, path);
+		execve(path, command_arguments, envp);
+		free_stuff(command_arguments, path);
 		exiting(data, -1);
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
-		data->last_exit_status = WEXITSTATUS(status);
+		data->last_command_exit_status = WEXITSTATUS(status);
 	}
 }
 
@@ -103,15 +103,15 @@ static inline void	close_files(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < data->infile_count)
+	while (i < data->input_file_count)
 	{
-		close(data->in_files[i]);
+		close(data->input_file_fds[i]);
 		i++;
 	}
 	i = 0;
-	while (i < data-> outfile_count)
+	while (i < data-> output_file_count)
 	{
-		close(data->out_files[i]);
+		close(data->output_file_fds[i]);
 		i++;
 	}
 }
@@ -122,14 +122,14 @@ static inline void	close_files(t_data *data)
 */
 static inline void	dupper(t_data *data)
 {
-	if (data->infile_count > 0)
+	if (data->input_file_count > 0)
 	{
-		if (dup2(data->in_files[data->infile_count - 1], STDIN_FILENO) < 0)
+		if (dup2(data->input_file_fds[data->input_file_count - 1], STDIN_FILENO) < 0)
 			exiting(data, -1);
 	}
-	if (data->outfile_count > 0)
+	if (data->output_file_count > 0)
 	{
-		if (dup2(data->out_files[data->outfile_count - 1], STDOUT_FILENO) < 0)
+		if (dup2(data->output_file_fds[data->output_file_count - 1], STDOUT_FILENO) < 0)
 		{
 			perror("Error! Error in dup2 OUTPUT redirections\n");
 			exiting(data, -1);

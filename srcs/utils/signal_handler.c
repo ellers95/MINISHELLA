@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:17:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:18:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:44:19 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	signaling(void);
 void	handle_sigint(int sig);
 void	handle_quit(int sig);
-int		big_stopping(int get, int newvalue);
+int		get_set_stop_flag(int get, int newvalue);
 
 /*
  * Sets up signal handlers for the shell.
@@ -50,7 +50,7 @@ static inline void	handle_sigint(int sig)
 		write(STDOUT_FILENO, "^C\n", 3);
 		rl_done = 1;
 		close(STDIN_FILENO);
-		big_stopping(SET, 1);
+		get_set_stop_flag(SET, 1);
 	}
 	else
 	{
@@ -74,7 +74,7 @@ static inline void	handle_quit(int sig)
  * Manages a global stop flag for the shell.
  * Used to control execution flow, especially during signal handling.
 */
-int	big_stopping(int get, int newvalue)
+int	get_set_stop_flag(int get, int newvalue)
 {
 	static int	stopper = 0;
 

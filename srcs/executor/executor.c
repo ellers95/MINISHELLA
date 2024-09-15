@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 17:50:01 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:04:48 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ void	execute_command(t_data *data, char **envp, int index);
 */
 bool	execution(t_data *data)
 {
-	if (!data->is_rdr && !data->is_pipe)
+	if (!data->has_redirection && !data->is_pipe)
 		builtins(data);
 	token_merge(data);
 	if (data->is_heredoc)
-		big_stopping(SET, 0);
-	if (data->is_rdr && !data->is_pipe)
+		get_set_stop_flag(SET, 0);
+	if (data->has_redirection && !data->is_pipe)
 		redirections(data);
-	if (data->tok_num > 0)
+	if (data->token_count > 0)
 		pipex(data);
 	clean_struct(data);
 	return (true);
@@ -42,16 +42,16 @@ bool	execution(t_data *data)
 */
 bool	handle_commands(t_data *data, char **envp)
 {
-	if (data->is_rdr)
+	if (data->has_redirection)
 		redirections(data);
 	if (!parse_cmd_line(data, envp))
 	{
-		clean_n_errors(data);
+		cleanup_and_handle_errors(data);
 		return (false);
 	}
-	if (!parse_cmd_args(data))
+	if (!parse_command_arguments(data))
 	{
-		clean_n_errors(data);
+		cleanup_and_handle_errors(data);
 		return (false);
 	}
 	return (true);
@@ -63,33 +63,33 @@ bool	handle_commands(t_data *data, char **envp)
 */
 void	execute_command(t_data *data, char **envp, int index)
 {
-	char	**cmd_args;
+	char	**command_arguments;
 
-	cmd_args = ft_split(data->token[index], ' ');
-	if (cmd_args == NULL || cmd_args[0] == NULL)
+	command_arguments = ft_split(data->token[index], ' ');
+	if (command_arguments == NULL || command_arguments[0] == NULL)
 	{
 		ft_printf("Failed to split command arguments\n");
 		exiting(data, 1);
 	}
-	if (!ft_strncmp(cmd_args[0], "exit", 5))
+	if (!ft_strncmp(command_arguments[0], "exit", 5))
 	{
 		handle_exit(data);
-		free(cmd_args);
+		free(command_arguments);
 		exiting(data, 0);
 	}
-	if (data->cmd_paths[index])
+	if (data->command_paths[index])
 	{
-		execve(data->cmd_paths[index], cmd_args, envp);
+		execve(data->command_paths[index], command_arguments, envp);
 		ft_printf("Failed to execute command: %s\n", strerror(errno));
-		free_argh(cmd_args);
+		free_args(command_arguments);
 		exiting(data, 126);
 	}
 	else
 	{
 		ft_printf("Command not found\n");
-		free_argh(cmd_args);
+		free_args(command_arguments);
 		exiting(data, 127);
 	}
-	free_argh(cmd_args);
+	free_args(command_arguments);
 	exiting(data, 1);
 }

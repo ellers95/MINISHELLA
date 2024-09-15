@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:48:56 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:40:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:58:35 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	handle_env(t_data *data, t_node *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	while (data->tok_num > 0)
+	while (data->token_count > 0)
 		token_cleaner(data, 0);
-	if (data->is_rdr)
+	if (data->has_redirection)
 		exit (0);
 }

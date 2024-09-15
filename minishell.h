@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:12:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 02:44:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,24 @@ typedef struct s_node
 typedef struct s_data
 {
 	char	**token;
-	int		tok_num;
+	int		token_count;
 	bool	is_pipe;
-	bool	is_rdr;
+	bool	has_redirection;
 	bool	is_heredoc;
-	int		*in_files;
-	int		*out_files;
-	int		infile_count;
-	int		outfile_count;
-	char	**cmd_paths;
-	char	**cmd_args;
+	int		*input_file_fds;
+	int		*output_file_fds;
+	int		input_file_count;
+	int		output_file_count;
+	char	**command_paths;
+	char	**command_arguments;
 	int		**pipes;
-	int		prev_fd[2];
+	int		previous_pipe_fd[2];
 	int		fd_output;
 	int		fd_input;
-	bool	is_valid_intake;
 	bool	has_input;
 	int		original_stdin;
 	int		heredoc_interrupted;
-	int		last_exit_status;
+	int		last_command_exit_status;
 	char	**envp;
 	t_node	*env;
 }	t_data;
@@ -84,20 +83,20 @@ bool	handle_commands(t_data *data, char **envp);
 bool	execution(t_data *data);
 bool	redirect_file_input(t_data *data);
 bool	redirect_file_output(t_data *data);
-char	*get_path(char *path_name, char **envp);
+char	*get_command_path(char *command_name, char **envp);
 void	pipex(t_data *data);
-void	shut_fd(int fd[2]);
+void	close_pipe_fds(int fd[2]);
 void	redirections(t_data *data);
 
 // lexer:
-char	*env_variable_check(char *str, t_node *env, t_data *data);
-bool	lexer(char *str, t_data *data);
+char	*env_variable_check(char *input_str, t_node *env, t_data *data);
+bool	lexer(char *input_str, t_data *data);
 void	token_merge(t_data *data);
 void	token_cleaner(t_data *data, int i);
 bool	check_specials(char *token);
 
 // parser:
-bool	parse_cmd_args(t_data *data);
+bool	parse_command_arguments(t_data *data);
 bool	parse_cmd_line(t_data *data, char **envp);
 void	find_doc(t_data *data, int tk_i);
 void	handle_the_doc(const char *delimiter, t_data *data);
@@ -109,25 +108,25 @@ void	file_handling(t_data *data);
 
 // signal:
 void	signaling(void);
-int		big_stopping(int get, int newvalue);
+int		get_set_stop_flag(int get, int newvalue);
 
 // utils:
 void	reset_struct(t_data *data);
 int		add_end(t_node **stack, char *str);
-char	**list_to_eepie(t_node **env);
+char	**env_list_to_array(t_node **env);
 void	load_list(t_data *data, char **envp);
 t_node	*find_last(t_node	*stack);
-t_node	*parse_str(t_node *node, char *str);
+t_node	*parse_str(t_node *node, char *env_str);
 int		stack_len(t_node *stack);
 void	remove_node(t_node *node);
-void	clean_n_errors(t_data *data);
+void	cleanup_and_handle_errors(t_data *data);
 char	get_heredoc_status(void);
 void	set_heredoc_status(char status);
 void	free_array(char ***paths, int arc);
 char	*free_char_array(char **array);
 void	free_stuff(char **args, char *path);
 void	free_line(char **paths, int arc);
-void	free_argh(char **argh);
+void	free_args(char **argh);
 void	clean_data(t_data *data);
 void	clean_struct(t_data *data);
 void	free_env(t_node	**env);

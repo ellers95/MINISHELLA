@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 18:11:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:48:43 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,19 @@ bool			check_specials(char *token);
 */
 void	token_merge(t_data *data)
 {
-	int	i;
-	int	j;
+	int	main_token_index;
+	int	merge_token_index;
 
-	i = 0;
-	while (i < data->tok_num)
+	main_token_index = 0;
+	while (main_token_index < data->token_count)
 	{
-		if (valid(data, i))
+		if (valid(data, main_token_index))
 		{
-			j = i + 1;
-			while (valid(data, j))
-				merge_it(data, i, j);
+			merge_token_index = main_token_index + 1;
+			while (valid(data, merge_token_index))
+				merge_it(data, main_token_index, merge_token_index);
 		}
-		i++;
+		main_token_index++;
 	}
 }
 
@@ -47,14 +47,14 @@ void	token_merge(t_data *data)
 void	token_cleaner(t_data *data, int i)
 {
 	free(data->token[i]);
-	while (i < data->tok_num - 1)
+	while (i < data->token_count - 1)
 	{
 		data->token[i] = data->token[i + 1];
 		i++;
 	}
-	data->tok_num--;
-	data->token[data->tok_num] = NULL;
-	if (data->tok_num == 0)
+	data->token_count--;
+	data->token[data->token_count] = NULL;
+	if (data->token_count == 0)
 		free(data->token);
 }
 
@@ -64,12 +64,12 @@ void	token_cleaner(t_data *data, int i)
 */
 static inline bool	valid(t_data *data, int j)
 {
-	if ((j < data->tok_num)
+	if ((j < data->token_count)
 		&& (ft_strncmp(data->token[j], "|", 1) != 0)
 		&& (ft_strncmp(data->token[j], "<", 1) != 0)
 		&& (ft_strncmp(data->token[j], ">", 1) != 0))
 	{
-		if (data->is_rdr)
+		if (data->has_redirection)
 		{
 			if (ft_strncmp(data->token[j], "echo\0", 5) != 0)
 				return (true);
@@ -106,7 +106,7 @@ static inline void	merge_it(t_data *data, int i, int j)
 	ft_strlcat(new_str, data->token[j], len);
 	free(data->token[i]);
 	data->token[i] = new_str;
-	if (j < data->tok_num && ((ft_strcmp(data->token[i], "|") != 0)
+	if (j < data->token_count && ((ft_strcmp(data->token[i], "|") != 0)
 			|| ft_strncmp(data->token[i], "<", 1) != 0
 			|| ft_strncmp(data->token[i], ">", 1) != 0
 			|| ft_strncmp(data->token[i], "echo\0", 5) != 0))

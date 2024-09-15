@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 22:25:04 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:06:35 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:02:47 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 void	reset_struct(t_data *data)
 {
 	data->is_pipe = false;
-	data->is_rdr = false;
+	data->has_redirection = false;
 	data->is_heredoc = false;
-	data->outfile_count = 0;
-	data->infile_count = 0;
+	data->output_file_count = 0;
+	data->input_file_count = 0;
 	data->original_stdin = -1;
 	data->heredoc_interrupted = 0;
 	free_char_array(data->envp);
-	data->envp = list_to_eepie(&data->env);
+	data->envp = env_list_to_array(&data->env);
 }

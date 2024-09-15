@@ -3,77 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   path_solver.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:56:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 17:23:18 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 02:41:39 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char			*get_path(char *path_name, char **envp);
-static inline char	**find_path_env(char **envp);
-static inline char	*extract_path(char *path, char **envp);
-static inline char	*const_and_check(char *paths, char *path_name);
+char			*get_command_path(char *command_name, char **envp);
+static inline char	**find_path_directories(char **envp);
+static inline char	*extract_env_value(char *path, char **envp);
+static inline char	*construct_and_check_path(char *directory, char *path_name);
 
 /*
 * Resolves the full path of a command.
 * Searches for the command in the directories specified
 * by the PATH environment variable. 
 */
-char	*get_path(char *path_name, char **envp)
+char	*get_command_path(char *command_name, char **envp)
 {
-	int		i;
-	char	*full_path;
-	char	**paths;
+	int		path_index;
+	char	*full_command_path;
+	char	**path_directories;
 
-	if (access(path_name, F_OK) == 0)
-		return (ft_substr(path_name, 0, ft_strlen(path_name)));
-	paths = find_path_env(envp);
-	if (!paths)
+	if (access(command_name, F_OK) == 0)
+		return (ft_substr(command_name, 0, ft_strlen(command_name)));
+	path_directories = find_path_directories(envp);
+	if (!path_directories)
 		return (NULL);
-	i = 0;
-	while (paths[i] != NULL)
+	path_index = 0;
+	while (path_directories[path_index] != NULL)
 	{
-		full_path = const_and_check(paths[i], path_name);
-		if (full_path)
+		full_command_path = construct_and_check_path(path_directories[path_index], command_name);
+		if (full_command_path)
 		{
-			free_line(paths, -1);
-			return (full_path);
+			free_line(path_directories, -1);
+			return (full_command_path);
 		}
-		i++;
+		path_index++;
 	}
-	return (free_line(paths, -1), NULL);
+	return (free_line(path_directories, -1), NULL);
 }
 
 /*
 * Finds and splits the PATH environment variable.
 */
-static inline char	**find_path_env(char **envp)
+static inline char	**find_path_directories(char **envp)
 {
-	char	*path;
+	char	*path_value;
 
-	path = extract_path("PATH", envp);
-	if (!path)
+	path_value = extract_env_value("PATH", envp);
+	if (!path_value)
 		return (NULL);
-	return (ft_split(path, ':'));
+	return (ft_split(path_value, ':'));
 }
 
 /*
 * Extracts the value of a specific environment variable.
 */
-static inline char	*extract_path(char *path, char **envp)
+static inline char	*extract_env_value(char *env_value, char **envp)
 {
-	int	i;
+	int	env_index;
 
-	i = 0;
-	while (envp && envp[i] != NULL)
+	env_index = 0;
+	while (envp && envp[env_index] != NULL)
 	{
-		if (ft_strncmp(path, envp[i], ft_strlen(path)) == 0
-			&& envp[i][ft_strlen(path)] == '=')
-			return (ft_strchr(envp[i], '=') + 1);
-		i++;
+		if (ft_strncmp(env_value, envp[env_index], ft_strlen(env_value)) == 0
+			&& envp[env_index][ft_strlen(env_value)] == '=')
+			return (ft_strchr(envp[env_index], '=') + 1);
+		env_index++;
 	}
 	return (NULL);
 }
@@ -82,20 +82,20 @@ static inline char	*extract_path(char *path, char **envp)
 * Constructs and checks a full path for a command.
 * Combines a directory path with a command name and checks if it exists.
 */
-static inline char	*const_and_check(char *paths, char *path_name)
+static inline char	*construct_and_check_path(char *directory, char *path_name)
 {
-	char	*oneline;
-	char	*full_path;
+	char	*path_with_slash;
+	char	*full_command_path;
 
-	oneline = ft_strjoin(paths, "/");
+	path_with_slash = ft_strjoin(directory, "/");
 	if (!oneline)
 		return (NULL);
-	full_path = ft_strjoin(oneline, path_name);
-	free(oneline);
-	if (!full_path)
+	full_command_path = ft_strjoin(path_with_slash, path_name);
+	free(path_with_slash);
+	if (!full_command_path)
 		return (NULL);
-	if (access(full_path, F_OK) == 0)
-		return (full_path);
-	free(full_path);
+	if (access(full_command_path, F_OK) == 0)
+		return (full_command_path);
+	free(full_command_path);
 	return (NULL);
 }

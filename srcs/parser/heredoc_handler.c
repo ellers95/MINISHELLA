@@ -16,7 +16,7 @@ void	find_doc(t_data *data, int tk_i);
 void	handle_the_doc(const char *delimiter, t_data *data);
 char	*find_delimiter(t_data *data);
 char	*readline_wrapper(const char *prompt, t_data *data);
-char	*clean_deli(char *str);
+char	*clean_delimiter(char *str);
 
 /*
  * Locates and processes a here-document in the command.
@@ -37,7 +37,7 @@ void	find_doc(t_data *data, int tk_i)
 	else
 	{
 		delimiter = data->token[tk_i] + 2;
-		data->token[tk_i] = clean_deli(data->token[tk_i]);
+		data->token[tk_i] = clean_delimiter(data->token[tk_i]);
 	}
 	handle_the_doc(delimiter, data);
 	if (separate)
@@ -68,13 +68,13 @@ void	handle_the_doc(const char *delimiter, t_data *data)
 	}
 	data->heredoc_interrupted = 0;
 	set_heredoc_status(IN_HEREDOC);
-	big_stopping(SET, 0);
+	get_set_stop_flag(SET, 0);
 	while (1)
 	{
 		line = readline_wrapper("here_doc> ", data);
 		if (!line)
 		{
-			if (big_stopping(GET, 0))
+			if (get_set_stop_flag(GET, 0))
 				data->heredoc_interrupted = 1;
 			else
 				eof_encountered = true;
@@ -101,8 +101,8 @@ void	handle_the_doc(const char *delimiter, t_data *data)
 	}
 	else
 	{
-		data->in_files[data->infile_count] = fd[0];
-		data->infile_count++;
+		data->input_file_fds[data->input_file_count] = fd[0];
+		data->input_file_count++;
 	}
 	if (data->original_stdin != -1)
 	{
@@ -151,7 +151,7 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 	char	*line;
 
 	line = readline(prompt);
-	if (big_stopping(GET, 0))
+	if (get_set_stop_flag(GET, 0))
 	{
 		free(line);
 		data->heredoc_interrupted = 1;
@@ -164,7 +164,7 @@ char	*readline_wrapper(const char *prompt, t_data *data)
  * Cleans and formats the delimiter string for a here-document.
  * Removes any leading '<' characters from the delimiter.
 */
-static inline char	*clean_deli(char *str)
+static inline char	*clean_delimiter(char *str)
 {
 	char	*copy;
 	int		i;
