@@ -19,7 +19,9 @@ char	*readline_wrapper(const char *prompt, t_data *data);
 char	*clean_deli(char *str);
 
 /*
-
+ * Locates and processes a here-document in the command.
+ * Identifies the delimiter and initiates the here-document 
+ * handling process.
 */
 void	find_doc(t_data *data, int tk_i)
 {
@@ -43,7 +45,9 @@ void	find_doc(t_data *data, int tk_i)
 }
 
 /*
-
+ * Handles the here-document input process.
+ * Reads input lines until the delimiter is encountered, storing the content.
+ * Sets up file descriptors for the here-document content.
 */
 void	handle_the_doc(const char *delimiter, t_data *data)
 {
@@ -109,7 +113,7 @@ void	handle_the_doc(const char *delimiter, t_data *data)
 }
 
 /*
-
+* Searches for and extracts the delimiter for a here-document.
 */
 char	*find_delimiter(t_data *data)
 {
@@ -140,7 +144,7 @@ char	*find_delimiter(t_data *data)
 }
 
 /*
-
+ * A wrapper function for readline to handle interrupts during here-document input.
 */
 char	*readline_wrapper(const char *prompt, t_data *data)
 {
@@ -157,7 +161,8 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 }
 
 /*
-
+ * Cleans and formats the delimiter string for a here-document.
+ * Removes any leading '<' characters from the delimiter.
 */
 static inline char	*clean_deli(char *str)
 {

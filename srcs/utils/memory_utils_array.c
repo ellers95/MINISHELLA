@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils_array.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:23:04 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:04:07 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:13:20 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	free_stuff(char **args, char *path);
 void	free_line(char **paths, int arc);
 
 /*
-
+ * Frees a 2D array of strings and sets the pointer to NULL.
+ * If arc is -1, frees all elements until a NULL pointer is encountered.
+ * If arc is >= 0, frees the specified number of elements.
 */
 void	free_array(char ***paths, int arc)
 {
@@ -49,7 +51,8 @@ void	free_array(char ***paths, int arc)
 }
 
 /*
-
+ * Frees a dynamically allocated array of strings.
+ * Frees each string in the array and then the array itself.
 */
 char	*free_char_array(char **array)
 {
@@ -69,7 +72,8 @@ char	*free_char_array(char **array)
 }
 
 /*
-
+ * Frees an array of argument strings and a path string.
+ * Typically used for cleaning up after command execution.
 */
 void	free_stuff(char **args, char *path)
 {
@@ -87,7 +91,9 @@ void	free_stuff(char **args, char *path)
 }
 
 /*
-
+ * Frees an array of path strings.
+ * If arc is -1, frees all elements until a NULL pointer is encountered.
+ * If arc is >= 0, frees the specified number of elements.
 */
 void	free_line(char **paths, int arc)
 {

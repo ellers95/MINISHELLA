@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:07:20 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:00:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ void	open_infile(t_data *data, int i);
 void	open_outfile(t_data *data, int i, bool append);
 
 /*
-
+ * Opens an input file for redirection or handles here-document setup.
+ * If the token indicates a here-document (<<), it sets up the here-document.
+ * Otherwise, it opens the specified file for input redirection.
+ * Updates the data structure with the new file descriptor.
 */
 void	open_infile(t_data *data, int i)
 {
@@ -57,7 +60,9 @@ void	open_infile(t_data *data, int i)
 }
 
 /*
-
+ * Opens an output file for redirection, either in truncate or append mode.
+ * Creates the file if it doesn't exist, or opens it if it does.
+ * Updates the data structure with the new file descriptor.
 */
 void	open_outfile(t_data *data, int i, bool append)
 {

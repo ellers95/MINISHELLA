@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:05:38 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:05:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	from_files(t_data *data, int i);
 char	*clean_arrows(char *str);
 
 /*
-
+ * Manages file redirection operations in the shell command.
+ * Iterates through tokens to handle input and output redirections.
+ * Calls specific functions for input and output file operations.
 */
 void	file_handling(t_data *data)
 {
@@ -37,7 +39,9 @@ void	file_handling(t_data *data)
 }
 
 /*
-
+ * Handles output file redirections.
+ * Processes '>' for overwrite and '>>' for append operations.
+ * Opens the specified output file and updates the data structure accordingly.
 */
 static inline void	to_files(t_data *data, int i)
 {
@@ -66,7 +70,9 @@ static inline void	to_files(t_data *data, int i)
 }
 
 /*
-
+ * Handles input file redirections and here-documents.
+ * Processes '<' for input files and '<<' for here-documents.
+ * Opens input files or sets up here-documents as needed.
 */
 static inline void	from_files(t_data *data, int i)
 {
@@ -84,7 +90,8 @@ static inline void	from_files(t_data *data, int i)
 }
 
 /*
-
+ * Cleans redirection symbols from token strings.
+ * Removes leading '<' or '>' characters from the given string.
 */
 static inline char	*clean_arrows(char *str)
 {

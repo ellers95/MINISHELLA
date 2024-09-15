@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:06:43 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:15:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ void	clean_files(t_data *data);
 void	exiting(t_data *data, int i);
 
 /*
-
+ * Performs a complete cleanup of the shell's data structures.
+ * Calls clean_struct to reset the main structure, frees the environment
+ * variable linked list, and deallocates the environment string array.
 */
 void	clean_data(t_data *data)
 {
@@ -29,7 +31,9 @@ void	clean_data(t_data *data)
 }
 
 /*
-
+ * Resets and cleans up the main data structure.
+ * Frees tokens, closes file descriptors, and resets counters and flags.
+ * Does not free the environment variables.
 */
 void	clean_struct(t_data *data)
 {
@@ -51,7 +55,9 @@ void	clean_struct(t_data *data)
 }
 
 /*
-
+ * Frees the entire environment variable linked list.
+ * Iterates through the list, freeing each node's key and value,
+ * then frees the node itself.
 */
 void	free_env(t_node	**env)
 {
@@ -89,7 +95,8 @@ static inline void	clean_files(t_data *data)
 }
 
 /*
-
+ * Cleans up file-related resources in the data structure.
+ * Frees arrays holding file descriptors for input and output files.
 */
 void	exiting(t_data *data, int i)
 {

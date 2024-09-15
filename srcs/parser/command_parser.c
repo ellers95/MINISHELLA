@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:07:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/15 23:55:43 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ bool	parse_cmd_line(t_data *data, char **envp);
 bool	init_path(t_data *data);
 
 /*
-
+ * Parses command arguments from the token array.
+ * Allocates memory for and populates the cmd_args array 
+ * in the data structure.
+ * Returns true if parsing is successful, false otherwise.
 */
 bool	parse_cmd_args(t_data *data)
 {
@@ -45,7 +48,10 @@ bool	parse_cmd_args(t_data *data)
 }
 
 /*
-
+ * Parses the command line, processing special characters and expanding paths.
+ * Initializes cmd_paths in the data structure with full command paths.
+ * Uses the provided environment variables for path resolution.
+ * Returns true if parsing is successful, false otherwise.
 */
 bool	parse_cmd_line(t_data *data, char **envp)
 {
@@ -79,7 +85,9 @@ bool	parse_cmd_line(t_data *data, char **envp)
 }
 
 /*
-
+ * Initializes the cmd_paths array in the data structure.
+ * Allocates memory for storing command paths based on the number of tokens.
+ * Returns true if initialization is successful, false if memory allocation fails.
 */
 static inline bool	init_path(t_data *data)
 {

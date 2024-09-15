@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:17:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:00:22 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:18:16 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	handle_quit(int sig);
 int		big_stopping(int get, int newvalue);
 
 /*
-
+ * Sets up signal handlers for the shell.
+ * Configures custom handlers for SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\).
 */
 void	signaling(void)
 {
@@ -36,7 +37,10 @@ void	signaling(void)
 }
 
 /*
-
+ * Handles the SIGINT signal (Ctrl+C).
+ * Behavior differs based on whether the shell is in a heredoc:
+ * - In heredoc: Terminates the heredoc input.
+ * - Otherwise: Displays a new prompt on a new line.
 */
 static inline void	handle_sigint(int sig)
 {
@@ -58,7 +62,8 @@ static inline void	handle_sigint(int sig)
 }
 
 /*
-
+ * Handles the SIGQUIT signal (Ctrl+\).
+ * Currently set up as an empty handler to ignore SIGQUIT.
 */
 static inline void	handle_quit(int sig)
 {
@@ -66,11 +71,8 @@ static inline void	handle_quit(int sig)
 }
 
 /*
-
-*/
-
-/*
-
+ * Manages a global stop flag for the shell.
+ * Used to control execution flow, especially during signal handling.
 */
 int	big_stopping(int get, int newvalue)
 {

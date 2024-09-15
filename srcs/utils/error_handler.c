@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:09:55 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:11:25 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:10:33 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-
+ * Performs cleanup operations and handles errors in the shell.
+ * Closes open file descriptors, frees allocated memory for command paths and tokens,
+ * and releases the main data structure.
+ * This function is typically called when encountering errors or during shell shutdown.
 */
 void	clean_n_errors(t_data *data)
 {

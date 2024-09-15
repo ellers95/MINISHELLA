@@ -17,7 +17,8 @@ char	get_heredoc_status(void);
 void	set_heredoc_status(char status);
 
 /*
-
+ * Internal function to manage the heredoc status.
+ * Provides a static variable to store the current heredoc status.
 */
 static inline char	*_getstatus(void)
 {
@@ -27,7 +28,7 @@ static inline char	*_getstatus(void)
 }
 
 /*
-
+ * Retrieves the current status of heredoc processing.
 */
 char	get_heredoc_status(void)
 {
@@ -35,7 +36,8 @@ char	get_heredoc_status(void)
 }
 
 /*
-
+ * Sets the status of heredoc processing.
+ * Used to indicate whether the shell is currently handling a heredoc.
 */
 void	set_heredoc_status(char status)
 {

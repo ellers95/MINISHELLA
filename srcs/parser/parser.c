@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 19:06:00 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:03:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ void	type_flagger(t_data *data);
 bool	heredoc_check(t_data *data, int i);
 
 /*
- * Creates space for the files and sets flags for pipes and redirections
+ * Main parsing function for the shell input.
+ * Coordinates the parsing process, including 
+ * file storage creation and token type flagging.
  */
 bool	parser(t_data *data)
 {
@@ -29,7 +31,9 @@ bool	parser(t_data *data)
 }
 
 /*
-* Count and allocate space for files
+ * Prepares storage for input and output files.
+ * Counts the number of input and output redirections in the command.
+ * Allocates memory for storing file descriptors based on the counts.
 */
 static inline void	create_file_storage(t_data *data)
 {
@@ -53,7 +57,9 @@ static inline void	create_file_storage(t_data *data)
 }
 
 /*
-* Allocating space for the files
+ * Allocates memory for storing file descriptors.
+ * Creates arrays for input and output file descriptors 
+ * based on counted redirections.
 */
 static inline void	mallocing(t_data *data)
 {
@@ -73,7 +79,9 @@ static inline void	mallocing(t_data *data)
 }
 
 /*
- * Sets flags for redirections and pipes
+ * Sets flags for different types of shell operations.
+ * Identifies and marks pipes, redirections, and 
+ * here-documents in the command.
  */
 static inline void	type_flagger(t_data *data)
 {
@@ -97,7 +105,9 @@ static inline void	type_flagger(t_data *data)
 }
 
 /*
-
+ * Checks and handles here-document syntax.
+ * Verifies the correct format of here-document delimiters.
+ * Initiates here-document processing if syntax is correct.
 */
 static inline bool	heredoc_check(t_data *data, int i)
 {

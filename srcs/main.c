@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/15 18:48:37 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:21:28 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-
+ * The main entry point for the minishell program.
+ * Initializes the shell, sets up the environment,
+ * and runs the main command loop.
 */
 int	main(int argv, char **argc, char **envp)
 {
