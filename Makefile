@@ -6,7 +6,7 @@
 #    By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2024/09/14 23:57:36 by etaattol         ###   ########.fr        #
+#    Updated: 2024/09/16 16:12:49 by etaattol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,24 +15,20 @@ NAME		= 	minishell
 FLAGS		=	-Wall -Wextra -Werror -g -I. #-fsanitize=address
 
 SRCFILES 	= 	main.c \
-
 				executor/executor.c \
 				executor/fd_closer.c \
 				executor/file_redirections.c \
 				executor/path_solver.c \
 				executor/pipe_executor.c \
 				executor/redirection_executor.c \
-				
 				lexer/env_expander.c \
 				lexer/lexer.c \
 				lexer/token_utils.c \
-
 				parser/command_parser.c \
 				parser/heredoc_handler.c \
 				parser/open_files.c \
 				parser/parser.c \
 				parser/redirection_handler.c \
-				
 				builtins/builtin_handler.c \
 				builtins/export_unset.c \
 				builtins/handle_cd.c \
@@ -40,22 +36,19 @@ SRCFILES 	= 	main.c \
 				builtins/handle_env.c \
 				builtins/handle_exit.c \
 				builtins/handle_pwd.c \
-
 				utils/data_manager.c \
 				utils/env_utils_ops.c \
 				utils/env_utils.c \
 				utils/error_handler.c \
 				utils/heredoc_status.c \
 				utils/memory_utils_array.c \
+				utils/memory_utils_extra.c \
 				utils/memory_utils.c \
 				utils/signal_handler.c \
 				utils/string_utils.c \
 				utils/terminal_configuration.c \
-
-				signal/signal_handler.c
 				
 SRCDIR		=	srcs
-PIPEDIR		=	pipes_are_calling
 OBJDIR		=	objs
 
 HEADER		=	minishell.h
@@ -63,12 +56,12 @@ HEADER		=	minishell.h
 LIBFT_DIR	=	./libft
 LIBFT		=	$(LIBFT_DIR)/libft.a
 
-SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES)) \
+SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES))
 
-PSRCS		=	$(addprefix $(PIPEDIR)/, $(PIPEFILES))
+# OBJS		= 	$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS)) \
+# 				$(patsubst $(PIPEDIR)/%.c, $(OBJDIR)/%.o, $(PSRCS))
 
-OBJS		= 	$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS)) \
-				$(patsubst $(PIPEDIR)/%.c, $(OBJDIR)/%.o, $(PSRCS))
+OBJS		= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
 
 ANSI_CYAN 	:= 	\033[0;36m
 ANSI_BLUE 	:= 	\033[0;34m
@@ -81,7 +74,7 @@ $(OBJDIR)/%.o:	$(SRCDIR)/%.c $(HEADER)
 				@mkdir -p $(OBJDIR)
 				@cc $(FLAGS) -o $@ -c $<
 
-$(OBJDIR)/%.o:	$(PIPEDIR)/%.c $(HEADER)
+$(OBJDIR)/%.o:	$(SRCDIR)/*/%.c $(HEADER) 
 				@mkdir -p $(OBJDIR)
 				@cc $(FLAGS) -o $@ -c $<
 
@@ -95,7 +88,6 @@ $(LIBFT):
 
 clean:
 				@rm -rf $(OBJDIR)
-				@rm -f $(PIPEDIR)/*.o   #this is useless i Think#
 				@make -C $(LIBFT_DIR) clean
 				@echo "$(ANSI_RED)Objects and LIB_FT Cleaned$(ANSI_RESET)"
 

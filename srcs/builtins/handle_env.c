@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:48:56 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:40:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	handle_env(t_data *data, t_node *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	while (data->tok_num > 0)
-		token_cleaner(data, 0);
-	if (data->is_rdr)
+	while (data->token_count > 0)
+		remove_token_and_shift_array(data, 0);
+	if (data->has_redirection)
 		exit (0);
 }

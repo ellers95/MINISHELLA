@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:46:52 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:41:27 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@
 */
 int	handle_pwd(t_data *data)
 {
-	char	*buf;
+	char	*current_directory;
 
-	token_cleaner(data, 0);
-	buf = getcwd(NULL, 0);
-	if (!buf)
+	remove_token_and_shift_array(data, 0);
+	current_directory = getcwd(NULL, 0);
+	if (!current_directory)
 	{
-		data->last_exit_status = 1;
+		data->last_command_exit_status = 1;
 		return (1);
 	}
-	printf("%s\n", buf);
-	data->last_exit_status = 0;
-	if (data->is_rdr)
+	printf("%s\n", current_directory);
+	data->last_command_exit_status = 0;
+	if (data->has_redirection)
 		exit (0);
 	return (0);
 }

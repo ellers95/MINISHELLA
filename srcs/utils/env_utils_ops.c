@@ -6,17 +6,19 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:11:05 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:06:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		add_end(t_node **stack, char *str);
-char	**list_to_eepie(t_node **env);
+char	**env_list_to_array(t_node **env);
 
 /*
-
+ * Adds a new node to the end of the linked list (stack).
+ * Parses the input string to create a new environment variable node.
+ * If the list is empty, initializes it with the new node.
 */
 int	add_end(t_node **stack, char *str)
 {
@@ -43,9 +45,11 @@ int	add_end(t_node **stack, char *str)
 }
 
 /*
-
+ * Converts the linked list of environment variables to an array of strings.
+ * Each string in the array is in the format "KEY=VALUE".
+ * This array format is typically used for execve() and similar functions.
 */
-char	**list_to_eepie(t_node **env)
+char	**env_list_to_array(t_node **env)
 {
 	int		len;
 	int		i;

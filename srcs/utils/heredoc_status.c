@@ -12,31 +12,30 @@
 
 #include "minishell.h"
 
-static inline char	*_getstatus(void);
-char    			get_heredoc_status(void);
-void    			set_heredoc_status(char status);
-
 /*
-
+ * Internal function to manage the heredoc status.
+ * Provides a static variable to store the current heredoc status.
 */
-static inline char	*_getstatus(void)
+static inline char	*get_heredoc_status_ptr(void)
 {
 	static char	status = 0;
+
 	return (&status);
 }
 
 /*
-
+ * Retrieves the current status of heredoc processing.
 */
-char    get_heredoc_status(void)
+char	get_heredoc_status(void)
 {
-		return (*_getstatus());
+	return (*get_heredoc_status_ptr());
 }
 
 /*
-
+ * Sets the status of heredoc processing.
+ * Used to indicate whether the shell is currently handling a heredoc.
 */
-void    set_heredoc_status(char status)
+void	set_heredoc_status(char status)
 {
-	*_getstatus() = status;
+	*get_heredoc_status_ptr() = status;
 }

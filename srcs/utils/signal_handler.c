@@ -6,41 +6,39 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:17:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:07:57 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:27:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    			signaling(void);
 static inline void	handle_sigint(int sig);
 static inline void	handle_quit(int sig);
-static inline int	event_hook(void);
-int 				big_stopping(int get, int newvalue);
 
 /*
-
+ * Sets up signal handlers for the shell.
+ * Configures custom handlers for SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\).
 */
-void    signaling(void)
+void	signaling(void)
 {
-    struct sigaction    sa_int;
-    struct sigaction    sa_quit;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
 
-    sigemptyset(&sa_int.sa_mask);
-    sigemptyset(&sa_quit.sa_mask);
-
-
-    sa_int.sa_handler = handle_sigint;
+	sigemptyset(&sa_int.sa_mask);
+	sigemptyset(&sa_quit.sa_mask);
+	sa_int.sa_handler = handle_sigint;
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
-
 	sa_quit.sa_handler = handle_quit;
 	sa_quit.sa_flags = 0;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 /*
-
+ * Handles the SIGINT signal (Ctrl+C).
+ * Behavior differs based on whether the shell is in a heredoc:
+ * - In heredoc: Terminates the heredoc input.
+ * - Otherwise: Displays a new prompt on a new line.
 */
 static inline void	handle_sigint(int sig)
 {
@@ -50,7 +48,7 @@ static inline void	handle_sigint(int sig)
 		write(STDOUT_FILENO, "^C\n", 3);
 		rl_done = 1;
 		close(STDIN_FILENO);
-		big_stopping(SET, 1);
+		get_set_stop_flag(SET, 1);
 	}
 	else
 	{
@@ -62,7 +60,8 @@ static inline void	handle_sigint(int sig)
 }
 
 /*
-
+ * Handles the SIGQUIT signal (Ctrl+\).
+ * Currently set up as an empty handler to ignore SIGQUIT.
 */
 static inline void	handle_quit(int sig)
 {
@@ -70,25 +69,16 @@ static inline void	handle_quit(int sig)
 }
 
 /*
-
+ * Manages a global stop flag for the shell.
+ * Used to control execution flow, especially during signal handling.
 */
-static inline int	event_hook(void)
-{
-	rl_variable_bind("enable-bracketed-paste", "off");
-	return (0);
-}
-
-/*
-
-*/
-int big_stopping(int get, int newvalue)
+int	get_set_stop_flag(int get, int newvalue)
 {
 	static int	stopper = 0;
 
 	if (get)
-		return stopper;
+		return (stopper);
 	else
 		stopper = newvalue;
-	return stopper;
+	return (stopper);
 }
-

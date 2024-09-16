@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:05:06 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:11:21 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:06:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,34 @@
 
 void	load_list(t_data *data, char **envp);
 t_node	*find_last(t_node	*stack);
-t_node	*parse_str(t_node *node, char *str);
+t_node	*parse_str(t_node *node, char *env_str);
 int		stack_len(t_node *stack);
 void	remove_node(t_node *node);
 
 /*
-
+ * Initializes the environment variable linked list from the provided envp array.
+ * Iterates through the envp array, adding each environment variable to the list.
 */
 void	load_list(t_data *data, char **envp)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (envp[i])
-    {
-        if (add_end(&data->env, envp[i]))
-        {
-            free_env(&data->env);
-            write(1, "Error\n", 6);
-            exit(1);
-        }
-        i++;
-    }
+	i = 0;
+	while (envp[i])
+	{
+		if (add_end(&data->env, envp[i]))
+		{
+			free_env(&data->env);
+			write(1, "Error\n", 6);
+			exit(1);
+		}
+		i++;
+	}
 	return ;
 }
 
 /*
-
+* Finds and returns the last node in the linked list.
 */
 t_node	*find_last(t_node	*stack)
 {
@@ -55,33 +56,34 @@ t_node	*find_last(t_node	*stack)
 }
 
 /*
-
+ * Parses a string into key and value components for an environment variable.
+ * Splits the string at the '=' character, if present.
 */
-t_node   *parse_str(t_node *node, char *str)
+t_node	*parse_str(t_node *node, char *env_str)
 {
-    char *split;
-    int i;
+	char	*split;
+	int		i;
 
-    i = 0;    
-    split = ft_strchr(str, '=');
-    if (!split)
-    {
-        node->value = NULL;
-        node->key = ft_strdup(str);
-    }
-    else
-    {
-        i = split - str;
-        split++;
-        node->value = ft_strdup(split);
-        str[i] = '\0';
-        node->key = ft_strdup(str);
-    }
-    return (node);
+	i = 0;
+	split = ft_strchr(env_str, '=');
+	if (!split)
+	{
+		node->value = NULL;
+		node->key = ft_strdup(env_str);
+	}
+	else
+	{
+		i = split - env_str;
+		split++;
+		node->value = ft_strdup(split);
+		env_str[i] = '\0';
+		node->key = ft_strdup(env_str);
+	}
+	return (node);
 }
 
 /*
-
+ * Counts the number of nodes in the linked list.
 */
 int	stack_len(t_node *stack)
 {
@@ -99,12 +101,13 @@ int	stack_len(t_node *stack)
 }
 
 /*
-
+ * Removes a specified node from the linked list and frees its memory.
+ * Adjusts the links of surrounding nodes to maintain list integrity.
 */
 void	remove_node(t_node *node)
 {
 	t_node	*temp;
-	
+
 	if (!node->prev && !node->next)
 	{
 		(void)temp;

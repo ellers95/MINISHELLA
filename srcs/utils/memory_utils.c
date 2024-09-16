@@ -6,22 +6,20 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/15 00:12:13 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void 				clean_data(t_data *data);
-void				clean_struct(t_data *data);
-void				free_env(t_node	**env);
-static inline void 	clean_files(t_data *data);
-void    			exiting(t_data *data, int i);
+static inline void	clean_files(t_data *data);
 
 /*
-
+ * Performs a complete cleanup of the shell's data structures.
+ * Calls clean_struct to reset the main structure, frees the environment
+ * variable linked list, and deallocates the environment string array.
 */
-void clean_data(t_data *data)
+void	clean_data(t_data *data)
 {
 	clean_struct(data);
 	free_env(&data->env);
@@ -29,38 +27,39 @@ void clean_data(t_data *data)
 }
 
 /*
-
+ * Resets and cleans up the main data structure.
+ * Frees tokens, closes file descriptors, and resets counters and flags.
+ * Does not free the environment variables.
 */
 void	clean_struct(t_data *data)
 {
-	if (data->tok_num > 0)
-		token_cleaner(data, 0);
-
+	if (data->token_count > 0)
+		remove_token_and_shift_array(data, 0);
 	clean_files(data);
-	if(data->pipes != NULL)
+	if (data->pipes != NULL)
 	{
 		free(data->pipes);
 		data->pipes = NULL;
 	}
-	data->tok_num = 0;
-	data->infile_count = 0;
-	data->outfile_count = 0;
+	data->token_count = 0;
+	data->input_file_count = 0;
+	data->output_file_count = 0;
 	data->fd_input = -1;
 	data->fd_output = -1;
-	data->prev_fd[0] = -1;
-	data->prev_fd[1] = -1;
-
+	data->previous_pipe_fd[0] = -1;
+	data->previous_pipe_fd[1] = -1;
 }
 
 /*
-
+ * Frees the entire environment variable linked list.
+ * Iterates through the list, freeing each node's key and value,
+ * then frees the node itself.
 */
 void	free_env(t_node	**env)
 {
 	t_node	*temp;
 	t_node	*curr;
 
-   
 	curr = *env;
 	temp = NULL;
 	while (curr)
@@ -77,25 +76,25 @@ void	free_env(t_node	**env)
 /*
 
 */
-static inline void clean_files(t_data *data)
+static inline void	clean_files(t_data *data)
 {
-	if (data->in_files != NULL)
+	if (data->input_file_fds != NULL)
 	{
-		free(data->in_files);
-		data->in_files = NULL;
+		free(data->input_file_fds);
+		data->input_file_fds = NULL;
 	}
-
-	if(data->out_files != NULL)
+	if (data->output_file_fds != NULL)
 	{
-		free(data->out_files);
-		data->out_files = NULL;
+		free(data->output_file_fds);
+		data->output_file_fds = NULL;
 	}
 }
 
 /*
-
+ * Cleans up file-related resources in the data structure.
+ * Frees arrays holding file descriptors for input and output files.
 */
-void    exiting(t_data *data, int i)
+void	exiting(t_data *data, int i)
 {
 	clean_data(data);
 	exit(i);

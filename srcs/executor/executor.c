@@ -6,39 +6,30 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/14 23:41:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:35:03 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool    execution(t_data *data);
-bool    handle_commands(t_data *data, char **envp);
-void	execute_command(t_data *data, char **envp, int index);
 
 /*
 * Main execution function for the shell.
 * Orchestrates the overall command execution process.
 * Handles built-ins, redirections, and piped commands.
 */
-bool execution(t_data *data)
+bool	execution(t_data *data)
 {
-    if (!data->is_rdr && !data->is_pipe)
-        built_ins(data);
-    
-    token_merge(data);
-
-    if (data->is_heredoc)
-        big_stopping(SET, 0);
-    
-    if (data->is_rdr && !data->is_pipe)
-        redirections(data);
-    
-    if (data->tok_num > 0)
-        pipex(data);   
-    
-    clean_struct(data);	
-	return true;
+	if (!data->has_redirection && !data->is_pipe)
+		builtins(data);
+	token_merge(data);
+	if (data->is_heredoc)
+		get_set_stop_flag(SET, 0);
+	if (data->has_redirection && !data->is_pipe)
+		handle_redirections(data);
+	if (data->token_count > 0)
+		execute_pipeline(data);
+	clean_struct(data);
+	return (true);
 }
 
 /*
@@ -47,16 +38,16 @@ bool execution(t_data *data)
 */
 bool	handle_commands(t_data *data, char **envp)
 {
-	if (data->is_rdr)
-		redirections(data);
-	if (!parse_cmd_line(data, envp))
+	if (data->has_redirection)
+		handle_redirections(data);
+	if (!parse_command_line(data, envp))
 	{
-		clean_n_errors(data);
+		cleanup_and_handle_errors(data);
 		return (false);
 	}
-	if (!parse_cmd_args(data))
+	if (!parse_command_arguments(data))
 	{
-		clean_n_errors(data);
+		cleanup_and_handle_errors(data);
 		return (false);
 	}
 	return (true);
@@ -68,33 +59,33 @@ bool	handle_commands(t_data *data, char **envp)
 */
 void	execute_command(t_data *data, char **envp, int index)
 {
-	char **cmd_args;
+	char	**command_arguments;
 
-	cmd_args = ft_split(data->token[index], ' ');
-	if (cmd_args == NULL || cmd_args[0] == NULL)
+	command_arguments = ft_split(data->token[index], ' ');
+	if (command_arguments == NULL || command_arguments[0] == NULL)
 	{
 		ft_printf("Failed to split command arguments\n");
 		exiting(data, 1);
 	}
-	if (!ft_strncmp(cmd_args[0], "exit", 5))
+	if (!ft_strncmp(command_arguments[0], "exit", 5))
 	{
 		handle_exit(data);
-		free(cmd_args);
+		free(command_arguments);
 		exiting(data, 0);
 	}
-	if(data->cmd_paths[index])
+	if (data->command_paths[index])
 	{
-			execve(data->cmd_paths[index], cmd_args, envp);
-			ft_printf("Failed to execute command: %s\n", strerror(errno));
-			free_argh(cmd_args);
-			exiting(data, 126);
+		execve(data->command_paths[index], command_arguments, envp);
+		ft_printf("Failed to execute command: %s\n", strerror(errno));
+		free_args(command_arguments);
+		exiting(data, 126);
 	}
 	else
 	{
 		ft_printf("Command not found\n");
-		free_argh(cmd_args);
+		free_args(command_arguments);
 		exiting(data, 127);
 	}
-	free_argh(cmd_args);
+	free_args(command_arguments);
 	exiting(data, 1);
 }
