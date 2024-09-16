@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 02:00:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:02:59 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	lexer(char *input_str, t_data *data);
-int		count_tokens(char *input_str);
-void	delete_quotes(t_data *data);
-int		handle_quote(char *input_str, char *current_quote, int i);
-int		empties(char c);
+//bool	lexer(char *input_str, t_data *data);
+static inline int	count_tokens(char *input_str);
+static inline void	delete_quotes(t_data *data);
+static inline int	handle_quote(char *input_str, char *current_quote, int i);
+static inline int	empties(char c);
 
 /*
 * Main lexical analysis function.
@@ -38,7 +38,7 @@ bool	lexer(char *input_str, t_data *data)
 		return (false);
 	while (token_index < data->token_count && input_str[char_index])
 	{
-		while (input_str[char_index] && empties(str[char_index]))
+		while (input_str[char_index] && empties(input_str[char_index]))
 			char_index++;
 		if (input_str[char_index])
 		{

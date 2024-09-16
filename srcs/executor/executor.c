@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:04:48 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:30:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	execution(t_data *data);
-bool	handle_commands(t_data *data, char **envp);
-void	execute_command(t_data *data, char **envp, int index);
+//bool	execution(t_data *data);
+//bool	handle_commands(t_data *data, char **envp);
+//void	execute_command(t_data *data, char **envp, int index);
 
 /*
 * Main execution function for the shell.

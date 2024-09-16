@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:02:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:08:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	parser(t_data *data);
-void	create_file_storage(t_data *data);
-void	allocate_file_descriptors(t_data *data);
-void	type_flagger(t_data *data);
-bool	heredoc_check(t_data *data, int i);
+//bool	parser(t_data *data);
+static inline void	create_file_storage(t_data *data);
+static inline void	allocate_file_descriptors(t_data *data);
+static inline void	type_flagger(t_data *data);
+static inline bool	heredoc_check(t_data *data, int i);
 
 /*
  * Main parsing function for the shell input.

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:26:05 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:35:01 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	parse_command_arguments(t_data *data);
-bool	parse_cmd_line(t_data *data, char **envp);
-bool	init_path(t_data *data);
+//bool	parse_command_arguments(t_data *data);
+//bool	parse_cmd_line(t_data *data, char **envp);
+//bool	init_path(t_data *data);
 
 /*
  * Parses command arguments from the token array.
@@ -44,6 +44,19 @@ bool	parse_command_arguments(t_data *data)
 		i++;
 	}
 	data->command_arguments[i] = NULL;
+	return (true);
+}
+
+/*
+ * Initializes the command_paths array in the data structure.
+ * Allocates memory for storing command paths based on the number of tokens.
+ * Returns true if initialization is successful, false if memory allocation fails.
+*/
+static inline bool	init_path(t_data *data)
+{
+	data->command_paths = ft_calloc(data->token_count, sizeof(char *));
+	if (!data->command_paths)
+		return (false);
 	return (true);
 }
 
@@ -84,15 +97,3 @@ bool	parse_cmd_line(t_data *data, char **envp)
 	return (true);
 }
 
-/*
- * Initializes the command_paths array in the data structure.
- * Allocates memory for storing command paths based on the number of tokens.
- * Returns true if initialization is successful, false if memory allocation fails.
-*/
-static inline bool	init_path(t_data *data)
-{
-	data->command_paths = ft_calloc(data->token_count - 1, sizeof(char *));
-	if (!data->command_paths)
-		return (false);
-	return (true);
-}

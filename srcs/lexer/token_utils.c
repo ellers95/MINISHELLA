@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:48:43 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:49:44 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			token_merge(t_data *data);
-void			token_cleaner(t_data *data, int i);
+//void			token_merge(t_data *data);
+//void			token_cleaner(t_data *data, int i);
 static inline bool	valid(t_data *data, int j);
 static inline void	merge_it(t_data *data, int i, int j);
-bool			check_specials(char *token);
+//bool			check_specials(char *token);
 
 /*
 * Merges adjacent tokens that should be considered as a single unit.

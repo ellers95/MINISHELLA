@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   path_solver.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:56:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:41:39 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:48:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char			*get_command_path(char *command_name, char **envp);
+//char			*get_command_path(char *command_name, char **envp);
 static inline char	**find_path_directories(char **envp);
 static inline char	*extract_env_value(char *path, char **envp);
 static inline char	*construct_and_check_path(char *directory, char *path_name);
@@ -88,7 +88,7 @@ static inline char	*construct_and_check_path(char *directory, char *path_name)
 	char	*full_command_path;
 
 	path_with_slash = ft_strjoin(directory, "/");
-	if (!oneline)
+	if (!path_with_slash)
 		return (NULL);
 	full_command_path = ft_strjoin(path_with_slash, path_name);
 	free(path_with_slash);

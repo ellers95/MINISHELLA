@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   terminal_configuration.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:06:03 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:20:41 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:05:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

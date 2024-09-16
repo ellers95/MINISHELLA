@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   file_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:59:40 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:02:28 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:30:31 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	redirect_file_input(t_data *data);
-bool	redirect_file_output(t_data *data);
+//bool	redirect_file_input(t_data *data);
+//bool	redirect_file_output(t_data *data);
 
 /*
  * Redirects input from a file to standard input.

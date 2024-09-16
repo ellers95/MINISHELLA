@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:09:03 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:05:54 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	clean_data(t_data *data);
-void	clean_struct(t_data *data);
-void	free_env(t_node	**env);
-void	clean_files(t_data *data);
-void	exiting(t_data *data, int i);
+//void	clean_data(t_data *data);
+//void	clean_struct(t_data *data);
+//void	free_env(t_node	**env);
+static inline void	clean_files(t_data *data);
+//void	exiting(t_data *data, int i);
 
 /*
  * Performs a complete cleanup of the shell's data structures.

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_executor.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:26:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:49:36 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			redirections(t_data *data);
+//void			redirections(t_data *data);
 static inline void	execute_rdr(t_data *data, char **envp);
 static inline void	close_files(t_data *data);
 static inline void	dupper(t_data *data);

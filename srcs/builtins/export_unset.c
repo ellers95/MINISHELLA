@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   export_unset.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:01:53 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:13:59 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:10:00 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			handle_export(t_data *data);
-void			handle_unset(t_data *data, t_node **env);
+//void			handle_export(t_data *data);
+//void			handle_unset(t_data *data, t_node **env);
 static inline void	handle_export_no_args(t_data *data, t_node *env);
 static inline void	add_to_env(t_data *data, t_node *env, char *value_start, int key_length);
 static inline void	search_env(t_data *data, t_node *env, char *value_start, int key_length);
@@ -64,20 +64,20 @@ void	handle_unset(t_data *data, t_node **env)
 	while (data->token_count >= 1)
 	{
 		current_node = *env;
-		while (node->next)
+		while (current_node->next)
 		{
-			if (!ft_strcmp(node->key, data->token[0]))
+			if (!ft_strcmp(current_node->key, data->token[0]))
 			{
-				printf("key = %s\n", node->key);
+				printf("key = %s\n", current_node->key);
 				token_cleaner(data, 0);
-				free(node->key);
-				free(node->value);
-				node->key = NULL;
-				node->value = NULL;
+				free(current_node->key);
+				free(current_node->value);
+				current_node->key = NULL;
+				current_node->value = NULL;
 				remove_node(current_node);
 				break ;
 			}
-			current_node = node->next;
+			current_node = current_node->next;
 		}
 	}
 	if (data->has_redirection)

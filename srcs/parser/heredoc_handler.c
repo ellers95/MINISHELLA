@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-void	find_doc(t_data *data, int tk_i);
-void	handle_the_doc(const char *delimiter, t_data *data);
-char	*find_delimiter(t_data *data);
+//void	find_doc(t_data *data, int tk_i);
+//void	handle_the_doc(const char *delimiter, t_data *data);
+//char	*find_delimiter(t_data *data);
 char	*readline_wrapper(const char *prompt, t_data *data);
-char	*clean_delimiter(char *str);
+static inline char	*clean_delimiter(char *str);
 
 /*
  * Locates and processes a here-document in the command.

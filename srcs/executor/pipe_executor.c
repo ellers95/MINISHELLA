@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_executor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:48:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:55:33 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:52:10 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pipex(t_data *data);
-int		create_child(t_data *data, char **envp, int command_index);
-bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index);
-void	redirect_input(t_data *data, int index);
-void	redirect_output(t_data *data, int fd[2], int index);
+//void	pipex(t_data *data);
+static inline int	create_child(t_data *data, char **envp, int command_index);
+static inline bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index);
+static inline void	redirect_input(t_data *data, int index);
+static inline void	redirect_output(t_data *data, int fd[2], int index);
 
 /*
 * Implements pipe functionality for command execution.
@@ -64,7 +64,7 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 	int		is_last_command;
 	int		status;
 
-	is_last_command = (command_index == data->token_count) - 1;
+	is_last_command = (command_index == data->token_count - 1);
 	if (!fork_it(data, fd, &pid, command_index))
 		return (false);
 	if (pid == 0)

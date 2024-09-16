@@ -37,11 +37,3 @@ reorganise minishell.h
 norminette heredoc and rename
 
 
-unused funcions:
-handle_sigint_s(int sig);
-init_pipes
-pipe_helper
-empty_prompt
-check_arguments
-get_infile
-get_outfile

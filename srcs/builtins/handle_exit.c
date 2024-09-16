@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 02:23:05 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:48:58 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static inline size_t	exit_code_calculator(char *argv);
 static inline void	perform_exit(t_data *data);
-void			handle_exit(t_data *data);
+//void			handle_exit(t_data *data);
 
 /*
 * Converts a string argument to an exit code.

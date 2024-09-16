@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   env_expander.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:05:09 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 01:20:13 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:55:42 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*env_variable_check(char *input_str, t_node *env, t_data *data);
-t_node	*find_key(char *key, t_node *env);
-char	*expand_var(char *str, t_node *env, t_data *data);
+//char	*env_variable_check(char *input_str, t_node *env, t_data *data);
+//t_node	*find_key(char *key, t_node *env);
+static inline char	*expand_var(char *str, t_node *env, t_data *data);
+static inline t_node	*find_key(char *key, t_node *env);
 
 /*
 * Checks for and expands environment variables in a given string.
