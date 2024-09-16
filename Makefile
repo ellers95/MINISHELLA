@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2024/09/16 16:12:49 by etaattol         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME		= 	minishell
 
 FLAGS		=	-Wall -Wextra -Werror -g -I. #-fsanitize=address
@@ -57,9 +45,6 @@ LIBFT_DIR	=	./libft
 LIBFT		=	$(LIBFT_DIR)/libft.a
 
 SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES))
-
-# OBJS		= 	$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS)) \
-# 				$(patsubst $(PIPEDIR)/%.c, $(OBJDIR)/%.o, $(PSRCS))
 
 OBJS		= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 13:31:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:12:27 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static size_t	exit_code_calculator(char *argv)
 	result = 0;
 	while (argv[char_index] != '\0')
 	{
-		if (!isdigit(argv[char_index]))
+		if (!ft_isdigit(argv[char_index]))
 			return (0);
 		char_index++;
 	}
