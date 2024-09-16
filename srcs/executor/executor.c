@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:35:03 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:04:58 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,7 @@ void	execute_command(t_data *data, char **envp, int index)
 		free_args(command_arguments);
 		exiting(data, 126);
 	}
-	else
-	{
-		ft_printf("Command not found\n");
-		free_args(command_arguments);
-		exiting(data, 127);
-	}
+	ft_printf("Command not found\n");
 	free_args(command_arguments);
-	exiting(data, 1);
+	exiting(data, 127);
 }

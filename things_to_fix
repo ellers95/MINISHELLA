@@ -5,3 +5,60 @@ ls >p
 Error!: Error opening output file: Permission denied
 b  bananatests	ELLA  libft  Makefile  minishell  minishell.h  o  objs	p  README.md  srcs  things_to_fix  u  v  y
 shouldn't do ls if you don't have the permission to p
+
+
+
+functions that are over 25 lines
+
+lexer:
+
+bool				lexer(char *input_str, t_data *data)
+
+static inline int	count_tokens(char *input_str)
+
+static inline void	delete_quotes(t_data *data)
+
+
+parser:
+
+bool	parse_command_line(t_data *data, char **envp)
+
+void	handle_heredoc(const char *delimiter, t_data *data)
+
+void	setup_input_redirection(t_data *data, int i)
+
+
+utils:
+
+char	**env_list_to_array(t_node **env)
+
+void	remove_node(t_node *node)
+
+
+main:
+
+int	main(int argv, char **argc, char **envp)
+
+
+remove the second 
+
+$(OBJDIR)/%.o:	$(SRCDIR)/%.c $(HEADER) 
+				@mkdir -p $(OBJDIR)
+				@cc $(FLAGS) -o $@ -c $<
+
+from makefile it was for pipefiles
+
+
+
+
+
+pipes and has_input
+deleted from the bana struct since they're not being used
+
+deleted if (data->pipes != NULL)
+	{
+		free(data->pipes);
+		data->pipes = NULL;
+	}
+
+it's not allocated anywhere or use anywhere

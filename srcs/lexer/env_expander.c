@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expander.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:05:09 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 13:23:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:51:13 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ static inline char	*expand_single_env_variable(char *str, t_node *env, t_data *d
 	t_node	*env_var;
 
 	var_name = extract_variable_name(str);
+	expanded_value = NULL;
 	if (!var_name)
 		return (str);
-	expanded_value = NULL;
 	env_var = find_env_variable(var_name, env);
 	if (env_var && env_var->value)
 		expanded_value = ft_strdup(env_var->value);
@@ -94,18 +94,14 @@ static inline char	*expand_single_env_variable(char *str, t_node *env, t_data *d
 		expanded_value = handle_special_variable(var_name, data);
 	if (expanded_value)
 	{
-		if (ft_strlen(expanded_value) <= ft_strlen(str))
-			ft_strlcpy(str, expanded_value, ft_strlen(expanded_value) + 1);
+		if (ft_strlen(expanded_value) > ft_strlen(str))
+			str = expanded_value;
 		else
 		{
-			free(str);
-			str = expanded_value;
-			expanded_value = NULL;
+			ft_strlcpy(str, expanded_value, ft_strlen(expanded_value) + 1);
+			free(expanded_value);
 		}
 	}
-	else
-		printf("Variable not found or has no value: %s\n", var_name);
 	free(var_name);
-	free(expanded_value);
 	return (str);
 }

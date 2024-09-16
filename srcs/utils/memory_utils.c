@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:31:26 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:39:08 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@ void	clean_struct(t_data *data)
 	if (data->token_count > 0)
 		remove_token_and_shift_array(data, 0);
 	clean_files(data);
-	if (data->pipes != NULL)
-	{
-		free(data->pipes);
-		data->pipes = NULL;
-	}
 	data->token_count = 0;
 	data->input_file_count = 0;
 	data->output_file_count = 0;

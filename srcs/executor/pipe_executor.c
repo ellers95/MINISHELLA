@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_executor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:48:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:46:03 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:28:41 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static inline int	create_child(t_data *data, char **envp, int command_index);
+static inline void	handle_parent_process(t_data *data, int fd[2], int command_index, int is_last_command);
+static inline void	handle_child_process(t_data *data, char **envp, int command_index, int fd[2]);
 static inline bool	create_pipe_and_fork(t_data *data, int fd[2], pid_t *pid, int index);
 static inline void	redirect_input(t_data *data, int index);
 static inline void	redirect_output(t_data *data, int fd[2], int index);
@@ -41,11 +43,8 @@ void	execute_pipeline(t_data *data)
 		i++;
 	}
 	i = 0;
-	while (i < data->token_count)
-	{
+	while (i++ < data->token_count)
 		waitpid(-1, &status, 0);
-		i++;
-	}
 	if (WIFEXITED(status))
 		data->last_command_exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -61,14 +60,42 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 	pid_t	pid;
 	int		fd[2];
 	int		is_last_command;
-	int		status;
 
-	is_last_command = (command_index == data->token_count - 1); //// used to be like this is_last_command = (command_index == data->token_count) - 1;
+	is_last_command = (command_index == data->token_count - 1);
 	if (!create_pipe_and_fork(data, fd, &pid, command_index))
 		return (false);
 	if (pid == 0)
 	{
-		if (data->has_redirection)
+		handle_child_process(data, envp, command_index, fd);
+		exit (1);
+	}
+	else
+		handle_parent_process(data, fd, command_index, is_last_command);
+	return (true);
+}
+	
+static inline void	handle_parent_process(t_data *data, int fd[2], int command_index, int is_last_command)
+{
+	int	status;
+	
+	if (command_index > 0)
+		close(data->previous_pipe_fd[0]);
+	if (!is_last_command)
+	{
+		data->previous_pipe_fd[0] = fd[0];
+		close(fd[1]);
+	}
+	else
+	{
+		close_pipe_fds(fd);
+		waitpid(-1, &status, 0);
+		data->last_command_exit_status = WEXITSTATUS(status);
+	}
+}
+
+static inline void	handle_child_process(t_data *data, char **envp, int command_index, int fd[2])
+{
+	if (data->has_redirection)
 		{
 			if (!redirect_file_input(data))
 				redirect_input(data, command_index);
@@ -79,27 +106,8 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 			redirect_input(data, command_index);
 			redirect_output(data, fd, command_index);
 		}
-		execute_command(data, envp, command_index);
-		exit (1);
-	}
-	else
-	{
-		if (command_index > 0)
-			close(data->previous_pipe_fd[0]);
-		if (!is_last_command)
-		{
-			data->previous_pipe_fd[0] = fd[0];
-			close(fd[1]);
-		}
-		else
-		{
-			close_pipe_fds(fd);
-			waitpid(pid, &status, 0);
-			data->last_command_exit_status = WEXITSTATUS(status);
-		}
-	}
-	return (true);
-}
+		execute_command(data, envp, command_index);	
+}	
 
 /*
 * Creates a pipe and forks a new process.

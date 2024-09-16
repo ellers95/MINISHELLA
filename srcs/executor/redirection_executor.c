@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_executor.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:25:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:41:09 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static inline void	execute_command_with_redirections(t_data *data, char **envp);
+static inline void	execute_child_with_redirections(t_data *data, char **envp);
 static inline void	close_redirection_files(t_data *data);
 static inline void	setup_redirection_file_descriptors(t_data *data);
 
@@ -49,11 +50,7 @@ static inline void	execute_command_with_redirections(t_data *data, char **envp)
 {
 	pid_t	pid;
 	int		status;
-	char	*path;
-	char	**command_arguments;
 
-	command_arguments = NULL;
-	path = NULL;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -62,28 +59,7 @@ static inline void	execute_command_with_redirections(t_data *data, char **envp)
 	}
 	if (pid == 0)
 	{
-		setup_redirection_file_descriptors(data);
-		close_redirection_files(data);
-		command_arguments = ft_split(data->token[0], ' ');
-		if (command_arguments == NULL)
-		{
-			ft_printf("Bnanas! Failed to split the command arguments\n");
-			free_stuff(command_arguments, path);
-			exiting(data, 1);
-		}
-		path = get_command_path(command_arguments[0], envp);
-		if (!path)
-		{
-			printf("%s\n", command_arguments[0]);
-			builtins(data);
-			perror("Error: Command is Error:");
-			free_stuff(command_arguments, NULL);
-			exiting(data, 126);
-		}
-		builtins(data);
-		remove_token_and_shift_array(data, 0);
-		execve(path, command_arguments, envp);
-		free_stuff(command_arguments, path);
+		execute_child_with_redirections(data, envp);
 		exiting(data, -1);
 	}
 	else
@@ -91,6 +67,36 @@ static inline void	execute_command_with_redirections(t_data *data, char **envp)
 		waitpid(pid, &status, 0);
 		data->last_command_exit_status = WEXITSTATUS(status);
 	}
+
+}
+
+static inline void	execute_child_with_redirections(t_data *data, char **envp)
+{
+	char	*path;
+	char	**command_arguments;
+
+	setup_redirection_file_descriptors(data);
+	close_redirection_files(data);
+	command_arguments = ft_split(data->token[0], ' ');
+	if (command_arguments == NULL)
+	{
+		ft_printf("Error: Failed to split the command arguments\n");
+		free_stuff(command_arguments, NULL);
+		exiting(data, 1);
+	}
+	path = get_command_path(command_arguments[0], envp);
+	if (!path)
+	{
+		printf("%s\n", command_arguments[0]);
+		builtins(data);
+		perror("Error: Command is Error:");
+		free_stuff(command_arguments, NULL);
+		exiting(data, 126);
+	}
+	builtins(data);
+	remove_token_and_shift_array(data, 0);
+	execve(path, command_arguments, envp);
+	free_stuff(command_arguments, path);
 }
 
 /*

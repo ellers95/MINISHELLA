@@ -1,6 +1,6 @@
 NAME		= 	minishell
 
-FLAGS		=	-Wall -Wextra -Werror -g -I. #-fsanitize=address
+FLAGS		=	-Wall -Wextra -Werror -Wunused-function -g -I. #-fsanitize=address
 
 SRCFILES 	= 	main.c \
 				executor/executor.c \
@@ -46,7 +46,7 @@ LIBFT		=	$(LIBFT_DIR)/libft.a
 
 SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES))
 
-OBJS		= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
+OBJS		= 	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
 
 ANSI_CYAN 	:= 	\033[0;36m
 ANSI_BLUE 	:= 	\033[0;34m

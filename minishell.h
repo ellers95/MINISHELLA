@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:25:37 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 01:00:36 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,9 @@ typedef struct s_data
 	int		output_file_count;
 	char	**command_paths;
 	char	**command_arguments;
-	int		**pipes;
 	int		previous_pipe_fd[2];
 	int		fd_output;
 	int		fd_input;
-	bool	has_input;
 	int		original_stdin;
 	int		heredoc_interrupted;
 	int		last_command_exit_status;
