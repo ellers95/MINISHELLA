@@ -6,16 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:17:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:05:36 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:27:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void	signaling(void);
 static inline void	handle_sigint(int sig);
 static inline void	handle_quit(int sig);
-//int		get_set_stop_flag(int get, int newvalue);
 
 /*
  * Sets up signal handlers for the shell.

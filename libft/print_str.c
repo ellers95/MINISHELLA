@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   print_str.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 15:12:21 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/06 15:22:26 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/30 15:48:59 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 13:25:12 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+int	print_str(char *str, int *check)
 {
-	if (!lst || !del || !(*lst))
-		return ;
-	ft_lstclear(&(*lst)->next, del);
-	(del)((*lst)->content);
-	free(*lst);
-	*lst = NULL;
+	int	len;
+
+	if (!str)
+		return (write(1, "(null)", 6));
+	len = ft_strlen(str);
+	if (write(1, str, len) == -1)
+	{
+		*check = -1;
+		return (-1);
+	}
+	return (len);
 }

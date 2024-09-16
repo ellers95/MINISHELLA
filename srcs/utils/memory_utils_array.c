@@ -6,16 +6,11 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:23:04 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:32:20 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:27:32 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//void	free_array(char ***paths, int arc);
-//char	*free_char_array(char **array);
-//void	free_stuff(char **args, char *path);
-//void	free_line(char **paths, int arc);
 
 /*
  * Frees a 2D array of strings and sets the pointer to NULL.

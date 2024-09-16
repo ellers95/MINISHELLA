@@ -3,113 +3,82 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/03 09:29:59 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/19 10:43:54 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/13 14:30:40 by etaattol          #+#    #+#             */
+/*   Updated: 2024/06/24 18:38:54 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-static int	count_words(const char *str, char c)
+static size_t	word_count(char const *s, char c)
 {
-	int	count;
-	int	n;
+	size_t	count;
+	int		in_word;
 
 	count = 0;
-	n = 0;
-	while (*str)
+	in_word = 0;
+	while (*s)
 	{
-		if (*str != c && n == 0)
+		if (*s != c && *s != '\n' && !in_word)
 		{
-			n = 1;
-			count ++;
+			in_word = 1;
+			count++;
 		}
-		else if (*str == c)
-			n = 0;
-		str++;
+		else if (*s == c || *s == '\n')
+		{
+			in_word = 0;
+		}
+		s++;
 	}
 	return (count);
 }
 
-static char	*strfill(const char *s, int start, int end)
-{
-	char	*word;
-	int		i;
-	int		j;
-	int		h;
-
-	i = 0;
-	j = 0;
-	h = ft_strlen(s);
-	word = (char *)malloc(sizeof(char) * (end + 1));
-	if (!word)
-		return (NULL);
-	while (*(s + i) && i < h)
-	{
-		if (i >= start && j < end)
-		{
-			*(word + j) = *(s + i);
-			j++;
-		}
-		i++;
-	}
-	*(word + j) = 0;
-	return (word);
-}
-
-static size_t	onewordlen(char const *s, char c)
+static char	**abandon(char **words)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i] && s[i] != c)
-		i++;
-	return (i);
+	while (words[i])
+		free(words[i++]);
+	free(words);
+	return (0);
 }
 
-static char	**dosplit(char const *s, char c, char **copy, size_t words)
+static size_t	offset_of_char(char const *s, char c)
 {
-	size_t	i;
-	size_t	j;
+	size_t	len;
 
-	i = 0;
-	j = 0;
-	while (i < words)
-	{
-		while (*(s + j) && *(s + j) == c)
-			j++;
-		*(copy + i) = strfill(s, j, onewordlen(&*(s + j), c));
-		if (!*(copy + i))
-		{
-			while (i > 0)
-			{
-				i--;
-				free(*(copy + i));
-			}
-			free (copy);
-		}
-		while (*(s + j) && *(s + j) != c)
-			j++;
-		i++;
-	}
-	*(copy + i) = NULL;
-	return (copy);
+	len = 0;
+	while (s[len] && s[len] != c && s[len] != '\n')
+		len++;
+	return (len);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**copy;
-	size_t	words;
+	char	**words;
+	size_t	end_of_word;
+	size_t	word_i;
 
-	if (!s)
-		return (NULL);
-	words = count_words(s, c);
-	copy = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!copy)
-		return (NULL);
-	copy = dosplit(s, c, copy, words);
-	return (copy);
+	while (*s && (*s == c || *s == '\n'))
+		s++;
+	words = ft_calloc(word_count(s, c) + 1, sizeof(char *));
+	if (!words)
+		return (0);
+	word_i = 0;
+	while (*s)
+	{
+		end_of_word = offset_of_char(s, c);
+		if (!end_of_word)
+			end_of_word = ft_strlen(s);
+		words[word_i] = ft_substr(s, 0, end_of_word);
+		if (!words[word_i++])
+			return (abandon(words));
+		s += end_of_word;
+		while (*s && (*s == c || *s == '\n'))
+			s++;
+	}
+	return (words);
 }

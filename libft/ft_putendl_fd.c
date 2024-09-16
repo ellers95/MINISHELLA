@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 11:45:59 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/07 09:43:18 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/07 15:48:42 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/20 09:30:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ void	ft_putendl_fd(char *s, int fd)
 {
 	if (s)
 	{
-		while (*s)
-		{
-			ft_putchar_fd(*s, fd);
-			s++;
-		}
+		ft_putstr_fd(s, fd);
 		ft_putchar_fd('\n', fd);
 	}
 }

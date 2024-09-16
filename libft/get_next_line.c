@@ -5,120 +5,125 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/07 09:04:27 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/15 19:12:47 by etaattol         ###   ########.fr       */
+/*   Created: 2024/01/14 18:15:27 by etaattol          #+#    #+#             */
+/*   Updated: 2024/06/30 18:19:35 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	clean_list(t_list **list)
+char	*join_and_free(char **complete_buffer, char *read_buffer)
 {
-	t_list	*last_line;
-	t_list	*new_line;
+	char	*temp;
+
+	temp = ft_strjoin_gnl(*complete_buffer, read_buffer);
+	free(*complete_buffer);
+	return (temp);
+}
+
+char	*remaining_lines(char *complete_buffer)
+{
 	int		i;
-	int		k;
-	char	*buf;
-
-	buf = malloc(BUFFER_SIZE + 1);
-	if (buf == NULL)
-		return (-1);
-	new_line = malloc(sizeof(t_list));
-	if (new_line == NULL)
-		return (free(buf), -1);
-	last_line = find_last_line(*list);
-	i = 0;
-	k = 0;
-	while (last_line->s_line[i] && last_line->s_line[i] != '\n')
-		i++;
-	while (last_line->s_line[i] && last_line->s_line[i++])
-		buf[k++] = last_line->s_line[i];
-	buf[k] = '\0';
-	new_line->s_line = buf;
-	new_line->next = NULL;
-	setitfree(list, new_line, buf);
-	return (0);
-}
-
-void	copy_line(t_list *list, char *str)
-{
-	int	i;
-	int	k;
-
-	if (list == NULL)
-		return ;
-	k = 0;
-	while (list)
-	{
-		i = 0;
-		while (list->s_line[i] && i < BUFFER_SIZE)
-		{
-			if (list->s_line[i] == '\n')
-			{
-				str[k++] = '\n';
-				str[k] = '\0';
-				return ;
-			}
-			str[k++] = list->s_line[i++];
-		}
-		list = list->next;
-	}
-	str[k] = '\0';
-}
-
-char	*save_line(t_list *list)
-{
-	int		str_len;
-	char	*str;
-
-	if (list == NULL)
-		return (NULL);
-	str_len = size_of_line(list);
-	str = malloc(str_len + 1);
-	if (str == NULL)
-		return (NULL);
-	copy_line(list, str);
-	return (str);
-}
-
-int	create_line(t_list **list, int fd)
-{
-	int		char_read;
+	int		j;
 	char	*line;
 
-	while (!look_slash_n(*list))
+	i = 0;
+	while (complete_buffer[i] && complete_buffer[i] != '\n')
+		i++;
+	if (!complete_buffer[i])
 	{
-		line = malloc(BUFFER_SIZE + 1);
-		if (line == NULL)
-			return (-1);
-		char_read = read(fd, line, BUFFER_SIZE);
-		if (char_read < 0)
-			return (free(line), -1);
-		if (char_read == 0)
-			return (free(line), 0);
-		line[char_read] = '\0';
-		if (list_the_line(list, line) < 0)
-			return (free(line), -1);
+		free(complete_buffer);
+		return (NULL);
 	}
-	return (0);
+	line = ft_calloc_gnl((ft_strlen_gnl(complete_buffer)
+				- i + 1), sizeof(char));
+	if (!line)
+	{
+		free(complete_buffer);
+		return (NULL);
+	}
+	i++;
+	j = 0;
+	while (complete_buffer[i])
+		line[j++] = complete_buffer[i++];
+	free(complete_buffer);
+	return (line);
+}
+
+char	*first_line(char *complete_buffer)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	if (!complete_buffer[i])
+		return (NULL);
+	while (complete_buffer[i] && complete_buffer[i] != '\n')
+		i++;
+	if (complete_buffer[i] == '\n')
+		i += 1;
+	line = ft_calloc(i + 1, sizeof(char));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (complete_buffer[i] && complete_buffer[i] != '\n')
+	{
+		line[i] = complete_buffer[i];
+		i++;
+	}
+	if (complete_buffer[i] && complete_buffer[i] == '\n')
+		line[i++] = '\n';
+	return (line);
+}
+
+char	*read_file(int fd, char **complete_buffer)
+{
+	struct s_vars	t;
+
+	t.read_buffer = ft_calloc_gnl(BUFFER_SIZE + 1, sizeof(char));
+	if (!t.read_buffer)
+		return (join_and_free(complete_buffer, NULL));
+	t.bytes_read = 1;
+	while (!ft_strchr_gnl(t.read_buffer, '\n') && t.bytes_read > 0)
+	{
+		t.bytes_read = read(fd, t.read_buffer, BUFFER_SIZE);
+		if (t.bytes_read == -1)
+		{
+			free(*complete_buffer);
+			free(t.read_buffer);
+			return (NULL);
+		}
+		t.read_buffer[t.bytes_read] = 0;
+		*complete_buffer = join_and_free(complete_buffer, t.read_buffer);
+		if (!(*complete_buffer))
+		{
+			free(t.read_buffer);
+			return (NULL);
+		}
+	}
+	free(t.read_buffer);
+	return (*complete_buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_list	*list;
-	char			*nextline;
-	int				status;
+	static char	*complete_buffer;
+	char		*line;
 
-	if (fd < 0 || (BUFFER_SIZE <= 0))
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	status = create_line(&list, fd);
-	if (!list || status < 0)
-		return (setitfree(&list, 0, 0), NULL);
-	nextline = save_line(list);
-	if (nextline == NULL)
-		return (setitfree(&list, 0, 0), NULL);
-	status = clean_list(&list);
-	if (status < 0)
-		return (free(nextline), setitfree(&list, 0, 0), NULL);
-	return (nextline);
+	if (!complete_buffer)
+		complete_buffer = ft_calloc_gnl(1, 1);
+	complete_buffer = read_file(fd, &complete_buffer);
+	if (!complete_buffer)
+		return (NULL);
+	line = first_line(complete_buffer);
+	if (!line)
+	{
+		free(complete_buffer);
+		complete_buffer = NULL;
+		return (NULL);
+	}
+	complete_buffer = remaining_lines(complete_buffer);
+	return (line);
 }

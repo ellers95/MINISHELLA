@@ -3,64 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/02 10:58:32 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/10 14:39:44 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/10 15:26:45 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/13 12:40:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static int	nbr_len(int n)
+static int	lenght(int n)
 {
-	int	numlen;
+	int	i;
 
-	numlen = 0;
-	if (n < 1)
-		numlen ++;
+	i = 0;
 	while (n)
 	{
 		n /= 10;
-		numlen++;
+		i++;
 	}
-	return (numlen);
+	return (i);
 }
 
-static char	*doit(int count, int neg, char *str, long nu)
+static char	*n_iszero_or_minint(int n)
 {
-	str[count] = '\0';
-	if (nu < 0)
-	{
-		neg = 1;
-		nu *= -1;
-	}
-	while (count > 0)
-	{
-		*(str + count -1) = nu % 10 + '0';
-		nu /= 10;
-		count--;
-	}
-	if (neg == 1)
-		*str = '-';
-	return (str);
+	if (!n)
+		return (ft_strdup("0"));
+	return (ft_strdup("-2147483648"));
 }
 
 char	*ft_itoa(int n)
 {
-	int		count;
-	int		neg;
+	int		len;
+	char	neg;
 	char	*str;
-	char	*final;
-	long	nu;
 
+	if (!n || n == -2147483648)
+		return (n_iszero_or_minint(n));
 	neg = 0;
-	nu = (long)n;
-	count = nbr_len(nu);
-	str = (char *)malloc(sizeof(char) * (nbr_len(n) + 1));
+	if (n < 0)
+	{
+		n = -n;
+		neg = 1;
+	}
+	len = lenght(n);
+	str = ft_calloc(neg + len + 1, 1);
 	if (!str)
-		return (NULL);
-	final = doit(count, neg, str, nu);
-	return (final);
+		return (0);
+	if (neg)
+		str[0] = '-';
+	while (n)
+	{
+		str[neg + len -1] = n % 10 + '0';
+		n /= 10;
+		len--;
+	}
+	return (str);
 }

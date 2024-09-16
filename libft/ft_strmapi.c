@@ -3,49 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 12:40:11 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/07 10:08:08 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/14 12:09:51 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/14 15:48:27 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
-
-static char	*str_new(size_t n)
-{
-	char	*str;
-
-	str = (char *)malloc(sizeof(char) * (n + 1));
-	if (!str)
-		return (NULL);
-	return (str);
-}
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	size_t	i;
-	char	*str;
-	char	*copy;
+	char			*str;
+	unsigned int	len;
+	unsigned int	i;
 
-	if (s == NULL)
-		return (NULL);
-	if (*s == '\0')
-	{
-		str = str_new(0);
-		if (!str)
-			return (NULL);
-		*str = 0;
-		return (str);
-	}
-	str = str_new(ft_strlen(s));
+	if (!s)
+		return (0);
+	len = ft_strlen(s);
+	str = ft_calloc(len + 1, 1);
 	if (!str)
-		return (NULL);
+		return (0);
 	i = 0;
-	copy = str;
-	while (*s)
-		*str++ = f(i++, *s++);
-	*str = '\0';
-	return (copy);
+	while (i < len)
+	{
+		str[i] = f(i, s[i]);
+		i++;
+	}
+	return (str);
 }

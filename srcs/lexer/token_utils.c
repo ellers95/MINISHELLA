@@ -6,17 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:49:44 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:32:00 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void			token_merge(t_data *data);
-//void			token_cleaner(t_data *data, int i);
-static inline bool	valid(t_data *data, int j);
-static inline void	merge_it(t_data *data, int i, int j);
-//bool			check_specials(char *token);
+static inline bool	is_token_mergeable(t_data *data, int j);
+static inline void	merge_tokens(t_data *data, int i, int j);
 
 /*
 * Merges adjacent tokens that should be considered as a single unit.
@@ -30,11 +27,11 @@ void	token_merge(t_data *data)
 	main_token_index = 0;
 	while (main_token_index < data->token_count)
 	{
-		if (valid(data, main_token_index))
+		if (is_token_mergeable(data, main_token_index))
 		{
 			merge_token_index = main_token_index + 1;
-			while (valid(data, merge_token_index))
-				merge_it(data, main_token_index, merge_token_index);
+			while (is_token_mergeable(data, merge_token_index))
+				merge_tokens(data, main_token_index, merge_token_index);
 		}
 		main_token_index++;
 	}
@@ -44,7 +41,7 @@ void	token_merge(t_data *data)
 * Removes the token at index i and shifts remaining tokens.
 * Used to clean up the token array after processing.
 */
-void	token_cleaner(t_data *data, int i)
+void	remove_token_and_shift_array(t_data *data, int i)
 {
 	free(data->token[i]);
 	while (i < data->token_count - 1)
@@ -62,7 +59,7 @@ void	token_cleaner(t_data *data, int i)
 * Checks if the token at index j is eligible for merging.
 * Considers token type and surrounding context.
 */
-static inline bool	valid(t_data *data, int j)
+static inline bool	is_token_mergeable(t_data *data, int j)
 {
 	if ((j < data->token_count)
 		&& (ft_strncmp(data->token[j], "|", 1) != 0)
@@ -86,7 +83,7 @@ static inline bool	valid(t_data *data, int j)
 * Combines tokens at indices i and j into a single token.
 * Updates the data structure accordingly.
 */
-static inline void	merge_it(t_data *data, int i, int j)
+static inline void	merge_tokens(t_data *data, int i, int j)
 {
 	int		len;
 	char	*new_str;
@@ -110,14 +107,14 @@ static inline void	merge_it(t_data *data, int i, int j)
 			|| ft_strncmp(data->token[i], "<", 1) != 0
 			|| ft_strncmp(data->token[i], ">", 1) != 0
 			|| ft_strncmp(data->token[i], "echo\0", 5) != 0))
-		token_cleaner(data, j);
+		remove_token_and_shift_array(data, j);
 }
 
 /*
 * Identifies if a token contains special shell characters.
 * Checks for operators, redirections, etc.
 */
-bool	check_specials(char *token)
+bool	is_special_shell_operator(char *token)
 {
 	if (ft_strcmp(token, "|") == 0
 		|| ft_strcmp(token, ">") == 0

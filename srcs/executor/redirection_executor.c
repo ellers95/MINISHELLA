@@ -6,29 +6,28 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:49:36 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:25:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void			redirections(t_data *data);
-static inline void	execute_rdr(t_data *data, char **envp);
-static inline void	close_files(t_data *data);
-static inline void	dupper(t_data *data);
+static inline void	execute_command_with_redirections(t_data *data, char **envp);
+static inline void	close_redirection_files(t_data *data);
+static inline void	setup_redirection_file_descriptors(t_data *data);
 
 /*
 * Manages the overall redirection process for a command.
 * Handles both input and output redirections.
 */
-void	redirections(t_data *data)
+void	handle_redirections(t_data *data)
 {
 	if (data->token_count < 2)
 	{
 		clean_struct(data);
 		return ;
 	}
-	file_handling(data);
+	process_redirection_tokens(data);
 	if (data->is_heredoc && data->token_count < 1)
 	{
 		clean_struct(data);
@@ -36,9 +35,9 @@ void	redirections(t_data *data)
 	}
 	if (!data->is_pipe)
 	{
-		execute_rdr(data, data->envp);
+		execute_command_with_redirections(data, data->envp);
 		while (data->token_count > 0)
-			token_cleaner(data, 0);
+			remove_token_and_shift_array(data, 0);
 	}
 }
 
@@ -46,7 +45,7 @@ void	redirections(t_data *data)
 * Executes a command with redirections in a child process.
 * Sets up redirections, executes the command, and handles cleanup.
 */
-static inline void	execute_rdr(t_data *data, char **envp)
+static inline void	execute_command_with_redirections(t_data *data, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -63,8 +62,8 @@ static inline void	execute_rdr(t_data *data, char **envp)
 	}
 	if (pid == 0)
 	{
-		dupper(data);
-		close_files(data);
+		setup_redirection_file_descriptors(data);
+		close_redirection_files(data);
 		command_arguments = ft_split(data->token[0], ' ');
 		if (command_arguments == NULL)
 		{
@@ -82,7 +81,7 @@ static inline void	execute_rdr(t_data *data, char **envp)
 			exiting(data, 126);
 		}
 		builtins(data);
-		token_cleaner(data, 0);
+		remove_token_and_shift_array(data, 0);
 		execve(path, command_arguments, envp);
 		free_stuff(command_arguments, path);
 		exiting(data, -1);
@@ -98,7 +97,7 @@ static inline void	execute_rdr(t_data *data, char **envp)
 * Closes all opened file descriptors for redirections.
 * Ensures proper cleanup after redirection operations.
 */
-static inline void	close_files(t_data *data)
+static inline void	close_redirection_files(t_data *data)
 {
 	int	i;
 
@@ -120,7 +119,7 @@ static inline void	close_files(t_data *data)
 * Performs the actual file descriptor duplication for redirections.
 * Sets up stdin and stdout to point to the appropriate files.
 */
-static inline void	dupper(t_data *data)
+static inline void	setup_redirection_file_descriptors(t_data *data)
 {
 	if (data->input_file_count > 0)
 	{

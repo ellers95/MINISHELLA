@@ -6,15 +6,11 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:30:26 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:35:03 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//bool	execution(t_data *data);
-//bool	handle_commands(t_data *data, char **envp);
-//void	execute_command(t_data *data, char **envp, int index);
 
 /*
 * Main execution function for the shell.
@@ -29,9 +25,9 @@ bool	execution(t_data *data)
 	if (data->is_heredoc)
 		get_set_stop_flag(SET, 0);
 	if (data->has_redirection && !data->is_pipe)
-		redirections(data);
+		handle_redirections(data);
 	if (data->token_count > 0)
-		pipex(data);
+		execute_pipeline(data);
 	clean_struct(data);
 	return (true);
 }
@@ -43,8 +39,8 @@ bool	execution(t_data *data)
 bool	handle_commands(t_data *data, char **envp)
 {
 	if (data->has_redirection)
-		redirections(data);
-	if (!parse_cmd_line(data, envp))
+		handle_redirections(data);
+	if (!parse_command_line(data, envp))
 	{
 		cleanup_and_handle_errors(data);
 		return (false);

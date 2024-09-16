@@ -3,109 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/04 13:27:34 by iniska            #+#    #+#             */
-/*   Updated: 2023/12/11 08:45:47 by iniska           ###   ########.fr       */
+/*   Created: 2023/12/22 13:23:16 by etaattol          #+#    #+#             */
+/*   Updated: 2024/06/30 17:26:22 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	setitfree(t_list **list, t_list *clean_line, char *buf)
+void	*ft_calloc_gnl(size_t count, size_t size)
 {
-	t_list	*tmp;
+	void			*p;
+	size_t			bsize;
+	unsigned char	*ptr;
 
-	if (*list == NULL)
-		return ;
-	while (*list)
-	{
-		tmp = (*list)->next;
-		free((*list)->s_line);
-		free(*list);
-		*list = tmp;
-	}
-	*list = NULL;
-	if (clean_line == 0 || buf == 0)
-		return ;
-	if (clean_line->s_line[0])
-		*list = clean_line;
-	else
-	{
-		free(buf);
-		free(clean_line);
-	}
-}
-
-t_list	*find_last_line(t_list *list)
-{
-	if (list == NULL)
+	bsize = count * size;
+	if (count != 0 && bsize / count != size)
 		return (NULL);
-	while (list->next)
-		list = list->next;
-	return (list);
-}
-
-int	size_of_line(t_list *list)
-{
-	int	i;
-	int	len;
-
-	len = 0;
-	if (list == NULL)
-		return (0);
-	while (list)
+	p = malloc(bsize);
+	if (p == NULL)
+		return (NULL);
+	ptr = (unsigned char *)p;
+	while (bsize > 0)
 	{
-		i = 0;
-		while (list->s_line[i])
-		{
-			if (list->s_line[i] == '\n')
-			{
-				len++;
-				return (len);
-			}
-			i++;
-			len++;
-		}
-		list = list->next;
+		*ptr = 0;
+		ptr++;
+		bsize--;
 	}
-	return (len);
+	return (p);
 }
 
-int	list_the_line(t_list **list, char *line)
+char	*ft_strjoin_gnl(char const *s1, char const *s2)
 {
-	t_list	*new_line;
-	t_list	*last_line;
+	size_t	s1len;
+	size_t	s2len;
+	char	*dest;
 
-	last_line = find_last_line(*list);
-	new_line = malloc(sizeof(t_list));
-	if (new_line == NULL)
-		return (-1);
-	if (last_line == NULL)
-		*list = new_line;
-	else
-		last_line->next = new_line;
-	new_line->s_line = line;
-	new_line->next = NULL;
-	return (0);
+	if (!s1 || !s2)
+		return (NULL);
+	s1len = ft_strlen_gnl(s1);
+	s2len = ft_strlen_gnl(s2);
+	dest = malloc(sizeof(char) * (s1len + s2len + 1));
+	if (!dest)
+		return (NULL);
+	ft_memcpy_gnl(dest, s1, s1len);
+	ft_memcpy_gnl(dest + s1len, s2, s2len + 1);
+	return (dest);
 }
 
-int	look_slash_n(t_list *list)
+size_t	ft_strlen_gnl(const char *s)
 {
-	int	i;
+	size_t	i;
 
-	if (list == NULL)
-		return (0);
-	while (list)
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+void	*ft_memcpy_gnl(void *dst, const void *src, size_t n)
+{
+	if (src != dst)
 	{
-		i = 0;
-		while (list -> s_line[i] && i < BUFFER_SIZE)
-		{
-			if (list->s_line[i] == '\n')
-				return (1);
-			i++;
-		}
-		list = list->next;
+		while (n--)
+			((unsigned char *) dst)[n] = ((const unsigned char *) src)[n];
 	}
-	return (0);
+	return (dst);
+}
+
+char	*ft_strchr_gnl(const char *s, int c)
+{
+	while (*s != '\0')
+	{
+		if (*s == (char)c)
+		{
+			return ((char *)s);
+		}
+		s++;
+	}
+	if (*s == (char)c)
+	{
+		return ((char *)s);
+	}
+	return (NULL);
 }

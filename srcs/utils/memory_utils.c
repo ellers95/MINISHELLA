@@ -6,17 +6,13 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:05:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void	clean_data(t_data *data);
-//void	clean_struct(t_data *data);
-//void	free_env(t_node	**env);
 static inline void	clean_files(t_data *data);
-//void	exiting(t_data *data, int i);
 
 /*
  * Performs a complete cleanup of the shell's data structures.
@@ -38,7 +34,7 @@ void	clean_data(t_data *data)
 void	clean_struct(t_data *data)
 {
 	if (data->token_count > 0)
-		token_cleaner(data, 0);
+		remove_token_and_shift_array(data, 0);
 	clean_files(data);
 	if (data->pipes != NULL)
 	{

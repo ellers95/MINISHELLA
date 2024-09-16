@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/24 12:17:20 by iniska            #+#    #+#             */
-/*   Updated: 2023/10/31 09:09:09 by iniska           ###   ########.fr       */
+/*   Created: 2023/10/23 15:36:01 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/20 12:17:57 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int	ft_isalpha(int a)
+int	ft_isalpha(int c)
 {
-	while (('a' <= a && a <= 'z') || ('A' <= a && a <= 'Z'))
-		return (1);
-	return (0);
+	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }

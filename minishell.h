@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:44:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:25:37 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,27 +84,27 @@ bool	execution(t_data *data);
 bool	redirect_file_input(t_data *data);
 bool	redirect_file_output(t_data *data);
 char	*get_command_path(char *command_name, char **envp);
-void	pipex(t_data *data);
+void	execute_pipeline(t_data *data);
 void	close_pipe_fds(int fd[2]);
-void	redirections(t_data *data);
+void	handle_redirections(t_data *data);
 
 // lexer:
-char	*env_variable_check(char *input_str, t_node *env, t_data *data);
+char	*check_and_expand_env_variables(char *input_str, t_node *env, t_data *data);
 bool	lexer(char *input_str, t_data *data);
 void	token_merge(t_data *data);
-void	token_cleaner(t_data *data, int i);
-bool	check_specials(char *token);
+void	remove_token_and_shift_array(t_data *data, int i);
+bool	is_special_shell_operator(char *token);
 
 // parser:
 bool	parse_command_arguments(t_data *data);
-bool	parse_cmd_line(t_data *data, char **envp);
-void	find_doc(t_data *data, int tk_i);
-void	handle_the_doc(const char *delimiter, t_data *data);
+bool	parse_command_line(t_data *data, char **envp);
+void	find_heredoc(t_data *data, int tk_i);
+void	handle_heredoc(const char *delimiter, t_data *data);
 char	*find_delimiter(t_data *data);
-void	open_infile(t_data *data, int i);
-void	open_outfile(t_data *data, int i, bool append);
+void	setup_input_redirection(t_data *data, int i);
+void	setup_output_redirection(t_data *data, int i, bool append);
 bool	parser(t_data *data);
-void	file_handling(t_data *data);
+void	process_redirection_tokens(t_data *data);
 
 // signal:
 void	signaling(void);

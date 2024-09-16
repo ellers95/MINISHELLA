@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_address.c                                    :+:      :+:    :+:   */
+/*   print_char.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/22 11:12:36 by iniska            #+#    #+#             */
-/*   Updated: 2024/05/02 18:16:25 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/30 15:45:19 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 13:24:42 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	print_address(unsigned long n)
+int	print_char(int c, int *check)
 {
-	int		count;
-	char	*symbols;
-
-	symbols = "0123456789abcdef";
-	if (n < 16)
+	if (*check == -1)
+		return (-1);
+	if (write(1, &c, 1) == -1)
 	{
-		if (printchar(symbols[n]) < 0)
-			return (-1);
-		return (1);
+		*check = -1;
+		return (-1);
 	}
-	else
-	{
-		count = print_address(n / 16);
-		return (count + print_address(n % 16));
-	}
-	return (-1);
+	return (1);
 }

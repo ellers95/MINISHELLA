@@ -6,15 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:48:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:52:10 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:46:03 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//void	pipex(t_data *data);
 static inline int	create_child(t_data *data, char **envp, int command_index);
-static inline bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index);
+static inline bool	create_pipe_and_fork(t_data *data, int fd[2], pid_t *pid, int index);
 static inline void	redirect_input(t_data *data, int index);
 static inline void	redirect_output(t_data *data, int fd[2], int index);
 
@@ -22,7 +21,7 @@ static inline void	redirect_output(t_data *data, int fd[2], int index);
 * Implements pipe functionality for command execution.
 * Manages the creation of child processes and sets up pipes between them.
 */
-void	pipex(t_data *data)
+void	execute_pipeline(t_data *data)
 {
 	int		i;
 	int		status;
@@ -64,8 +63,8 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 	int		is_last_command;
 	int		status;
 
-	is_last_command = (command_index == data->token_count - 1);
-	if (!fork_it(data, fd, &pid, command_index))
+	is_last_command = (command_index == data->token_count - 1); //// used to be like this is_last_command = (command_index == data->token_count) - 1;
+	if (!create_pipe_and_fork(data, fd, &pid, command_index))
 		return (false);
 	if (pid == 0)
 	{
@@ -105,7 +104,7 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 /*
 * Creates a pipe and forks a new process.
 */
-static inline bool	fork_it(t_data *data, int fd[2], pid_t *pid, int index)
+static inline bool	create_pipe_and_fork(t_data *data, int fd[2], pid_t *pid, int index)
 {
 	if (index < data->token_count)
 	{

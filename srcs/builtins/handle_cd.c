@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:11:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/15 16:17:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:30:58 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 void	handle_cd(t_data *data, t_node *env)
 {
 	(void)env;
-	token_cleaner(data, 0);
+	remove_token_and_shift_array(data, 0);
 	if (chdir(data->token[0]))
 		printf("cd: %s not set\n", data->token[0]);
 	if (data->token[0])
-		token_cleaner(data, 0);
+		remove_token_and_shift_array(data, 0);
 }

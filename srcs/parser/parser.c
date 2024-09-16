@@ -6,17 +6,16 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:08:11 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:02:16 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//bool	parser(t_data *data);
 static inline void	create_file_storage(t_data *data);
 static inline void	allocate_file_descriptors(t_data *data);
 static inline void	type_flagger(t_data *data);
-static inline bool	heredoc_check(t_data *data, int i);
+static inline bool	is_valid_heredoc_syntax(t_data *data, int i);
 
 /*
  * Main parsing function for the shell input.
@@ -90,7 +89,7 @@ static inline void	type_flagger(t_data *data)
 	i = 0;
 	while (data->token[i])
 	{		
-		if (!heredoc_check(data, i))
+		if (!is_valid_heredoc_syntax(data, i))
 			return ;
 		if (ft_strncmp(data->token[i], "|", 1) == 0)
 		{
@@ -109,7 +108,7 @@ static inline void	type_flagger(t_data *data)
  * Verifies the correct format of here-document delimiters.
  * Initiates here-document processing if syntax is correct.
 */
-static inline bool	heredoc_check(t_data *data, int i)
+static inline bool	is_valid_heredoc_syntax(t_data *data, int i)
 {
 	if (ft_strncmp(data->token[i], "<<", 2) == 0)
 	{
@@ -122,7 +121,7 @@ static inline bool	heredoc_check(t_data *data, int i)
 			return (false);
 		}
 		data->is_heredoc = true;
-		find_doc(data, i);
+		find_heredoc(data, i);
 		if (data->token_count < 1)
 		{
 			clean_struct(data);

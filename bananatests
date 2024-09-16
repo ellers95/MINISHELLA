@@ -1,0 +1,152 @@
+Execute a Simple Command with Absolute Path
+/bin/ls
+/bin/date
+Press "Enter"
+Press "space" or "tab"
+
+
+
+
+Execute Commands with Arguments
+/bin/ls -l
+/bin/ls /home
+/bin/pwd
+/bin/date +%Y-%m-%d
+/usr/bin/uptime
+/usr/bin/w
+/bin/df -h
+/usr/bin/free -m
+/bin/echo Hello, World!
+/bin/echo
+/bin/echo SingleArgument
+/bin/echo Argument1 Argument2 Argument3
+/bin/echo -n NoNewline
+/bin/echo -n NoNewline1 NoNewline2
+/bin/ls filethatdoesntexist
+/bin/nonexistentcommand
+
+
+
+
+Test echo Command
+echo Hello
+echo "Hello World"
+echo -n No newline
+echo "With newline"
+
+
+
+
+Test Return Value
+/bin/ls
+expr $? + $?
+
+
+
+
+Signal Handling Tests
+Press ctrl-C, ctrl-\, and ctrl-D in an empty prompt.
+After starting a blocking command like cat, test ctrl-C, ctrl-\, and ctrl-D.
+
+
+
+
+Test Quotes in Commands
+echo "Hello World"
+echo "cat lol.c | cat > lol.c"
+
+
+
+
+Test Single Quotes
+echo '$USER'
+echo 'Hello $USER'
+
+
+
+
+Test Environment Variables
+env
+echo $USER
+
+
+
+
+Test export Command
+export MYVAR=test
+env | grep MYVAR
+
+
+
+
+Test unset Command
+unset MYVAR
+env | grep MYVAR
+
+
+
+
+Test cd Command
+cd /tmp
+/bin/ls
+cd ..
+/bin/ls
+cd .
+cd ..
+
+
+
+
+Test pwd Command
+pwd
+
+
+
+
+Test Relative Path with cd
+cd ../
+/bin/ls
+
+
+
+
+
+Test Redirection
+echo "Test" > file.txt
+cat file.txt
+echo "Append" >> file.txt
+cat file.txt
+cat <<EOF >file.txt
+asd
+asd
+EOF
+cat file.txt
+
+
+
+
+Test Piping
+echo "Hello World" | grep World
+cat file.txt | grep dog
+
+
+
+Miscellaneous Tests
+echo "Test Command"
+After typing a command, press ctrl-C and then "Enter".
+dsbksdgbksdghsd
+cat | cat | ls
+echo $(seq 1 100) > long_command.txt
+cat long_command.txt
+
+
+
+Test Environment Variables in Quotes
+echo "$USER"
+echo "$USER"
+
+
+
+Test exit Command
+exit
+Relaunch the shell after exit.

@@ -6,13 +6,12 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:56:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 11:48:07 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:24:23 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//char			*get_command_path(char *command_name, char **envp);
 static inline char	**find_path_directories(char **envp);
 static inline char	*extract_env_value(char *path, char **envp);
 static inline char	*construct_and_check_path(char *directory, char *path_name);

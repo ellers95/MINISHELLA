@@ -6,61 +6,49 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:05:09 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 11:55:42 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:23:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//char	*env_variable_check(char *input_str, t_node *env, t_data *data);
-//t_node	*find_key(char *key, t_node *env);
-static inline char	*expand_var(char *str, t_node *env, t_data *data);
-static inline t_node	*find_key(char *key, t_node *env);
+static inline char	*expand_single_env_variable(char *str, t_node *env, t_data *data);
+static inline t_node	*find_env_variable(char *key, t_node *env);
 
 /*
 * Checks for and expands environment variables in a given string.
 * Handles variable expansion within quotes and special cases like $?.
 */
-char	*env_variable_check(char *input_str, t_node *env, t_data *data)
+
+char	*check_and_expand_env_variables(char *input_str, t_node *env, t_data *data)
 {
 	int		i;
-	int		single_quote;
-	int		double_quote;
+	int		dollar_position;
+	bool	single_quote;
+	bool	double_quote;
 	char	*dollar_ptr;
-	int		dollar_pos;
 
 	i = 0;
-	single_quote = 0;
-	double_quote = 0;
+	single_quote = false;
+	double_quote = false;
 	dollar_ptr = ft_strchr(input_str, '$');
 	if (!dollar_ptr)
 		return (input_str);
-	dollar_pos = dollar_ptr - input_str;
+	dollar_position = dollar_ptr - input_str;
 	while (input_str[i])
 	{
 		if (input_str[i] == '\'' && !double_quote)
 			single_quote = !single_quote;
 		else if (input_str[i] == '"')
 			double_quote = !double_quote;
-		if (i == dollar_pos)
-		{
-			if (!single_quote || (single_quote && double_quote))
-			{
-				input_str = expand_var(dollar_ptr, env, data);
-				return (input_str);
-			}
-			else
-				return (input_str);
-		}
+		if (i == dollar_position && (!single_quote || (single_quote && double_quote)))
+			return (expand_single_env_variable(dollar_ptr, env, data));
 		i++;
 	}
 	return (input_str);
 }
 
-/*
-* Searches for a specific key in the environment variable linked list.
-*/
-static inline t_node	*find_key(char *key, t_node *env)
+static inline t_node	*find_env_variable(char *key, t_node *env)
 {
 	while (env)
 	{
@@ -72,63 +60,52 @@ static inline t_node	*find_key(char *key, t_node *env)
 	return (NULL);
 }
 
-/*
-* Expands a single environment variable.
-* Handles special cases like $? for last exit status.
-*/
-static inline char	*expand_var(char *str, t_node *env, t_data *data)
+static char *extract_variable_name(const char *str)
 {
-	t_node	*temp_node;
-	char	*var_name;
-	int		i;
-	int		j;
-	size_t	value_len;
-	char	*temp_str;
+	int	i;
 
-	value_len = 0;
-	i = 1;
-	while (str[i] && (str[i] != ' ' && str[i] != '\0'
-			&& str[i] != '\'' && str[i] != '"' && str[i] != '.'))
+	i = 0;
+	while (str[i] && (str[i] != ' ' && str[i] != '\'' && str[i] != '"' && str[i] != '.'))
 		i++;
-	var_name = ft_calloc(i + 1, sizeof(char));
+	return (ft_substr(str, 1, i - 1));
+}
+
+static char	*handle_special_variable(const char *var_name, t_data *data)
+{
+	if (ft_strcmp(var_name, "?") == 0)
+		return (ft_itoa(data->last_command_exit_status));
+	return (NULL);
+}
+
+static inline char	*expand_single_env_variable(char *str, t_node *env, t_data *data)
+{
+	char	*var_name;
+	char	*expanded_value;
+	t_node	*env_var;
+
+	var_name = extract_variable_name(str);
 	if (!var_name)
 		return (str);
-	j = 1;
-	while (j < i)
+	expanded_value = NULL;
+	env_var = find_env_variable(var_name, env);
+	if (env_var && env_var->value)
+		expanded_value = ft_strdup(env_var->value);
+	else
+		expanded_value = handle_special_variable(var_name, data);
+	if (expanded_value)
 	{
-		var_name[j - 1] = str[j];
-		j++;
-	}	
-	var_name[j - 1] = '\0';
-	temp_node = find_key(var_name, env);
-	if (temp_node && temp_node->value)
-	{
-		value_len = ft_strlen(temp_node->value);
-		if (value_len <= ft_strlen(str))
-			ft_strlcpy(str, temp_node->value, value_len + 1);
+		if (ft_strlen(expanded_value) <= ft_strlen(str))
+			ft_strlcpy(str, expanded_value, ft_strlen(expanded_value) + 1);
 		else
 		{
-			temp_str = ft_strdup(temp_node->value);
-			str = temp_str;
-		}
-	}
-	else if (ft_strcmp(var_name, "?") == 0)
-	{
-		temp_str = ft_itoa(data->last_command_exit_status);
-		value_len = ft_strlen(temp_str);
-		if (value_len <= ft_strlen(str))
-			ft_strlcpy(str, temp_str, value_len + 1);
-		else
-		{
-			if (temp_str)
-			{
-				free (str);
-				str = temp_str;
-			}
+			free(str);
+			str = expanded_value;
+			expanded_value = NULL;
 		}
 	}
 	else
 		printf("Variable not found or has no value: %s\n", var_name);
 	free(var_name);
+	free(expanded_value);
 	return (str);
 }

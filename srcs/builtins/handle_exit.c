@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 11:48:58 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static inline size_t	exit_code_calculator(char *argv);
 static inline void	perform_exit(t_data *data);
-//void			handle_exit(t_data *data);
 
 /*
 * Converts a string argument to an exit code.
@@ -59,7 +58,7 @@ static void	perform_exit(t_data *data)
 			exit_code = exit_code_calculator(data->token[1]);
 			ft_printf("Good bye!\nexit(%d)\n", exit_code);
 			while (data->token_count > 0)
-				token_cleaner(data, 0);
+				remove_token_and_shift_array(data, 0);
 			clean_data(data);
 			exit(exit_code);
 		}
@@ -69,7 +68,7 @@ static void	perform_exit(t_data *data)
 			ft_printf("Good bye!\nexit\n%s: %s: count your 🍌s!\n",
 				data->token[0], data->token[1]);
 			while (data->token_count > 0)
-				token_cleaner(data, 2);
+				remove_token_and_shift_array(data, 2);
 			clean_data(data);
 			exit(0);
 		}
@@ -86,7 +85,7 @@ void	handle_exit(t_data *data)
 	if (data->token_count == 1)
 	{
 		ft_printf("Good bye!\nexit\n");
-		token_cleaner(data, 0);
+		remove_token_and_shift_array(data, 0);
 		clean_data(data);
 		exit(0);
 	}

@@ -3,49 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 09:04:09 by iniska            #+#    #+#             */
-/*   Updated: 2024/05/02 18:15:53 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/24 09:45:42 by etaattol          #+#    #+#             */
+/*   Updated: 2024/07/04 17:21:37 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "libft.h"
 
-static int	print_f(const char *format, int totals, va_list ap)
+int	format(char *specifier, va_list arg_list, int *check)
 {
-	while (*format != '\0')
-	{
-		if (*format == '%')
-		{
-			if (*(++format) == '%')
-				totals += printchar('%');
-			else
-				totals += ft_form(*(format), ap);
-			if (totals < 0)
-				return (-1);
-		}
-		else
-		{
-			if (write(1, format, 1) == -1)
-				return (-1);
-			totals ++;
-		}
-		format++;
-	}
-	return (totals);
+	int	count;
+
+	count = 0;
+	if (*specifier == 'c')
+		count += print_char(va_arg(arg_list, int), check);
+	else if (*specifier == 's')
+		count += print_str(va_arg(arg_list, char *), check);
+	else if (*specifier == 'd' || *specifier == 'i')
+		count += print_nbr(va_arg(arg_list, int), check);
+	else if (*specifier == 'u')
+		count += print_unsigned_nbr(va_arg(arg_list, unsigned int), check);
+	else if (*specifier == 'x')
+		count += print_hex(va_arg(arg_list, unsigned int), 0, check);
+	else if (*specifier == 'X')
+		count += print_hex(va_arg(arg_list, unsigned int), 1, check);
+	else if (*specifier == '%')
+		count += write(1, "%", 1);
+	else if (*specifier == 'p')
+		count += print_ptr(va_arg(arg_list, void *), check);
+	else
+		return (-1);
+	return (count);
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_printf(const char *s1, ...)
 {
-	int		totals;
-	va_list	ap;
+	va_list	arg_list;
+	int		count;
+	int		check;
+	char	*s;
 
-	totals = 0;
-	va_start(ap, format);
-	totals = print_f(format, totals, ap);
-	if (totals < 0)
-		return (-1);
-	va_end(ap);
-	return (totals);
+	s = (char *)s1;
+	check = 0;
+	va_start(arg_list, s1);
+	while (*s)
+	{
+		if (*s == '%')
+		{
+			s++;
+			count = format(s, arg_list, &check);
+		}
+		else
+			count = write(1, s, 1);
+		if (count == -1)
+			return (-1);
+		s++;
+		check += count;
+	}
+	va_end(arg_list);
+	return (check);
 }

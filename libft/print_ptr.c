@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
+/*   print_ptr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 14:07:37 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/06 14:18:51 by iniska           ###   ########.fr       */
+/*   Created: 2023/12/01 10:41:28 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 13:25:04 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstlast(t_list *lst)
+int	print_ptr(void *ptr, int *check)
 {
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	int	count;
+
+	count = 0;
+	count += print_str("0x", check);
+	if (count == -1)
+		return (-1);
+	count += print_hex((unsigned long)ptr, 0, check);
+	return (count);
 }

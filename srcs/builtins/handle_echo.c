@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:47:35 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:16:40 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:01 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	handle_echo(t_data *data)
 	{
 		if (ft_strcmp(data->token[1], "-n") == 0)
 		{
-			token_cleaner(data, 1);
+			remove_token_and_shift_array(data, 1);
 			suppress_newline = true;
 		}
 		while (token_index <= data->token_count - 2)
@@ -42,7 +42,7 @@ void	handle_echo(t_data *data)
 			printf("\n");
 	}
 	while (data->token_count > 0)
-		token_cleaner(data, 0);
+		remove_token_and_shift_array(data, 0);
 	if (data->has_redirection)
 		exit (0);
 }

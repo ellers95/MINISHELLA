@@ -6,17 +6,16 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 12:02:59 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:26:02 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//bool	lexer(char *input_str, t_data *data);
 static inline int	count_tokens(char *input_str);
 static inline void	delete_quotes(t_data *data);
 static inline int	handle_quote(char *input_str, char *current_quote, int i);
-static inline int	empties(char c);
+static inline int	is_whitespace(char c);
 
 /*
 * Main lexical analysis function.
@@ -38,7 +37,7 @@ bool	lexer(char *input_str, t_data *data)
 		return (false);
 	while (token_index < data->token_count && input_str[char_index])
 	{
-		while (input_str[char_index] && empties(input_str[char_index]))
+		while (input_str[char_index] && is_whitespace(input_str[char_index]))
 			char_index++;
 		if (input_str[char_index])
 		{
@@ -48,7 +47,7 @@ bool	lexer(char *input_str, t_data *data)
 			if (!data->token[token_index])
 				return (false);
 			ft_strlcpy(data->token[token_index], &input_str[start], char_index - start + 1);
-			data->token[token_index] = env_variable_check
+			data->token[token_index] = check_and_expand_env_variables
 				(data->token[token_index], data->env, data);
 			token_index++;
 		}
@@ -73,11 +72,11 @@ static inline int	count_tokens(char *input_str)
 	quotes = 0;
 	while (input_str[i] != '\0')
 	{
-		while (input_str[i] != '\0' && empties(input_str[i]))
+		while (input_str[i] != '\0' && is_whitespace(input_str[i]))
 			i++;
 		if (input_str[i])
 			count++;
-		while (input_str[i] && (!empties(input_str[i]) || quotes))
+		while (input_str[i] && (!is_whitespace(input_str[i]) || quotes))
 		{
 			if (input_str[i] == '"' || input_str[i] == '\'')
 			{
@@ -143,7 +142,7 @@ static inline int	handle_quote(char *input_str, char *current_quote, int i)
 	int	quotes;
 
 	quotes = 0;
-	while (input_str[i] && (!empties(input_str[i]) || quotes))
+	while (input_str[i] && (!is_whitespace(input_str[i]) || quotes))
 	{
 		if (input_str[i] == '"' || input_str[i] == '\'')
 		{
@@ -164,7 +163,7 @@ static inline int	handle_quote(char *input_str, char *current_quote, int i)
 * Checks if a character is considered "empty" (whitespace).
 * Used to determine token boundaries.
 */
-static inline int	empties(char c)
+static inline int	is_whitespace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n');
 }

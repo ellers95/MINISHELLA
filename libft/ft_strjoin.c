@@ -5,40 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 15:51:44 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/15 19:16:15 by etaattol         ###   ########.fr       */
+/*   Created: 2023/11/09 15:09:16 by etaattol          #+#    #+#             */
+/*   Updated: 2024/09/16 13:55:20 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	int		c;
-	char	*copy;
+	size_t	s1len;
+	size_t	s2len;
+	char	*dest;
 
 	if (!s1 || !s2)
 		return (NULL);
-	i = 0;
-	c = 0;
-	copy = (char *)malloc(sizeof(char) * (ft_strlen(s1) + (ft_strlen(s2) +1)));
-	if (!copy)
+	s1len = ft_strlen(s1);
+	s2len = ft_strlen(s2);
+	dest = malloc(sizeof(char) * (s1len + s2len + 1));
+	if (dest == NULL)
 		return (NULL);
-	while (s1[i] != '\0')
-	{
-		copy[c] = s1[i];
-		c++;
-		i++;
-	}
-	i = 0;
-	while (s2[i] != '\0')
-	{
-		copy[c] = s2[i];
-		c++;
-		i++;
-	}
-	copy[c] = '\0';
-	return (copy);
+	if (s1)
+		ft_strlcpy(dest, s1, s1len + 1);
+	ft_strlcat(dest, s2, (s1len + s2len + 1));
+	return (dest);
 }

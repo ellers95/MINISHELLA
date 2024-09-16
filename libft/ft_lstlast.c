@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_lstlast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 15:12:22 by etaattol          #+#    #+#             */
-/*   Updated: 2023/11/20 09:36:10 by etaattol         ###   ########.fr       */
+/*   Created: 2024/02/16 14:54:11 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/26 11:02:36 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strrchr(const char *s, int c)
+t_list	*ft_lstlast(t_list *lst)
 {
-	char	*ptr;
-	long	len;
-
-	ptr = (char *) s;
-	len = ft_strlen(ptr);
-	while (len >= 0)
-	{
-		if (ptr[len] == (char) c)
-			return (&(ptr[len]));
-		len--;
-	}
-	return (0);
+	if (!lst)
+		return (0);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }

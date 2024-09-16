@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/24 12:34:44 by iniska            #+#    #+#             */
-/*   Updated: 2023/10/31 09:14:14 by iniska           ###   ########.fr       */
+/*   Created: 2023/10/23 17:47:28 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/20 12:18:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int	ft_isascii(int a)
+int	ft_isascii(int i)
 {
-	while (a >= 0 && a <= 127)
-		return (1);
-	return (0);
+	return (i >= 0 && i <= 127);
 }

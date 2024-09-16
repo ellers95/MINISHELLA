@@ -6,14 +6,14 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:08:24 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:00:33 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	open_infile(t_data *data, int i);
-void	open_outfile(t_data *data, int i, bool append);
+void	setup_input_redirection(t_data *data, int i);
+void	setup_output_redirection(t_data *data, int i, bool append);
 
 /*
  * Opens an input file for redirection or handles here-document setup.
@@ -21,7 +21,7 @@ void	open_outfile(t_data *data, int i, bool append);
  * Otherwise, it opens the specified file for input redirection.
  * Updates the data structure with the new file descriptor.
 */
-void	open_infile(t_data *data, int i)
+void	setup_input_redirection(t_data *data, int i)
 {
 	int		fd;
 	char	*delimiter;
@@ -32,7 +32,7 @@ void	open_infile(t_data *data, int i)
 		delimiter = find_delimiter(data);
 		if (delimiter)
 		{
-			handle_the_doc(delimiter, data);
+			handle_heredoc(delimiter, data);
 			free(delimiter);
 		}
 		else
@@ -64,7 +64,7 @@ void	open_infile(t_data *data, int i)
  * Creates the file if it doesn't exist, or opens it if it does.
  * Updates the data structure with the new file descriptor.
 */
-void	open_outfile(t_data *data, int i, bool append)
+void	setup_output_redirection(t_data *data, int i, bool append)
 {
 	int	fd;
 

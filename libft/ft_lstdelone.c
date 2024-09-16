@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 15:01:01 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/06 15:10:30 by iniska           ###   ########.fr       */
+/*   Created: 2024/02/16 14:49:30 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 14:51:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	if (!lst || !del)
+	if (!lst)
 		return ;
-	(del)(lst->content);
+	if (del)
+		del(lst->content);
 	free(lst);
-	lst = NULL;
 }

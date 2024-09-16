@@ -3,36 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/28 11:36:06 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/08 15:56:03 by iniska           ###   ########.fr       */
+/*   Created: 2023/10/27 16:36:59 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/20 12:43:38 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+static int	ft_isspace(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
+}
+
 int	ft_atoi(const char *str)
 {
-	int	n;
-	int	t;
+	int		neg;
+	long	res;
 
-	n = 0;
-	t = 1;
-	while (*str == ' ' || *str == '\n' || *str == '\t' || *str == '\v'
-		|| *str == '\f' || *str == '\r')
+	neg = 1;
+	res = 0;
+	while (ft_isspace(*str))
 		str++;
 	if (*str == '-' || *str == '+')
 	{
 		if (*str == '-')
-			t = -1;
+			neg = -1;
 		str++;
 	}
-	while ((*str >= '0' && *str <= '9'))
+	while (*str >= '0' && *str <= '9')
 	{
-		n *= 10;
-		n += *str - '0';
-		str++;
+		if (res > MY_LONG_MAX / 10 || (res == MY_LONG_MAX / 10 && *str > '7'))
+		{
+			if (neg == -1)
+				return (0);
+			return (-1);
+		}
+		res = (res * 10) + (*str++ - '0');
 	}
-	return (n * t);
+	return (res * neg);
 }

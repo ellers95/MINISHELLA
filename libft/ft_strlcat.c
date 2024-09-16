@@ -3,36 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 16:02:15 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/12 11:43:08 by iniska           ###   ########.fr       */
+/*   Created: 2023/10/25 15:19:35 by etaattol          #+#    #+#             */
+/*   Updated: 2023/11/20 09:33:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t n)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	size_t		dstlen;
-	size_t		finallen;
-	const char	*s;
+	size_t	dst_len;
+	size_t	src_len;
+	size_t	tot_len;
 
-	dstlen = 0;
-	s = src;
-	if ((!dst || !src) && !n)
-		return (0);
-	while (*(dst + dstlen) && dstlen < n)
-		dstlen++;
-	if (dstlen < n)
-		finallen = dstlen + ft_strlen(s);
-	else
-		return (n + ft_strlen(s));
-	while (*s && (dstlen + 1) < n)
-	{
-		*(dst + dstlen) = *s++;
-		dstlen++;
-	}
-	*(dst + dstlen) = '\0';
-	return (finallen);
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	tot_len = dst_len + src_len;
+	if (dstsize < dst_len)
+		return (src_len + dstsize);
+	ft_strlcpy(dst + dst_len, src, dstsize - dst_len);
+	return (tot_len);
 }

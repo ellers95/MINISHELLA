@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printchar.c                                        :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/21 12:39:18 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/21 12:40:02 by iniska           ###   ########.fr       */
+/*   Created: 2024/02/16 14:51:40 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 14:53:42 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	printchar(char c)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	if (write(1, &c, 1) < 0)
-		return (-1);
-	return (1);
+	if (!f)
+		return ;
+	while (lst)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
 }

@@ -12,10 +12,6 @@
 
 #include "minishell.h"
 
-//void	find_doc(t_data *data, int tk_i);
-//void	handle_the_doc(const char *delimiter, t_data *data);
-//char	*find_delimiter(t_data *data);
-char	*readline_wrapper(const char *prompt, t_data *data);
 static inline char	*clean_delimiter(char *str);
 
 /*
@@ -23,25 +19,42 @@ static inline char	*clean_delimiter(char *str);
  * Identifies the delimiter and initiates the here-document 
  * handling process.
 */
-void	find_doc(t_data *data, int tk_i)
+void	find_heredoc(t_data *data, int token_index)
 {
 	char	*delimiter;
-	char	separate;
+	bool	is_seperate_delimiter;
 
-	separate = 0;
-	if (ft_strlen(data->token[tk_i]) == 2)
+	is_seperate_delimiter = false;
+	if (ft_strlen(data->token[token_index]) == 2)
 	{
 		delimiter = find_delimiter(data);
-		separate = 1;
+		is_seperate_delimiter = true;
 	}
 	else
 	{
-		delimiter = data->token[tk_i] + 2;
-		data->token[tk_i] = clean_delimiter(data->token[tk_i]);
+		delimiter = data->token[token_index] + 2;
+		data->token[token_index] = clean_delimiter(data->token[token_index]);
 	}
-	handle_the_doc(delimiter, data);
-	if (separate)
+	handle_heredoc(delimiter, data);
+	if (is_seperate_delimiter)
 		free(delimiter);
+}
+
+/*
+ * A wrapper function for readline to handle interrupts during here-document input.
+*/
+char	*readline_wrapper(const char *prompt, t_data *data)
+{
+	char	*line;
+
+	line = readline(prompt);
+	if (get_set_stop_flag(GET, 0))
+	{
+		free(line);
+		data->heredoc_interrupted = 1;
+		return (NULL);
+	}
+	return (line);
 }
 
 /*
@@ -49,7 +62,7 @@ void	find_doc(t_data *data, int tk_i)
  * Reads input lines until the delimiter is encountered, storing the content.
  * Sets up file descriptors for the here-document content.
 */
-void	handle_the_doc(const char *delimiter, t_data *data)
+void	handle_heredoc(const char *delimiter, t_data *data)
 {
 	char	*line;
 	int		fd[2];
@@ -136,28 +149,11 @@ char	*find_delimiter(t_data *data)
 				return (NULL);
 			}
 			ft_strlcpy(deli, data->token[i], len + 1);
-			token_cleaner(data, i);
+			remove_token_and_shift_array(data, i);
 			return (deli);
 		}
 	}
 	return (NULL);
-}
-
-/*
- * A wrapper function for readline to handle interrupts during here-document input.
-*/
-char	*readline_wrapper(const char *prompt, t_data *data)
-{
-	char	*line;
-
-	line = readline(prompt);
-	if (get_set_stop_flag(GET, 0))
-	{
-		free(line);
-		data->heredoc_interrupted = 1;
-		return (NULL);
-	}
-	return (line);
 }
 
 /*
@@ -170,17 +166,14 @@ static inline char	*clean_delimiter(char *str)
 	int		i;
 
 	i = 0;
-	copy = malloc(sizeof(char) * 4);
+	while (str[i] == '<' && str[i] != '\0')
+		i++;
+	copy = malloc(sizeof(char) * (i + 1));
 	if (!copy)
 	{
 		ft_printf("Error: Malloc fail in doc\n");
-		return (0);
+		return (NULL);
 	}
-	while (str[i] == '<' && str[i] != '\0')
-	{
-		copy[i] = str[i];
-		i++;
-	}
-	copy[i] = '\0';
+	ft_strlcpy(copy, str, i + 1);
 	return (copy);
 }

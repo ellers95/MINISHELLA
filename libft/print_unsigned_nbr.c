@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printstr.c                                         :+:      :+:    :+:   */
+/*   print_unsigned_nbr.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iniska <iniska@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/21 12:50:03 by iniska            #+#    #+#             */
-/*   Updated: 2023/11/21 12:52:01 by iniska           ###   ########.fr       */
+/*   Created: 2023/11/30 15:50:20 by etaattol          #+#    #+#             */
+/*   Updated: 2024/02/16 13:23:40 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	printstr(char *s)
+int	print_unsigned_nbr(unsigned int unbr, int *check)
 {
-	int	i;
+	int	count;
 
-	i = 0;
-	if (s)
-	{
-		while (*s != '\0')
-		{
-			if (printchar((int)*s) < 0)
-				return (-1);
-			i++;
-			s++;
-		}
-	}
+	count = 0;
+	if (unbr == 2147483647)
+		return (write(1, "2147483647", 10));
 	else
 	{
-		if (write (1, "(null)", 6) == -1)
-			return (-1);
-		i = 6;
+		if (unbr >= 10)
+		{
+			count += print_unsigned_nbr(unbr / 10, check);
+			if (count == -1)
+				return (-1);
+		}
+		count += print_char(unbr % 10 + '0', check);
 	}
-	return (i);
+	return (count);
 }

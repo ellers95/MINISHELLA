@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_pwd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:46:52 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 02:24:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/16 13:31:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_pwd(t_data *data)
 {
 	char	*current_directory;
 
-	token_cleaner(data, 0);
+	remove_token_and_shift_array(data, 0);
 	current_directory = getcwd(NULL, 0);
 	if (!current_directory)
 	{
