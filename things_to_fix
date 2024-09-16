@@ -1,0 +1,7 @@
+"cat ELLA > a"
+
+
+ls >p
+Error!: Error opening output file: Permission denied
+b  bananatests	ELLA  libft  Makefile  minishell  minishell.h  o  objs	p  README.md  srcs  things_to_fix  u  v  y
+shouldn't do ls if you don't have the permission to p
