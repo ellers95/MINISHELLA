@@ -10,6 +10,7 @@ SRCFILES 	= 	main.c \
 				executor/fd_closer.c \
 				executor/file_redirections.c \
 				executor/path_solver.c \
+				executor/pipe_child_process.c \
 				executor/pipe_executor.c \
 				executor/redirection_executor.c \
 				lexer/env_expander.c \

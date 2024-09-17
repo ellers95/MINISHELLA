@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:05:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:48:22 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <sys/wait.h>
 # include <string.h>
 # include <stdio.h>
+# include <stdint.h>
 # include <stdbool.h>
 # include <errno.h>
 # include <signal.h>
@@ -83,6 +84,8 @@ bool	redirect_file_input(t_data *data);
 bool	redirect_file_output(t_data *data);
 char	*get_command_path(char *command_name, char **envp);
 void	execute_pipeline(t_data *data);
+void	handle_child_process(t_data *data, char **envp,
+			int command_index, int fd[2]);
 void	close_pipe_fds(int fd[2]);
 void	handle_redirections(t_data *data);
 

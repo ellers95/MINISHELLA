@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/17 17:03:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:49:49 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,13 @@ static inline void	remove_quotes_from_token(char *token)
 		{
 			quote = token[char_index];
 			ft_memmove(token + char_index, token + char_index + 1,
-				len - char_index);
-			len--;
+				len-- - char_index);
 			while (token[char_index] && token[char_index] != quote)
 				char_index++;
 			if (token[char_index] == quote)
 			{
 				ft_memmove(token + char_index, token + char_index + 1,
-					len - char_index);
-				len--;
+					len-- - char_index);
 			}
 		}
 		else
@@ -137,17 +135,17 @@ static inline void	delete_quotes(t_data *data)
 	}
 }
 
-static bool	process_token(t_data *data, char *input_str, int *char_index,
-				int token_index, char *current_quote)
+static bool	process_token(t_data *data, long strs[2], int *char_index,
+				int token_index)
 {
 	int	start;
 
 	start = *char_index;
-	*char_index = handle_quote(input_str, current_quote, *char_index);
+	*char_index = handle_quote((char *)strs[0], (char *)strs[1], *char_index);
 	data->token[token_index] = ft_calloc(*char_index - start + 1, sizeof(char));
 	if (!data->token[token_index])
 		return (false);
-	ft_strlcpy(data->token[token_index], &input_str[start],
+	ft_strlcpy(data->token[token_index], &((char *)strs[0])[start],
 		*char_index - start + 1);
 	data->token[token_index] = check_and_expand_env_variables
 		(data->token[token_index], data->env, data);
@@ -177,8 +175,8 @@ bool	lexer(char *input_str, t_data *data)
 			char_index++;
 		if (input_str[char_index])
 		{
-			if (!process_token(data, input_str, &char_index,
-					token_index, &current_quote))
+			if (!process_token(data, (long [2]){(long)&input_str, (long)&current_quote},
+					&char_index, token_index))
 				return (false);
 			token_index++;
 		}

@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 18:36:30 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:59:01 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:17:57 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_free(const void *blk)
 {
 	t_list	*cur;
 	t_list	*prv;
-	
+
 	if (!blk)
 		return ;
 	cur = *_gethead();
@@ -60,7 +60,7 @@ void	ft_free(const void *blk)
 	}
 }
 
-int		ft_clear(const int retval)
+int	ft_clear(const int retval)
 {
 	t_list	*cur;
 	t_list	*prv;
