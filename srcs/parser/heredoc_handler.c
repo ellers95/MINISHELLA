@@ -12,34 +12,57 @@
 
 #include "minishell.h"
 
-static inline char	*clean_delimiter(char *str);
-static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data);
-static void	handle_heredoc_completion(int fd[2], bool eof_encountered, const char *delimiter, t_data *data);
+/*
+* Searches for and extracts the delimiter for a here-document.
+*/
+char	*find_delimiter(t_data *data)
+{
+	int		i;
+	int		len;
+	char	*deli;
+
+	i = 0;
+	while (data->token[i])
+	{
+		if (!ft_strcmp(data->token[i++], "<<"))
+		{
+			if (!data->token[i])
+				return (ft_strdup(""));
+			len = ft_strlen(data->token[i]);
+			deli = ft_alloc(sizeof(char) * (len + 1));
+			if (!deli)
+			{
+				clean_struct(data);
+				return (NULL);
+			}
+			ft_strlcpy(deli, data->token[i], len + 1);
+			remove_token_and_shift_array(data, i);
+			return (deli);
+		}
+	}
+	return (NULL);
+}
 
 /*
- * Locates and processes a here-document in the command.
- * Identifies the delimiter and initiates the here-document 
- * handling process.
+ * Cleans and formats the delimiter string for a here-document.
+ * Removes any leading '<' characters from the delimiter.
 */
-void	find_heredoc(t_data *data, int token_index)
+static inline char	*clean_delimiter(char *str)
 {
-	char	*delimiter;
-	bool	is_seperate_delimiter;
+	char	*copy;
+	int		i;
 
-	is_seperate_delimiter = false;
-	if (ft_strlen(data->token[token_index]) == 2)
+	i = 0;
+	while (str[i] == '<' && str[i] != '\0')
+		i++;
+	copy = ft_alloc(sizeof(char) * (i + 1));
+	if (!copy)
 	{
-		delimiter = find_delimiter(data);
-		is_seperate_delimiter = true;
+		ft_printf("Error: ft_alloc fail in doc\n");
+		return (NULL);
 	}
-	else
-	{
-		delimiter = data->token[token_index] + 2;
-		data->token[token_index] = clean_delimiter(data->token[token_index]);
-	}
-	handle_heredoc(delimiter, data);
-	if (is_seperate_delimiter)
-		free(delimiter);
+	ft_strlcpy(copy, str, i + 1);
+	return (copy);
 }
 
 /*
@@ -57,6 +80,60 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 		return (NULL);
 	}
 	return (line);
+}
+
+static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data)
+{
+	char	*line;
+	bool	eof_encountered;
+
+	eof_encountered = false;
+	while (1)
+	{
+		line = readline_wrapper("here_doc> ", data);
+		if (!line)
+		{
+			if (get_set_stop_flag(GET, 0))
+				data->heredoc_interrupted = 1;
+			else
+				eof_encountered = true;
+			break ;
+		}
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		ft_putendl_fd(line, fd);
+		free(line);
+	}
+	return (eof_encountered);
+}
+
+static void	handle_heredoc_completion(int fd[2], bool eof_encountered,
+			const char *delimiter, t_data *data)
+{
+	set_heredoc_status(OUT_HEREDOC);
+	if (data->heredoc_interrupted || eof_encountered)
+	{
+		close(fd[0]);
+		if (eof_encountered)
+		{
+			printf("\nminishell: warning: heredoc delimited \
+					by end-of-file (wanted `%s')\n", delimiter);
+		}
+	}
+	else
+	{
+		data->input_file_fds[data->input_file_count] = fd[0];
+		data->input_file_count++;
+	}
+	if (data->original_stdin != -1)
+	{
+		dup2(data->original_stdin, STDIN_FILENO);
+		close(data->original_stdin);
+		data->original_stdin = -1;
+	}
 }
 
 /*
@@ -88,108 +165,28 @@ void	handle_heredoc(const char *delimiter, t_data *data)
 	handle_heredoc_completion(fd, eof_encountered, delimiter, data);
 }
 
-static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data)
+/*
+ * Locates and processes a here-document in the command.
+ * Identifies the delimiter and initiates the here-document 
+ * handling process.
+*/
+void	find_heredoc(t_data *data, int token_index)
 {
-	char	*line;
-	bool	eof_encountered;
+	char	*delimiter;
+	bool	is_seperate_delimiter;
 
-	eof_encountered = false;
-	while (1)
+	is_seperate_delimiter = false;
+	if (ft_strlen(data->token[token_index]) == 2)
 	{
-		line = readline_wrapper("here_doc> ", data);
-		if (!line)
-		{
-			if (get_set_stop_flag(GET, 0))
-				data->heredoc_interrupted = 1;
-			else
-				eof_encountered = true;
-			break ;
-		}
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-		{
-			free (line);
-			break ;
-		}
-		ft_putendl_fd(line, fd);
-		free(line);
-	}
-	return (eof_encountered);
-}
-
-static void	handle_heredoc_completion(int fd[2], bool eof_encountered, const char *delimiter, t_data *data)
-{
-	set_heredoc_status(OUT_HEREDOC);
-	if (data->heredoc_interrupted || eof_encountered)
-	{
-		close(fd[0]);
-		if (eof_encountered)
-		{
-			printf("\nminishell: warning: heredoc delimited \
-					by end-of-file (wanted `%s')\n", delimiter);
-		}
+		delimiter = find_delimiter(data);
+		is_seperate_delimiter = true;
 	}
 	else
 	{
-		data->input_file_fds[data->input_file_count] = fd[0];
-		data->input_file_count++;
+		delimiter = data->token[token_index] + 2;
+		data->token[token_index] = clean_delimiter(data->token[token_index]);
 	}
-	if (data->original_stdin != -1)
-	{
-		dup2(data->original_stdin, STDIN_FILENO);
-		close(data->original_stdin);
-		data->original_stdin = -1;
-	}
-}
-
-/*
-* Searches for and extracts the delimiter for a here-document.
-*/
-char	*find_delimiter(t_data *data)
-{
-	int		i;
-	int		len;
-	char	*deli;
-
-	i = 0;
-	while (data->token[i])
-	{
-		if (!ft_strcmp(data->token[i++], "<<"))
-		{
-			if (!data->token[i])
-				return (ft_strdup(""));
-			len = ft_strlen(data->token[i]);
-			deli = malloc(sizeof(char) * (len + 1));
-			if (!deli)
-			{
-				clean_struct(data);
-				return (NULL);
-			}
-			ft_strlcpy(deli, data->token[i], len + 1);
-			remove_token_and_shift_array(data, i);
-			return (deli);
-		}
-	}
-	return (NULL);
-}
-
-/*
- * Cleans and formats the delimiter string for a here-document.
- * Removes any leading '<' characters from the delimiter.
-*/
-static inline char	*clean_delimiter(char *str)
-{
-	char	*copy;
-	int		i;
-
-	i = 0;
-	while (str[i] == '<' && str[i] != '\0')
-		i++;
-	copy = malloc(sizeof(char) * (i + 1));
-	if (!copy)
-	{
-		ft_printf("Error: Malloc fail in doc\n");
-		return (NULL);
-	}
-	ft_strlcpy(copy, str, i + 1);
-	return (copy);
+	handle_heredoc(delimiter, data);
+	if (is_seperate_delimiter)
+		ft_free(delimiter);
 }

@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:46:52 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:31:07 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:18:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	handle_pwd(t_data *data)
 		return (1);
 	}
 	printf("%s\n", current_directory);
+	free(current_directory);
 	data->last_command_exit_status = 0;
 	if (data->has_redirection)
 		exit (0);

@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_ops.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 15:16:38 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:07:51 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int					add_end(t_node **stack, char *str);
-char				**env_list_to_array(t_node **env);
-static inline char	*create_env_string(t_node *node);
 
 /*
  * Adds a new node to the end of the linked list (stack).
@@ -26,7 +22,7 @@ int	add_end(t_node **stack, char *str)
 	t_node	*pre;
 	t_node	*last;
 
-	last = malloc(sizeof(t_node));
+	last = ft_alloc(sizeof(t_node));
 	if (!last)
 		return (1);
 	last->next = NULL;
@@ -43,6 +39,24 @@ int	add_end(t_node **stack, char *str)
 		last->prev = pre;
 	}
 	return (0);
+}
+
+static inline char	*create_env_string(t_node *node)
+{
+	char	*temp;
+	char	*result;
+
+	temp = ft_strjoin(node->key, "=");
+	if (!temp)
+		return (NULL);
+	if (node->value)
+	{
+		result = ft_strjoin(temp, node->value);
+		ft_free(temp);
+		return (result);
+	}
+	else
+		return (temp);
 }
 
 /*
@@ -75,22 +89,4 @@ char	**env_list_to_array(t_node **env)
 		i++;
 	}
 	return (eepie);
-}
-
-static inline char	*create_env_string(t_node *node)
-{
-	char	*temp;
-	char	*result;
-
-	temp = ft_strjoin(node->key, "=");
-	if (!temp)
-		return (NULL);
-	if (node->value)
-	{
-		result = ft_strjoin(temp, node->value);
-		free (temp);
-		return (result);
-	}
-	else
-		return (temp);
 }

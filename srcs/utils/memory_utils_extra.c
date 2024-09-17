@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils_extra.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 21:04:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 00:39:31 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	free_args(char **argh)
 	i = 0;
 	while (argh[i])
 	{
-		free(argh[i]);
+		ft_free(argh[i]);
 		i++;
 	}
-	free(argh);
+	ft_free(argh);
 }

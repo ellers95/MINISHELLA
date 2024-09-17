@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/17 15:44:03 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:05:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
  * Initializes the shell, sets up the environment,
  * and runs the main command loop.
 */
-static inline void	initialize_shell(t_data *data, char **envp, struct termios *original_termios)
+static inline void	initialize_shell(t_data *data, char **envp,
+	struct termios *original_termios)
 {
 	if (!ft_memset(data, 0, sizeof(t_data)))
 	{
@@ -37,7 +38,7 @@ static inline void	process_input(t_data *data, char *user_input)
 	if (!lexer(user_input, data) || !parser(data) || !execution(data))
 	{
 		if (!data->env)
-				free_env(&data->env);
+			free_env(&data->env);
 		printf("Error: Command processing failed\n");
 	}
 	free(user_input);
@@ -46,6 +47,7 @@ static inline void	process_input(t_data *data, char *user_input)
 static inline void	run_shell(t_data *data)
 {
 	char	*user_input;
+
 	while (1)
 	{
 		user_input = readline("✨🧚minishELLA🧚✨:");
@@ -75,11 +77,9 @@ int	main(int argv, char **argc, char **envp)
 
 	(void)argc;
 	(void)argv;
-	
 	initialize_shell(&data, envp, &original_termios);
 	run_shell(&data);
 	clean_data(&data);
 	restore_terminal(&original_termios);
-
-	return (0);
+	return (ft_clear(0));
 }

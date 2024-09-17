@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 13:58:30 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:38:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static bool process_command_token(t_data *data, char **envp, int i, int *new_index);
 
 /*
  * Parses command arguments from the token array.
@@ -52,9 +50,29 @@ bool	parse_command_arguments(t_data *data)
 */
 static inline bool	init_command_paths(t_data *data)
 {
-	data->command_paths = ft_calloc(data->token_count, sizeof(char *));      // used to be like this data->command_paths = ft_calloc(data->token_count - 1, sizeof(char *));
+	data->command_paths = ft_calloc(data->token_count, sizeof(char *));
 	if (!data->command_paths)
 		return (false);
+	return (true);
+}
+
+static bool	process_command_token(t_data *data, char **envp,
+			int i, int *new_index)
+{
+	char	**cmd;
+	char	*path;
+	
+	cmd = ft_split(data->token[i], ' ');
+	if (!cmd)
+	{
+		free_line(data->command_paths, data->token_count);
+		data->command_paths = NULL;
+		return (false);
+	}
+	path = get_command_path(cmd[0], envp);
+	data->command_paths[*new_index] = path;
+	(*new_index)++;
+	free_line(cmd, -1);
 	return (true);
 }
 
@@ -84,24 +102,5 @@ bool	parse_command_line(t_data *data, char **envp)
 			i++;
 		}
 	}
-	return (true);
-}
-
-static bool process_command_token(t_data *data, char **envp, int i, int *new_index)
-{
-	char	**cmd;
-	char	*path;
-	
-	cmd = ft_split(data->token[i], ' ');
-	if (!cmd)
-		{
-			free_line(data->command_paths, data->token_count);
-			data->command_paths = NULL;
-			return (false);
-		}
-	path = get_command_path(cmd[0], envp);
-	data->command_paths[*new_index] = path;
-	(*new_index)++;
-	free_line(cmd, -1);
 	return (true);
 }

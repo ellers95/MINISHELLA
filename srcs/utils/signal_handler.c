@@ -6,33 +6,11 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:17:48 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:27:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:14:17 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static inline void	handle_sigint(int sig);
-static inline void	handle_quit(int sig);
-
-/*
- * Sets up signal handlers for the shell.
- * Configures custom handlers for SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\).
-*/
-void	signaling(void)
-{
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sigemptyset(&sa_int.sa_mask);
-	sigemptyset(&sa_quit.sa_mask);
-	sa_int.sa_handler = handle_sigint;
-	sa_int.sa_flags = 0;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = handle_quit;
-	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
-}
 
 /*
  * Handles the SIGINT signal (Ctrl+C).
@@ -66,6 +44,25 @@ static inline void	handle_sigint(int sig)
 static inline void	handle_quit(int sig)
 {
 	(void)sig;
+}
+
+/*
+ * Sets up signal handlers for the shell.
+ * Configures custom handlers for SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\).
+*/
+void	signaling(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sigemptyset(&sa_int.sa_mask);
+	sigemptyset(&sa_quit.sa_mask);
+	sa_int.sa_handler = handle_sigint;
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = handle_quit;
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 /*

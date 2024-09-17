@@ -6,15 +6,78 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:01:53 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:30:56 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static inline void	print_sorted_environment(t_data *data, t_node *env);
-static inline void	add_to_env(t_data *data, t_node *env, char *value_start, int key_length);
-static inline void	find_env(t_data *data, t_node *env, char *value_start, int key_length);
+/*
+* Handles 'export' when called without arguments.
+* Displays all environment variables in the required format.
+*/
+static inline void	print_sorted_environment(t_data *data, t_node *env)
+{
+	while (env->next)
+	{
+		if (!env)
+			break ;
+		else if (env->value)
+			printf("declare -x %s=\"%s\"\n", env->key, env->value);
+		else if (!env->value)
+			printf("declare -x %s\n", env->key);
+		env = env->next;
+	}
+	remove_token_and_shift_array(data, 0);
+}
+
+/*
+* Adds a new variable to the environment.
+* Used by handle_export when a new variable needs to be added.
+*/
+static inline void	add_to_env(t_data *data, t_node *env,
+					char *value_start, int key_length)
+{
+	add_end(&env, data->token[0]);
+	if (value_start)
+	{
+		ft_strlcpy(env->key, data->token[0], key_length + 1);
+		env->value = ft_strdup(value_start);
+	}
+	else
+	{
+		env->key = ft_strdup(data->token[0]);
+		env->value = NULL;
+	}
+}
+
+/*
+* Searches for an existing variable in the environment and updates it.
+* Used by handle_export to update existing variables
+*/
+static inline void	find_env(t_data *data, t_node *env,
+					char *value_start, int key_length)
+{
+	bool	var_exists;
+
+	var_exists = false;
+	while (env->next)
+	{
+		if (!env)
+			break ;
+		else if (!ft_strcmp(env->key, data->token[0]))
+		{
+			var_exists = true;
+			if (value_start)
+				env->value = ft_strdup(value_start);
+		}
+		env = env->next;
+	}
+	if (var_exists == false)
+		add_to_env(data, env, value_start, key_length);
+	while (env->prev)
+		env = env->prev;
+}
 
 /*
 * Handles the 'export' builtin command.
@@ -68,8 +131,8 @@ void	handle_unset(t_data *data, t_node **env)
 			{
 				printf("key = %s\n", current_node->key);
 				remove_token_and_shift_array(data, 0);
-				free(current_node->key);
-				free(current_node->value);
+				ft_free(current_node->key);
+				ft_free(current_node->value);
 				current_node->key = NULL;
 				current_node->value = NULL;
 				remove_node(current_node);
@@ -80,69 +143,4 @@ void	handle_unset(t_data *data, t_node **env)
 	}
 	if (data->has_redirection)
 		exit (0);
-}
-
-/*
-* Handles 'export' when called without arguments.
-* Displays all environment variables in the required format.
-*/
-static inline void	print_sorted_environment(t_data *data, t_node *env)
-{
-	while (env->next)
-	{
-		if (!env)
-			break ;
-		else if (env->value)
-			printf("declare -x %s=\"%s\"\n", env->key, env->value);
-		else if (!env->value)
-			printf("declare -x %s\n", env->key);
-		env = env->next;
-	}
-	remove_token_and_shift_array(data, 0);
-}
-
-/*
-* Adds a new variable to the environment.
-* Used by handle_export when a new variable needs to be added.
-*/
-static inline void	add_to_env(t_data *data, t_node *env, char *value_start, int key_length)
-{
-	add_end(&env, data->token[0]);
-	if (value_start)
-	{
-		ft_strlcpy(env->key, data->token[0], key_length + 1);
-		env->value = ft_strdup(value_start);
-	}
-	else
-	{
-		env->key = ft_strdup(data->token[0]);
-		env->value = NULL;
-	}
-}
-
-/*
-* Searches for an existing variable in the environment and updates it.
-* Used by handle_export to update existing variables
-*/
-static inline void	find_env(t_data *data, t_node *env, char *value_start, int key_length)
-{
-	bool	var_exists;
-
-	var_exists = false;
-	while (env->next)
-	{
-		if (!env)
-			break ;
-		else if (!ft_strcmp(env->key, data->token[0]))
-		{
-			var_exists = true;
-			if (value_start)
-				env->value = ft_strdup(value_start);
-		}
-		env = env->next;
-	}
-	if (var_exists == false)
-		add_to_env(data, env, value_start, key_length);
-	while (env->prev)
-		env = env->prev;
 }

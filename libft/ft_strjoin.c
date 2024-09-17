@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 15:09:16 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:55:20 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:57:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	s1len = ft_strlen(s1);
 	s2len = ft_strlen(s2);
-	dest = malloc(sizeof(char) * (s1len + s2len + 1));
+	dest = ft_alloc(sizeof(char) * (s1len + s2len + 1));
 	if (dest == NULL)
 		return (NULL);
 	if (s1)

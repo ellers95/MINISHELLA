@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:05:06 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 15:26:11 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	load_list(t_data *data, char **envp);
-t_node	*find_last(t_node	*stack);
-t_node	*parse_str(t_node *node, char *env_str);
-int		stack_len(t_node *stack);
-void	remove_node(t_node *node);
 
 /*
  * Initializes the environment variable linked list from the provided envp array.
@@ -110,7 +104,7 @@ void	remove_node(t_node *node)
 		node->prev->next = node->next;
 	if (node->next)
 		node->next->prev = node->prev;
-	free(node->key);
-	free(node->value);
-	free(node);
+	ft_free(node->key);
+	ft_free(node->value);
+	ft_free(node);
 }

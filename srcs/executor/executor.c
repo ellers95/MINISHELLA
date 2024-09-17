@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 00:04:58 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	execute_command(t_data *data, char **envp, int index)
 	if (!ft_strncmp(command_arguments[0], "exit", 5))
 	{
 		handle_exit(data);
-		free(command_arguments);
+		ft_free(command_arguments);
 		exiting(data, 0);
 	}
 	if (data->command_paths[index])

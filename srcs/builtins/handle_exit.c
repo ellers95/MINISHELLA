@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   handle_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/16 23:51:01 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:06:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static inline size_t	exit_code_calculator(char *argv);
-static inline void	perform_exit(t_data *data);
 
 /*
 * Converts a string argument to an exit code.
@@ -71,7 +68,7 @@ static void	perform_exit(t_data *data)
 		exit_code = 0;
 	}
 	clean_data(data);
-	exit(exit_code);
+	exit(ft_clear(exit_code));
 }
 
 /*
@@ -86,7 +83,7 @@ void	handle_exit(t_data *data)
 		ft_printf("Good bye!\nexit\n");
 		remove_token_and_shift_array(data, 0);
 		clean_data(data);
-		exit(0);
+		exit(ft_clear(0));
 	}
 	else if (data->token_count >= 2)
 		perform_exit(data);

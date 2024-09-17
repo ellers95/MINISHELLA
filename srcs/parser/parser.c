@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:02:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:13:18 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,27 @@ static inline void	allocate_file_descriptors(t_data *data);
 static inline void	type_flagger(t_data *data);
 static inline bool	is_valid_heredoc_syntax(t_data *data, int i);
 
+
 /*
- * Main parsing function for the shell input.
- * Coordinates the parsing process, including 
- * file storage creation and token type flagging.
- */
-bool	parser(t_data *data)
+ * Allocates memory for storing file descriptors.
+ * Creates arrays for input and output file descriptors 
+ * based on counted redirections.
+*/
+static inline void	allocate_file_descriptors(t_data *data)
 {
-	create_file_storage(data);
-	type_flagger(data);
-	return (true);
+	data->input_file_fds = ft_alloc(sizeof(int) * data->input_file_count);
+	if (!data->input_file_fds && sizeof(int) * data->input_file_count)
+	{
+		perror("Error: ft_alloc input_file_fds failed");
+		return ;
+	}
+	data->output_file_fds = ft_alloc(sizeof(int) * data->output_file_count);
+	if (!data->output_file_fds && sizeof(int) * data->output_file_count)
+	{
+		perror("Error: ft_alloc output_file_fds failed");
+		ft_free(data->input_file_fds);
+		return ;
+	}
 }
 
 /*
@@ -56,25 +67,31 @@ static inline void	create_file_storage(t_data *data)
 }
 
 /*
- * Allocates memory for storing file descriptors.
- * Creates arrays for input and output file descriptors 
- * based on counted redirections.
+ * Checks and handles here-document syntax.
+ * Verifies the correct format of here-document delimiters.
+ * Initiates here-document processing if syntax is correct.
 */
-static inline void	allocate_file_descriptors(t_data *data)
+static inline bool	is_valid_heredoc_syntax(t_data *data, int i)
 {
-	data->input_file_fds = malloc(sizeof(int) * data->input_file_count);
-	if (!data->input_file_fds)
+	if (ft_strncmp(data->token[i], "<<", 2) == 0)
 	{
-		perror("Error: Malloc input_file_fds failed");
-		return ;
+		if ((ft_strncmp(data->token[i], "<<<", 3) == 0)
+			|| (ft_strncmp(data->token[i], "<<>", 3) == 0)
+			|| (ft_strncmp(data->token[i], "<<|", 3) == 0))
+		{
+			clean_struct(data);
+			printf("Error: Syntax error after token <<\n");
+			return (false);
+		}
+		data->is_heredoc = true;
+		find_heredoc(data, i);
+		if (data->token_count < 1)
+		{
+			clean_struct(data);
+			return (false);
+		}
 	}
-	data->output_file_fds = malloc(sizeof(int) * data->output_file_count);
-	if (!data->output_file_fds)
-	{
-		perror("Error: Malloc output_file_fds failed");
-		free(data->input_file_fds);
-		return ;
-	}
+	return (true);
 }
 
 /*
@@ -104,29 +121,13 @@ static inline void	type_flagger(t_data *data)
 }
 
 /*
- * Checks and handles here-document syntax.
- * Verifies the correct format of here-document delimiters.
- * Initiates here-document processing if syntax is correct.
-*/
-static inline bool	is_valid_heredoc_syntax(t_data *data, int i)
+ * Main parsing function for the shell input.
+ * Coordinates the parsing process, including 
+ * file storage creation and token type flagging.
+ */
+bool	parser(t_data *data)
 {
-	if (ft_strncmp(data->token[i], "<<", 2) == 0)
-	{
-		if ((ft_strncmp(data->token[i], "<<<", 3) == 0)
-			|| (ft_strncmp(data->token[i], "<<>", 3) == 0)
-			|| (ft_strncmp(data->token[i], "<<|", 3) == 0))
-		{
-			clean_struct(data);
-			printf("Error: Syntax error after token <<\n");
-			return (false);
-		}
-		data->is_heredoc = true;
-		find_heredoc(data, i);
-		if (data->token_count < 1)
-		{
-			clean_struct(data);
-			return (false);
-		}
-	}
+	create_file_storage(data);
+	type_flagger(data);
 	return (true);
 }

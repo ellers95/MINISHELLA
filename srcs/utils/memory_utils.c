@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 23:39:08 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static inline void	clean_files(t_data *data);
 
 /*
  * Performs a complete cleanup of the shell's data structures.
@@ -27,12 +25,39 @@ void	clean_data(t_data *data)
 }
 
 /*
+
+*/
+static inline void	clean_files(t_data *data)
+{
+	if (data->input_file_fds != NULL)
+	{
+		ft_free(data->input_file_fds);
+		data->input_file_fds = NULL;
+	}
+	if (data->output_file_fds != NULL)
+	{
+		ft_free(data->output_file_fds);
+		data->output_file_fds = NULL;
+	}
+}
+
+/*
  * Resets and cleans up the main data structure.
  * Frees tokens, closes file descriptors, and resets counters and flags.
  * Does not free the environment variables.
 */
 void	clean_struct(t_data *data)
 {
+	if (data->command_arguments)
+	{
+		ft_free(data->command_arguments);
+		data->command_arguments = NULL;
+	}
+	if (data->command_paths)
+	{
+		free_array(&data->command_paths, data->token_count);
+		data->command_paths = NULL;
+	}
 	if (data->token_count > 0)
 		remove_token_and_shift_array(data, 0);
 	clean_files(data);
@@ -60,29 +85,12 @@ void	free_env(t_node	**env)
 	while (curr)
 	{
 		temp = curr->next;
-		free(curr->value);
-		free(curr->key);
-		free(curr);
+		ft_free(curr->value);
+		ft_free(curr->key);
+		ft_free(curr);
 		curr = temp;
 	}
 	*env = NULL;
-}
-
-/*
-
-*/
-static inline void	clean_files(t_data *data)
-{
-	if (data->input_file_fds != NULL)
-	{
-		free(data->input_file_fds);
-		data->input_file_fds = NULL;
-	}
-	if (data->output_file_fds != NULL)
-	{
-		free(data->output_file_fds);
-		data->output_file_fds = NULL;
-	}
 }
 
 /*

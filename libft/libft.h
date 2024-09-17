@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:39:39 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:34:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:02:08 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,14 @@ char	*ft_strcpy(char *dst, const char *src);
 char	*ft_strncpy(char *dst, const char *src, size_t len);
 char	*ft_strcat(char *dst, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
+
+/* ************************************************************************ */
+/*							FREE LIST	    								*/
+/* ************************************************************************ */
+
+void	*ft_alloc(const size_t n);
+void	ft_flist_add(t_list *newnode);
+void	ft_free(const void *blk);	
+int		ft_clear(const int retval);
 
 #endif

@@ -3,38 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 14:36:44 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:57:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static inline void	handle_output_redirection(t_data *data, int i);
-static inline void	handle_input_redirection(t_data *data, int i);
-static inline char	*remove_redirection_symbols(char *token_str);
-
 /*
- * Manages file redirection operations in the shell command.
- * Iterates through tokens to handle input and output redirections.
- * Calls specific functions for input and output file operations.
+ * Cleans redirection symbols from token strings.
+ * Removes leading '<' or '>' characters from the given string.
 */
-void	process_redirection_tokens(t_data *data)
+static inline char	*remove_redirection_symbols(char *token_str)
 {
-	int	i;
+	int		i;
+	int		j;
+	char	*copy;
 
 	i = 0;
-	while (data->token[i] && data->token_count > 1)
+	j = 0;
+	copy = ft_alloc(sizeof(char) * (ft_strlen(token_str) + 1));
+	if (!copy)
 	{
-		if (ft_strncmp(data->token[i], "<", 1) == 0)
-			handle_input_redirection(data, i);
-		else if (ft_strncmp(data->token[i], ">", 1) == 0)
-			handle_output_redirection(data, i);
-		else
-			i++;
+		ft_printf("ft_alloc fail in arrows");
+		return (NULL);
 	}
+	while (token_str[i] != '\0')
+	{
+		while (token_str[i] == '<' || token_str[i] == '>')
+			i++;
+		while (token_str[i] != '\0')
+		{
+			copy[j] = token_str[i];
+			i++;
+			j++;
+		}
+	}
+	copy[j] = '\0';
+	return (copy);
 }
 
 /*
@@ -89,34 +97,22 @@ static inline void	handle_input_redirection(t_data *data, int i)
 }
 
 /*
- * Cleans redirection symbols from token strings.
- * Removes leading '<' or '>' characters from the given string.
+ * Manages file redirection operations in the shell command.
+ * Iterates through tokens to handle input and output redirections.
+ * Calls specific functions for input and output file operations.
 */
-static inline char	*remove_redirection_symbols(char *token_str)
+void	process_redirection_tokens(t_data *data)
 {
-	int		i;
-	int		j;
-	char	*copy;
+	int	i;
 
 	i = 0;
-	j = 0;
-	copy = malloc(sizeof(char) * (ft_strlen(token_str) + 1));
-	if (!copy)
+	while (data->token[i] && data->token_count > 1)
 	{
-		ft_printf("Malloc fail in arrows");
-		return (NULL);
-	}
-	while (token_str[i] != '\0')
-	{
-		while (token_str[i] == '<' || token_str[i] == '>')
+		if (ft_strncmp(data->token[i], "<", 1) == 0)
+			handle_input_redirection(data, i);
+		else if (ft_strncmp(data->token[i], ">", 1) == 0)
+			handle_output_redirection(data, i);
+		else
 			i++;
-		while (token_str[i] != '\0')
-		{
-			copy[j] = token_str[i];
-			i++;
-			j++;
-		}
 	}
-	copy[j] = '\0';
-	return (copy);
 }

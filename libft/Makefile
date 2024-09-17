@@ -55,7 +55,9 @@ ft_lstlast.c \
 ft_lstmap.c \
 ft_lstnew.c \
 ft_lstsize.c \
-morehelpers.c
+morehelpers.c \
+ft_alloc.c \
+ft_flist.c
 
 
 OBJS_DIR = objs/

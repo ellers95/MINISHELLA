@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:09:55 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 01:03:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ void	cleanup_and_handle_errors(t_data *data)
 		free_line(data->command_paths, data->token_count - 1);
 	if (data->token != NULL)
 		free_array(&data->token, data->token_count - 1);
-	free(data);
+	ft_free(data);
 }

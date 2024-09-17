@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 14:37:02 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:05:45 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
+# define _DEFAULT_SOURCE
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/wait.h>
@@ -87,7 +87,8 @@ void	close_pipe_fds(int fd[2]);
 void	handle_redirections(t_data *data);
 
 // lexer:
-char	*check_and_expand_env_variables(char *input_str, t_node *env, t_data *data);
+char	*check_and_expand_env_variables(char *input_str, \
+		t_node *env, t_data *data);
 bool	lexer(char *input_str, t_data *data);
 void	token_merge(t_data *data);
 void	remove_token_and_shift_array(t_data *data, int i);

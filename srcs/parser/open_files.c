@@ -3,18 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 14:43:55 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		setup_input_redirection(t_data *data, int i);
-static void	handle_heredoc_redirection(t_data *data);
-void		setup_output_redirection(t_data *data, int i, bool append);
+static void	handle_heredoc_redirection(t_data *data)
+{
+	char	*delimiter;
+
+	set_heredoc_status(IN_HEREDOC);
+	delimiter = find_delimiter(data);
+	if (delimiter)
+	{
+		handle_heredoc(delimiter, data);
+		ft_free(delimiter);
+	}
+	else
+		ft_printf("Error: Unable to find heredoc delimiter\n");
+	set_heredoc_status(OUT_HEREDOC);
+	data->is_heredoc = true;
+}
 
 /*
  * Opens an input file for redirection or handles here-document setup.
@@ -45,23 +58,6 @@ void	setup_input_redirection(t_data *data, int i)
 		return ;
 	}
 	data->input_file_count++;
-}
-
-static void	handle_heredoc_redirection(t_data *data)
-{
-	char	*delimiter;
-	
-	set_heredoc_status(IN_HEREDOC);
-	delimiter = find_delimiter(data);
-	if (delimiter)
-	{
-		handle_heredoc(delimiter, data);
-		free(delimiter);
-	}
-	else
-		ft_printf("Error: Unable to find heredoc delimiter\n");
-	set_heredoc_status(OUT_HEREDOC);
-	data->is_heredoc = true;
 }
 
 /*

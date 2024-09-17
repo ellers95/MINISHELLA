@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 17:11:07 by etaattol          #+#    #+#             */
-/*   Updated: 2023/11/19 20:15:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:57:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 			forw++;
 		while (s1[backw - 1] && ft_strchr(set, s1[backw - 1]) && backw > forw)
 			backw--;
-		res = malloc(sizeof(char) * (backw - forw + 1));
+		res = ft_alloc(sizeof(char) * (backw - forw + 1));
 		if (res == NULL)
 			return (NULL);
 		ft_strlcpy(res, s1 + forw, backw - forw + 1);

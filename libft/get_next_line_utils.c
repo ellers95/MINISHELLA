@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 13:23:16 by etaattol          #+#    #+#             */
-/*   Updated: 2024/06/30 17:26:22 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:57:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*ft_calloc_gnl(size_t count, size_t size)
 	bsize = count * size;
 	if (count != 0 && bsize / count != size)
 		return (NULL);
-	p = malloc(bsize);
+	p = ft_alloc(bsize);
 	if (p == NULL)
 		return (NULL);
 	ptr = (unsigned char *)p;
@@ -44,7 +44,7 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 		return (NULL);
 	s1len = ft_strlen_gnl(s1);
 	s2len = ft_strlen_gnl(s2);
-	dest = malloc(sizeof(char) * (s1len + s2len + 1));
+	dest = ft_alloc(sizeof(char) * (s1len + s2len + 1));
 	if (!dest)
 		return (NULL);
 	ft_memcpy_gnl(dest, s1, s1len);

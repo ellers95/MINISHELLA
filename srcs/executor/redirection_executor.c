@@ -3,71 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_executor.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 00:41:09 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 16:58:22 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static inline void	execute_command_with_redirections(t_data *data, char **envp);
-static inline void	execute_child_with_redirections(t_data *data, char **envp);
-static inline void	close_redirection_files(t_data *data);
-static inline void	setup_redirection_file_descriptors(t_data *data);
-
 /*
-* Manages the overall redirection process for a command.
-* Handles both input and output redirections.
+* Performs the actual file descriptor duplication for redirections.
+* Sets up stdin and stdout to point to the appropriate files.
 */
-void	handle_redirections(t_data *data)
+static inline void	setup_redirection_file_descriptors(t_data *data)
 {
-	if (data->token_count < 2)
+	if (data->input_file_count > 0)
 	{
-		clean_struct(data);
-		return ;
+		if (dup2(data->input_file_fds[data->input_file_count - 1],
+				STDIN_FILENO) < 0)
+			exiting(data, -1);
 	}
-	process_redirection_tokens(data);
-	if (data->is_heredoc && data->token_count < 1)
+	if (data->output_file_count > 0)
 	{
-		clean_struct(data);
-		return ;
-	}
-	if (!data->is_pipe)
-	{
-		execute_command_with_redirections(data, data->envp);
-		while (data->token_count > 0)
-			remove_token_and_shift_array(data, 0);
+		if (dup2(data->output_file_fds[data->output_file_count - 1],
+				STDOUT_FILENO) < 0)
+		{
+			perror("Error! Error in dup2 OUTPUT redirections\n");
+			exiting(data, -1);
+		}
 	}
 }
 
 /*
-* Executes a command with redirections in a child process.
-* Sets up redirections, executes the command, and handles cleanup.
+* Closes all opened file descriptors for redirections.
+* Ensures proper cleanup after redirection operations.
 */
-static inline void	execute_command_with_redirections(t_data *data, char **envp)
+static inline void	close_redirection_files(t_data *data)
 {
-	pid_t	pid;
-	int		status;
+	int	i;
 
-	pid = fork();
-	if (pid < 0)
+	i = 0;
+	while (i < data->input_file_count)
 	{
-		perror("Error not forking");
-		return ;
+		close(data->input_file_fds[i]);
+		i++;
 	}
-	if (pid == 0)
+	i = 0;
+	while (i < data-> output_file_count)
 	{
-		execute_child_with_redirections(data, envp);
-		exiting(data, -1);
+		close(data->output_file_fds[i]);
+		i++;
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		data->last_command_exit_status = WEXITSTATUS(status);
-	}
-
 }
 
 static inline void	execute_child_with_redirections(t_data *data, char **envp)
@@ -100,44 +87,53 @@ static inline void	execute_child_with_redirections(t_data *data, char **envp)
 }
 
 /*
-* Closes all opened file descriptors for redirections.
-* Ensures proper cleanup after redirection operations.
+* Executes a command with redirections in a child process.
+* Sets up redirections, executes the command, and handles cleanup.
 */
-static inline void	close_redirection_files(t_data *data)
+static inline void	execute_command_with_redirections(t_data *data, char **envp)
 {
-	int	i;
+	pid_t	pid;
+	int		status;
 
-	i = 0;
-	while (i < data->input_file_count)
+	pid = fork();
+	if (pid < 0)
 	{
-		close(data->input_file_fds[i]);
-		i++;
+		perror("Error not forking");
+		return ;
 	}
-	i = 0;
-	while (i < data-> output_file_count)
+	if (pid == 0)
 	{
-		close(data->output_file_fds[i]);
-		i++;
+		execute_child_with_redirections(data, envp);
+		exiting(data, -1);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		data->last_command_exit_status = WEXITSTATUS(status);
 	}
 }
 
 /*
-* Performs the actual file descriptor duplication for redirections.
-* Sets up stdin and stdout to point to the appropriate files.
+* Manages the overall redirection process for a command.
+* Handles both input and output redirections.
 */
-static inline void	setup_redirection_file_descriptors(t_data *data)
+void	handle_redirections(t_data *data)
 {
-	if (data->input_file_count > 0)
+	if (data->token_count < 2)
 	{
-		if (dup2(data->input_file_fds[data->input_file_count - 1], STDIN_FILENO) < 0)
-			exiting(data, -1);
+		clean_struct(data);
+		return ;
 	}
-	if (data->output_file_count > 0)
+	process_redirection_tokens(data);
+	if (data->is_heredoc && data->token_count < 1)
 	{
-		if (dup2(data->output_file_fds[data->output_file_count - 1], STDOUT_FILENO) < 0)
-		{
-			perror("Error! Error in dup2 OUTPUT redirections\n");
-			exiting(data, -1);
-		}
+		clean_struct(data);
+		return ;
+	}
+	if (!data->is_pipe)
+	{
+		execute_command_with_redirections(data, data->envp);
+		while (data->token_count > 0)
+			remove_token_and_shift_array(data, 0);
 	}
 }

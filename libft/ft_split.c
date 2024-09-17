@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 14:30:40 by etaattol          #+#    #+#             */
-/*   Updated: 2024/06/24 18:38:54 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static char	**abandon(char **words)
 
 	i = 0;
 	while (words[i])
-		free(words[i++]);
-	free(words);
+		ft_free(words[i++]);
+	ft_free(words);
 	return (0);
 }
 

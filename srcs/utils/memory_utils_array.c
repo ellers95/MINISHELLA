@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:23:04 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:27:32 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:08:10 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	free_array(char ***paths, int arc)
 	i = 0;
 	if (arc == -1)
 	{
-		while (paths[i] != NULL)
+		while ((*paths)[i] != NULL)
 		{
-			free(*paths[i]);
+			ft_free((*paths)[i]);
 			i++;
 		}
 	}
@@ -36,12 +36,12 @@ void	free_array(char ***paths, int arc)
 	{
 		while (i < arc)
 		{
-			if (*paths[i] != NULL)
-				free((*paths[i]));
+			if ((*paths)[i] != NULL)
+				ft_free((*paths)[i]);
 			i++;
 		}
 	}
-	free (*paths);
+	ft_free(*paths);
 	*paths = NULL;
 }
 
@@ -58,11 +58,11 @@ char	*free_char_array(char **array)
 	i = 0;
 	while ((array)[i] != NULL)
 	{
-		free((array)[i]);
+		ft_free((array)[i]);
 		(array)[i] = NULL;
 		i++;
 	}
-	free(array);
+	ft_free(array);
 	return (NULL);
 }
 
@@ -77,12 +77,12 @@ void	free_stuff(char **args, char *path)
 	i = 0;
 	while (args[i])
 	{
-		free(args[i]);
+		ft_free(args[i]);
 		i++;
 	}
-	free(args);
+	ft_free(args);
 	if (path)
-		free(path);
+		ft_free(path);
 }
 
 /*
@@ -101,7 +101,7 @@ void	free_line(char **paths, int arc)
 	{
 		while (paths[i] != NULL)
 		{
-			free(paths[i]);
+			ft_free(paths[i]);
 			i++;
 		}
 	}
@@ -110,10 +110,10 @@ void	free_line(char **paths, int arc)
 		while (i < arc)
 		{
 			if (paths[i] != NULL)
-				free(paths[i]);
+				ft_free(paths[i]);
 			i++;
 		}
 	}
-	free(paths);
+	ft_free(paths);
 	paths = NULL;
 }
