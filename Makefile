@@ -1,6 +1,9 @@
 NAME		= 	minishell
 
-FLAGS		=	-Wall -Wextra -Werror -Wunused-function -g -I. #-fsanitize=address
+FLAGS		=	-Wall -Wextra -Werror -Wunused-function -Wunused-variable -g -I. #-fsanitize=address
+
+CFLAGS		=	$(FLAGS) -I/usr/local/opt/readline/include #paraella
+LDFLAGS 	=	-L/usr/local/opt/readline/lib -lreadline #para ellas computadora
 
 SRCFILES 	= 	main.c \
 				executor/executor.c \
@@ -46,7 +49,7 @@ LIBFT		=	$(LIBFT_DIR)/libft.a
 
 SRCS		=	$(addprefix $(SRCDIR)/, $(SRCFILES))
 
-OBJS		= 	$(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
+OBJS		=	$(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
 
 ANSI_CYAN 	:= 	\033[0;36m
 ANSI_BLUE 	:= 	\033[0;34m
@@ -56,15 +59,11 @@ ANSI_RESET 	:= 	\033[0m
 all: 			$(NAME)
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c $(HEADER) 
-				@mkdir -p $(OBJDIR)
-				@cc $(FLAGS) -o $@ -c $<
-
-$(OBJDIR)/%.o:	$(SRCDIR)/*/%.c $(HEADER) 
-				@mkdir -p $(OBJDIR)
-				@cc $(FLAGS) -o $@ -c $<
+				@mkdir -p $(dir $@)
+				@cc $(CFLAGS) -o $@ -c $<
 
 $(NAME):		$(OBJS) $(LIBFT)
-				@cc $(HEADERS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
+				@cc $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 				@echo "$(ANSI_CYAN)Compilation Complete: $(NAME) $(ANSI_RESET)"
 
 $(LIBFT):		

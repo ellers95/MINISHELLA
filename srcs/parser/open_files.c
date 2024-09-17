@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:00:33 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:43:55 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	setup_input_redirection(t_data *data, int i);
-void	setup_output_redirection(t_data *data, int i, bool append);
+void		setup_input_redirection(t_data *data, int i);
+static void	handle_heredoc_redirection(t_data *data);
+void		setup_output_redirection(t_data *data, int i, bool append);
 
 /*
  * Opens an input file for redirection or handles here-document setup.
@@ -24,28 +25,15 @@ void	setup_output_redirection(t_data *data, int i, bool append);
 void	setup_input_redirection(t_data *data, int i)
 {
 	int		fd;
-	char	*delimiter;
 
 	if (ft_strncmp(data->token[i], "<<", 2) == 0)
-	{
-		set_heredoc_status(IN_HEREDOC);
-		delimiter = find_delimiter(data);
-		if (delimiter)
-		{
-			handle_heredoc(delimiter, data);
-			free(delimiter);
-		}
-		else
-			ft_printf("Error: Unable to find heredoc delimiter\n");
-		set_heredoc_status(OUT_HEREDOC);
-		data->is_heredoc = true;
-	}
+		handle_heredoc_redirection(data);
 	else if (get_heredoc_status() == OUT_HEREDOC)
 	{
 		fd = open(data->token[i], O_RDONLY);
 		if (fd == -1)
 		{
-			perror("Error!");
+			perror("Error: Error opening input file");
 			return ;
 		}
 		data->input_file_fds[data->input_file_count] = fd;
@@ -57,6 +45,23 @@ void	setup_input_redirection(t_data *data, int i)
 		return ;
 	}
 	data->input_file_count++;
+}
+
+static void	handle_heredoc_redirection(t_data *data)
+{
+	char	*delimiter;
+	
+	set_heredoc_status(IN_HEREDOC);
+	delimiter = find_delimiter(data);
+	if (delimiter)
+	{
+		handle_heredoc(delimiter, data);
+		free(delimiter);
+	}
+	else
+		ft_printf("Error: Unable to find heredoc delimiter\n");
+	set_heredoc_status(OUT_HEREDOC);
+	data->is_heredoc = true;
 }
 
 /*

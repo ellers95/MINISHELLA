@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:05:06 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:06:26 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:26:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,47 +106,11 @@ int	stack_len(t_node *stack)
 */
 void	remove_node(t_node *node)
 {
-	t_node	*temp;
-
-	if (!node->prev && !node->next)
-	{
-		(void)temp;
-		free(node->key);
-		free(node->value);
-		free(node);
-		return ;
-	}
-	else if (!node->prev && node->next)
-	{
-		temp = node->next;
-		node->next = NULL;
-		temp->prev = NULL;
-		free(node->key);
-		free(node->value);
-		free(node);
-		node = temp;
-		return ;
-	}
-	else if (node->prev && !node->next)
-	{
-		temp = node->prev;
-		temp->next = NULL;
-		node->prev = NULL;
-		free(node->key);
-		free(node->value);
-		free(node);
-		node = temp;
-		return ;
-	}
-	else
-	{
-		temp = node->prev;
-		temp->next = node->next;
-		temp->next->prev = temp;
-		node->prev = NULL;
-		node->next = NULL;
-		free(node->key);
-		free(node->value);
-		free(node);
-	}
+	if (node->prev)
+		node->prev->next = node->next;
+	if (node->next)
+		node->next->prev = node->prev;
+	free(node->key);
+	free(node->value);
+	free(node);
 }

@@ -13,6 +13,8 @@
 #include "minishell.h"
 
 static inline char	*clean_delimiter(char *str);
+static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data);
+static void	handle_heredoc_completion(int fd[2], bool eof_encountered, const char *delimiter, t_data *data);
 
 /*
  * Locates and processes a here-document in the command.
@@ -64,7 +66,6 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 */
 void	handle_heredoc(const char *delimiter, t_data *data)
 {
-	char	*line;
 	int		fd[2];
 	bool	eof_encountered;
 
@@ -82,6 +83,17 @@ void	handle_heredoc(const char *delimiter, t_data *data)
 	data->heredoc_interrupted = 0;
 	set_heredoc_status(IN_HEREDOC);
 	get_set_stop_flag(SET, 0);
+	eof_encountered = read_heredoc_input(delimiter, fd[1], data);
+	close(fd[1]);
+	handle_heredoc_completion(fd, eof_encountered, delimiter, data);
+}
+
+static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data)
+{
+	char	*line;
+	bool	eof_encountered;
+
+	eof_encountered = false;
 	while (1)
 	{
 		line = readline_wrapper("here_doc> ", data);
@@ -98,10 +110,14 @@ void	handle_heredoc(const char *delimiter, t_data *data)
 			free (line);
 			break ;
 		}
-		ft_putendl_fd(line, fd[1]);
+		ft_putendl_fd(line, fd);
 		free(line);
 	}
-	close(fd[1]);
+	return (eof_encountered);
+}
+
+static void	handle_heredoc_completion(int fd[2], bool eof_encountered, const char *delimiter, t_data *data)
+{
 	set_heredoc_status(OUT_HEREDOC);
 	if (data->heredoc_interrupted || eof_encountered)
 	{

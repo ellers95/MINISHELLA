@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 13:35:04 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:58:30 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool process_command_token(t_data *data, char **envp, int i, int *new_index);
 
 /*
  * Parses command arguments from the token array.
@@ -66,30 +68,40 @@ bool	parse_command_line(t_data *data, char **envp)
 {
 	int		i;
 	int		new_index;
-	char	**cmd;
-	char	*path;
 
-	i = 0;
-	new_index = 0;
 	if (!init_command_paths(data))
 		return (false);
+	i = 0;
+	new_index = 0;
 	while (i < data->token_count)
 	{
 		if (is_special_shell_operator(data->token[i]))
 			remove_token_and_shift_array(data, i);
-		cmd = ft_split(data->token[i], ' ');
-		if (!cmd)
+		else
+		{
+			if (!process_command_token(data, envp, i, &new_index))
+				return (false);
+			i++;
+		}
+	}
+	return (true);
+}
+
+static bool process_command_token(t_data *data, char **envp, int i, int *new_index)
+{
+	char	**cmd;
+	char	*path;
+	
+	cmd = ft_split(data->token[i], ' ');
+	if (!cmd)
 		{
 			free_line(data->command_paths, data->token_count);
 			data->command_paths = NULL;
 			return (false);
 		}
-		path = get_command_path(cmd[0], envp);
-		data->command_paths[i] = path;
-		free_line(cmd, -1);
-		new_index++;
-		i++;
-	}
+	path = get_command_path(cmd[0], envp);
+	data->command_paths[*new_index] = path;
+	(*new_index)++;
+	free_line(cmd, -1);
 	return (true);
 }
-

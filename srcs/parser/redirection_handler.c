@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 15:27:29 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:36:44 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

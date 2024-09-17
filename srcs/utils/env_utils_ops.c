@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_ops.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:06:45 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:16:38 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		add_end(t_node **stack, char *str);
-char	**env_list_to_array(t_node **env);
+int					add_end(t_node **stack, char *str);
+char				**env_list_to_array(t_node **env);
+static inline char	*create_env_string(t_node *node);
 
 /*
  * Adds a new node to the end of the linked list (stack).
@@ -54,9 +55,7 @@ char	**env_list_to_array(t_node **env)
 	int		len;
 	int		i;
 	t_node	*curr;
-	char	*temp;
 	char	**eepie;
-	char	*temp_value;
 
 	i = 0;
 	curr = *env;
@@ -64,29 +63,34 @@ char	**env_list_to_array(t_node **env)
 	eepie = ft_calloc(len, sizeof(char *));
 	if (!eepie)
 		return (NULL);
-	while (i < len - 1)
+	while (i < len - 1 && curr)
 	{
-		if (curr->key)
+		eepie[i] = create_env_string(curr);
+		if (!eepie[i])
 		{
-			temp = ft_strjoin(curr->key, "=");
-			if (temp)
-			{
-				if (curr->value)
-				{
-					temp_value = ft_strjoin(temp, curr->value);
-					free(temp);
-					if (temp_value)
-					{
-						eepie[i] = ft_strdup(temp_value);
-						free(temp_value);
-					}
-				}
-				else
-					eepie[i] = ft_strdup(temp);
-			}
+			free_char_array(eepie);
+			return (NULL);
 		}
 		curr = curr->next;
 		i++;
 	}
 	return (eepie);
+}
+
+static inline char	*create_env_string(t_node *node)
+{
+	char	*temp;
+	char	*result;
+
+	temp = ft_strjoin(node->key, "=");
+	if (!temp)
+		return (NULL);
+	if (node->value)
+	{
+		result = ft_strjoin(temp, node->value);
+		free (temp);
+		return (result);
+	}
+	else
+		return (temp);
 }
