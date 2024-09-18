@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 /*
- * A wrapper function for readline to handle interrupts during here-document input.
+ * A wrapper function for readline to handle
+ * interrupts during here-document input.
 */
 char	*readline_wrapper(const char *prompt, t_data *data)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/18 11:18:53 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:21:05 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ static inline void	delete_quotes(t_data *data)
 	}
 }
 
-static inline int	handle_token_content(char *input_str, int i, char *current_quote)
+static inline int	handle_token_content(char *input_str,
+					int i, char *current_quote)
 {
 	int	quotes;
 
@@ -88,7 +89,8 @@ static bool	process_token(t_data *data, char *input_str, int *char_index,
 
 	start = *char_index;
 	*char_index = handle_token_content(input_str, *char_index, current_quote);
-	data->token[data->lexer_token_index] = ft_calloc(*char_index - start + 1, sizeof(char));
+	data->token[data->lexer_token_index] = ft_calloc(*char_index
+			- start + 1, sizeof(char));
 	if (!data->token[data->lexer_token_index])
 		return (false);
 	ft_strlcpy(data->token[data->lexer_token_index], &input_str[start],

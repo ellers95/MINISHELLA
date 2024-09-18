@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 19:13:18 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:22:19 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static inline void	create_file_storage(t_data *data);
 static inline void	allocate_file_descriptors(t_data *data);
 static inline void	type_flagger(t_data *data);
 static inline bool	is_valid_heredoc_syntax(t_data *data, int i);
-
 
 /*
  * Allocates memory for storing file descriptors.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:52:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 11:18:37 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:22:00 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 * Checks if a character is considered "empty" (whitespace).
 * Used to determine token boundaries.
 */
-int is_whitespace(char c)
+int	is_whitespace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n');
 }

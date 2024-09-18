@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 17:38:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:26:46 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,12 @@ bool	parse_command_arguments(t_data *data)
 }
 
 /*
- * Initializes the command_paths array in the data structure.
- * Allocates memory for storing command paths based on the number of tokens.
- * Returns true if initialization is successful, false if memory allocation fails.
+ * Initializes the command_paths array
+ * in the data structure.
+ * Allocates memory for storing command paths
+ * based on the number of tokens.
+ * Returns true if initialization is successful,
+ * false if memory allocation fails.
 */
 static inline bool	init_command_paths(t_data *data)
 {
@@ -61,7 +64,7 @@ static bool	process_command_token(t_data *data, char **envp,
 {
 	char	**cmd;
 	char	*path;
-	
+
 	cmd = ft_split(data->token[i], ' ');
 	if (!cmd)
 	{
