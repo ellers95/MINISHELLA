@@ -15,9 +15,11 @@ SRCFILES 	= 	main.c \
 				executor/redirection_executor.c \
 				lexer/env_expander.c \
 				lexer/lexer.c \
+				lexer/lexer_utils.c \
 				lexer/token_utils.c \
 				parser/command_parser.c \
 				parser/heredoc_handler.c \
+				parser/heredoc_utils.c \
 				parser/open_files.c \
 				parser/parser.c \
 				parser/redirection_handler.c \

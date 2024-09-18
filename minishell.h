@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 09:44:12 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:10:57 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ bool	lexer(char *input_str, t_data *data);
 void	token_merge(t_data *data);
 void	remove_token_and_shift_array(t_data *data, int i);
 bool	is_special_shell_operator(char *token);
+int		is_whitespace(char c);
+int		count_tokens(char *input_str);
 
 // parser:
 bool	parse_command_arguments(t_data *data);
@@ -104,6 +106,7 @@ bool	parse_command_line(t_data *data, char **envp);
 void	find_heredoc(t_data *data, int tk_i);
 void	handle_heredoc(const char *delimiter, t_data *data);
 char	*find_delimiter(t_data *data);
+char	*clean_delimiter(char *str);
 void	setup_input_redirection(t_data *data, int i);
 void	setup_output_redirection(t_data *data, int i, bool append);
 bool	parser(t_data *data);
