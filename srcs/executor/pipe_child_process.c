@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:10:23 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 20:19:40 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:30:44 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,19 @@ static inline void	redirect_output(t_data *data, int fd[2], int index)
 	}
 }
 
+/*
+* Manages I/O redirection and command execution in a child process.
+* Handles file redirection if present, otherwise manages pipe I/O.
+* Redirects input and output as needed, then executes the command.
+*/
 void	handle_child_process(t_data *data, char **envp,
 						int command_index, int fd[2])
 {
+	struct sigaction	dfl;
+
+	sigaction(SIGQUIT, &dfl, NULL);
+	dfl.sa_handler = SIG_DFL;
+	dfl.sa_flags = 0;
 	if (data->has_redirection)
 	{
 		if (!redirect_file_input(data))

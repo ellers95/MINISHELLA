@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:48:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 20:19:23 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:28:52 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ static inline bool	create_pipe_and_fork(t_data *data, int fd[2],
 	return (true);
 }
 
+/*
+* Handles pipe management in the parent process.
+* Closes unnecessary pipe ends and updates previous pipe FDs.
+*/
 static inline void	handle_parent_process(t_data *data, int fd[2],
 						int command_index, int is_last_command)
 {
-	int	status;
-
 	if (command_index > 0)
 		close(data->previous_pipe_fd[0]);
 	if (!is_last_command)
@@ -50,11 +52,7 @@ static inline void	handle_parent_process(t_data *data, int fd[2],
 		close(fd[1]);
 	}
 	else
-	{
 		close_pipe_fds(fd);
-		waitpid(-1, &status, 0);
-		data->last_command_exit_status = WEXITSTATUS(status);
-	}
 }
 
 /*
@@ -81,8 +79,9 @@ static inline int	create_child(t_data *data, char **envp, int command_index)
 }
 
 /*
-* Implements pipe functionality for command execution.
-* Manages the creation of child processes and sets up pipes between them.
+* Implements pipeline functionality for command execution.
+* Creates child processes, sets up pipes, and waits for completion.
+* Handles command execution and updates exit status.
 */
 void	execute_pipeline(t_data *data)
 {
@@ -94,15 +93,14 @@ void	execute_pipeline(t_data *data)
 	data->previous_pipe_fd[1] = -1;
 	if (!handle_commands(data, data->envp))
 	{
-		ft_printf("Commands failed\n");
+		printf("Commands failed\n");
 		return ;
 	}
 	i = 0;
 	while (i < data->token_count)
 	{
-		if (!create_child(data, data->envp, i))
+		if (!create_child(data, data->envp, i++))
 			return ;
-		i++;
 	}
 	i = 0;
 	while (i++ < data->token_count)

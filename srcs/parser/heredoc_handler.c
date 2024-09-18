@@ -62,17 +62,15 @@ static void	handle_heredoc_completion(int fd[2], bool eof_encountered,
 			const char *delimiter, t_data *data)
 {
 	set_heredoc_status(OUT_HEREDOC);
-	if (data->heredoc_interrupted || eof_encountered)
-	{
+	if (data->heredoc_interrupted)
 		close(fd[0]);
-		if (eof_encountered)
-		{
-			printf("\nminishell: warning: heredoc delimited \
-					by end-of-file (wanted `%s')\n", delimiter);
-		}
-	}
 	else
 	{
+		if (eof_encountered)
+		{
+			printf("\nminishell: warning: heredoc delimitedby end-of-file ");
+			printf("(wanted `%s')\n", delimiter);
+		}
 		data->input_file_fds[data->input_file_count] = fd[0];
 		data->input_file_count++;
 	}

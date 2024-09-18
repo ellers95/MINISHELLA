@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:58:55 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 */
 static inline bool	is_token_mergeable(t_data *data, int j)
 {
+	if (j > 0 && (ft_strncmp(data->token[j - 1], "<", 1) == 0
+		|| ft_strncmp(data->token[j - 1], ">", 1) == 0
+		|| ft_strncmp(data->token[j - 1], "|", 1) == 0))
+		return (false);
 	if ((j < data->token_count)
 		&& (ft_strncmp(data->token[j], "|", 1) != 0)
 		&& (ft_strncmp(data->token[j], "<", 1) != 0)
@@ -52,7 +56,7 @@ static inline void	merge_tokens(t_data *data, int i, int j)
 	new_str = (char *)ft_calloc(len, sizeof(char));
 	if (new_str == NULL)
 	{
-		ft_printf("Calloc fail in merge\n");
+		printf("Calloc fail in merge\n");
 		exiting(data, 1);
 	}
 	ft_strlcpy(new_str, data->token[i], len);
@@ -104,7 +108,10 @@ void	remove_token_and_shift_array(t_data *data, int i)
 	data->token_count--;
 	data->token[data->token_count] = NULL;
 	if (data->token_count == 0)
+	{
 		ft_free(data->token);
+		data->token = NULL;
+	}
 }
 
 /*

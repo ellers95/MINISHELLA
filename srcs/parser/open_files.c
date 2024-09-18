@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:11:23 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	handle_heredoc_redirection(t_data *data)
 		ft_free(delimiter);
 	}
 	else
-		ft_printf("Error: Unable to find heredoc delimiter\n");
+		printf("Error: Unable to find heredoc delimiter\n");
 	set_heredoc_status(OUT_HEREDOC);
 	data->is_heredoc = true;
 }
@@ -53,7 +53,7 @@ void	setup_input_redirection(t_data *data, int i)
 	}
 	else
 	{
-		ft_printf("Error: Unexpected token while \
+		printf("Error: Unexpected token while \
 					in heredoc: %s\n", data->token[i]);
 		return ;
 	}
@@ -80,4 +80,16 @@ void	setup_output_redirection(t_data *data, int i, bool append)
 	}	
 	data->output_file_fds[data->output_file_count] = fd;
 	data->output_file_count++;
+}
+
+void	close_files(t_data *data)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < (size_t)data->input_file_count)
+		close(data->input_file_fds[i++]);
+	i = 0;
+	while (i < (size_t)data->output_file_count)
+		close(data->output_file_fds[i++]);
 }

@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/17 19:05:11 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:09:59 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static inline void	run_shell(t_data *data)
 		user_input = readline("✨🧚minishELLA🧚✨:");
 		if (user_input == NULL)
 		{
-			write(1, "\n✨🧚 Adios 🧚✨!\n", 26);
+			write(1, "\n✨🧚 Adios 🧚✨!\n", 24);
 			break ;
 		}
 		if (*user_input == '\0' || rl_end == 0)

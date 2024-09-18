@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 15:46:52 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 19:18:11 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:15:11 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ int	handle_pwd(t_data *data)
 	if (!current_directory)
 	{
 		data->last_command_exit_status = 1;
+		perror("pwd: getcwd failed");
 		return (1);
 	}
 	printf("%s\n", current_directory);
 	free(current_directory);
 	data->last_command_exit_status = 0;
 	if (data->has_redirection)
-		exit (0);
+		exit(0);
 	return (0);
 }

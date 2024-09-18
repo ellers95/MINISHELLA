@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 19:07:51 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:16:38 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,18 @@ char	**env_list_to_array(t_node **env)
 		i++;
 	}
 	return (eepie);
+}
+
+char	*msh_getenv(const char *var, t_node *env)
+{
+	size_t	len;
+
+	len = ft_strlen(var);
+	while (env)
+	{
+		if (ft_strncmp(var, env->key, len) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }

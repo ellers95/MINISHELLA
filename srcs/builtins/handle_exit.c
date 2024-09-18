@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:56:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/17 19:06:52 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:06:33 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ static void	perform_exit(t_data *data)
 	if (is_number)
 	{
 		exit_code = exit_code_calculator(data->token[1]);
-		ft_printf("Good bye!\nexit(%d)\n", exit_code);
+		printf("Good bye!\nexit(%d)\n", exit_code);
 		while (data->token_count > 0)
 			remove_token_and_shift_array(data, 0);
 	}
 	else
 	{
-		ft_printf("Good bye!\nexit\n%s: %s: count your 🍌s!\n",
+		printf("Good bye!\nexit\n%s: %s: count your 🍌s!\n",
 			data->token[0], data->token[1]);
 		while (data->token_count > 0)
 			remove_token_and_shift_array(data, 2);
@@ -80,7 +80,7 @@ void	handle_exit(t_data *data)
 {
 	if (data->token_count == 1)
 	{
-		ft_printf("Good bye!\nexit\n");
+		printf("Good bye!\nexit\n");
 		remove_token_and_shift_array(data, 0);
 		clean_data(data);
 		exit(ft_clear(0));

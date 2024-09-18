@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:30:47 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/16 12:23:55 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:56:41 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static inline void	call_builtin_function(t_data *data, char *command_name)
 	else if (ft_strcmp(command_name, "export") == 0)
 		handle_export(data);
 	else if (ft_strcmp(command_name, "cd") == 0)
-		handle_cd(data, data->env);
+		handle_cd(data);
 	else
 		return ;
 }

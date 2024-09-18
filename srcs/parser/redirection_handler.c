@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:41:46 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:57:07 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:50:24 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static inline char	*remove_redirection_symbols(char *token_str)
 	copy = ft_alloc(sizeof(char) * (ft_strlen(token_str) + 1));
 	if (!copy)
 	{
-		ft_printf("ft_alloc fail in arrows");
+		printf("ft_alloc fail in arrows");
 		return (NULL);
 	}
 	while (token_str[i] != '\0')
@@ -84,7 +84,7 @@ static inline void	handle_output_redirection(t_data *data, int i)
 static inline void	handle_input_redirection(t_data *data, int i)
 {
 	if (ft_strncmp(data->token[i], "<<", 2) == 0)
-		data->token[i] = remove_redirection_symbols(data->token[i]);
+		remove_token_and_shift_array(data, i);
 	else if (ft_strncmp(data->token[i], "<", 1) == 0)
 	{
 		if (ft_strncmp(data->token[i], "<\0", 2) != 0)

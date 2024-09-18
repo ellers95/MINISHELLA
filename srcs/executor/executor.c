@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:44:25 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:28:47 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ bool	execution(t_data *data)
 		handle_redirections(data);
 	if (data->token_count > 0)
 		execute_pipeline(data);
+	close_files(data);
 	clean_struct(data);
 	return (true);
 }
@@ -64,7 +65,7 @@ void	execute_command(t_data *data, char **envp, int index)
 	command_arguments = ft_split(data->token[index], ' ');
 	if (command_arguments == NULL || command_arguments[0] == NULL)
 	{
-		ft_printf("Failed to split command arguments\n");
+		printf("Failed to split command arguments\n");
 		exiting(data, 1);
 	}
 	if (!ft_strncmp(command_arguments[0], "exit", 5))
@@ -76,11 +77,11 @@ void	execute_command(t_data *data, char **envp, int index)
 	if (data->command_paths[index])
 	{
 		execve(data->command_paths[index], command_arguments, envp);
-		ft_printf("Failed to execute command: %s\n", strerror(errno));
+		printf("Failed to execute command: %s\n", strerror(errno));
 		free_args(command_arguments);
 		exiting(data, 126);
 	}
-	ft_printf("Command not found\n");
+	printf("Command not found\n");
 	free_args(command_arguments);
 	exiting(data, 127);
 }

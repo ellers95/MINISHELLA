@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 14:47:18 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 16:22:19 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:09:40 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ static inline bool	is_valid_heredoc_syntax(t_data *data, int i);
 static inline void	allocate_file_descriptors(t_data *data)
 {
 	data->input_file_fds = ft_alloc(sizeof(int) * data->input_file_count);
-	if (!data->input_file_fds && sizeof(int) * data->input_file_count)
+	if (!data->input_file_fds && (sizeof(int) * data->input_file_count) > 0)
 	{
 		perror("Error: ft_alloc input_file_fds failed");
 		return ;
 	}
 	data->output_file_fds = ft_alloc(sizeof(int) * data->output_file_count);
-	if (!data->output_file_fds && sizeof(int) * data->output_file_count)
+	if (!data->output_file_fds && (sizeof(int) * data->output_file_count) > 0)
 	{
 		perror("Error: ft_alloc output_file_fds failed");
 		ft_free(data->input_file_fds);

@@ -6,15 +6,15 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:46:05 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 16:58:22 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:40:25 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-* Performs the actual file descriptor duplication for redirections.
-* Sets up stdin and stdout to point to the appropriate files.
+* Sets up file descriptors for input and output redirections.
+* Duplicates appropriate FDs to stdin and stdout.
 */
 static inline void	setup_redirection_file_descriptors(t_data *data)
 {
@@ -57,6 +57,11 @@ static inline void	close_redirection_files(t_data *data)
 	}
 }
 
+/*
+* Executes a command in a child process with redirections.
+* Sets up redirections, prepares command arguments,
+* and executes the command.
+*/
 static inline void	execute_child_with_redirections(t_data *data, char **envp)
 {
 	char	*path;
@@ -67,7 +72,7 @@ static inline void	execute_child_with_redirections(t_data *data, char **envp)
 	command_arguments = ft_split(data->token[0], ' ');
 	if (command_arguments == NULL)
 	{
-		ft_printf("Error: Failed to split the command arguments\n");
+		printf("Error: Failed to split the command arguments\n");
 		free_stuff(command_arguments, NULL);
 		exiting(data, 1);
 	}

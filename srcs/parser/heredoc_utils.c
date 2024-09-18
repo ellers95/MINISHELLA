@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:08:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 13:10:34 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:07:51 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*clean_delimiter(char *str)
 	copy = ft_alloc(sizeof(char) * (i + 1));
 	if (!copy)
 	{
-		ft_printf("Error: ft_alloc fail in doc\n");
+		printf("Error: ft_alloc fail in doc\n");
 		return (NULL);
 	}
 	ft_strlcpy(copy, str, i + 1);

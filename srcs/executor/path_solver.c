@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:56:13 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:31:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char	*get_command_path(char *command_name, char **envp)
 	char	*full_command_path;
 	char	**path_directories;
 
+	if (!command_name)
+		return (NULL);
 	if (access(command_name, F_OK) == 0)
 		return (ft_substr(command_name, 0, ft_strlen(command_name)));
 	path_directories = find_path_directories(envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:12:07 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 13:10:57 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:10:39 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_data
 void	builtins(t_data *data);
 void	handle_export(t_data *data);
 void	handle_unset(t_data *data, t_node **env);
-void	handle_cd(t_data *data, t_node *env);
+void	handle_cd(t_data *data);
 void	handle_echo(t_data *data);
 void	handle_env(t_data *data, t_node *env);
 void	handle_exit(t_data *data);
@@ -121,6 +121,7 @@ void	reset_struct(t_data *data);
 int		add_end(t_node **stack, char *str);
 char	**env_list_to_array(t_node **env);
 void	load_list(t_data *data, char **envp);
+char	*msh_getenv(const char *var, t_node *env);
 t_node	*find_last(t_node	*stack);
 t_node	*parse_str(t_node *node, char *env_str);
 int		stack_len(t_node *stack);
@@ -136,6 +137,7 @@ void	free_args(char **argh);
 void	clean_data(t_data *data);
 void	clean_struct(t_data *data);
 void	free_env(t_node	**env);
+void	close_files(t_data *data);
 void	exiting(t_data *data, int i);
 int		number_checker(char *argv);
 void	setup_terminal(struct termios *original_termios);
