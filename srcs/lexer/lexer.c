@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/17 20:49:49 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 09:43:49 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,20 +135,20 @@ static inline void	delete_quotes(t_data *data)
 	}
 }
 
-static bool	process_token(t_data *data, long strs[2], int *char_index,
-				int token_index)
+static bool	process_token(t_data *data, char *input_str, int *char_index,
+			char *current_quote)
 {
 	int	start;
 
 	start = *char_index;
-	*char_index = handle_quote((char *)strs[0], (char *)strs[1], *char_index);
-	data->token[token_index] = ft_calloc(*char_index - start + 1, sizeof(char));
-	if (!data->token[token_index])
+	*char_index = handle_quote(input_str, current_quote, *char_index);
+	data->token[data->lexer_token_index] = ft_calloc(*char_index - start + 1, sizeof(char));
+	if (!data->token[data->lexer_token_index])
 		return (false);
-	ft_strlcpy(data->token[token_index], &((char *)strs[0])[start],
+	ft_strlcpy(data->token[data->lexer_token_index], &input_str[start],
 		*char_index - start + 1);
-	data->token[token_index] = check_and_expand_env_variables
-		(data->token[token_index], data->env, data);
+	data->token[data->lexer_token_index] = check_and_expand_env_variables
+		(data->token[data->lexer_token_index], data->env, data);
 	return (true);
 }
 
@@ -159,26 +159,24 @@ static bool	process_token(t_data *data, long strs[2], int *char_index,
 bool	lexer(char *input_str, t_data *data)
 {
 	int		char_index;
-	int		token_index;
 	char	current_quote;
 
 	char_index = 0;
-	token_index = 0;
 	current_quote = 0;
+	data->lexer_token_index = 0;
 	data->token_count = count_tokens(input_str);
 	data->token = ft_calloc((data->token_count + 1), sizeof(char *));
 	if (!data->token)
 		return (false);
-	while (token_index < data->token_count && input_str[char_index])
+	while (data->lexer_token_index < data->token_count && input_str[char_index])
 	{
 		while (input_str[char_index] && is_whitespace(input_str[char_index]))
 			char_index++;
 		if (input_str[char_index])
 		{
-			if (!process_token(data, (long [2]){(long)&input_str, (long)&current_quote},
-					&char_index, token_index))
+			if (!process_token(data, input_str, &char_index, &current_quote))
 				return (false);
-			token_index++;
+			data->lexer_token_index++;
 		}
 	}
 	delete_quotes(data);
