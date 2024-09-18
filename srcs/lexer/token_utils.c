@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:34:15 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 18:58:55 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:36:18 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 static inline bool	is_token_mergeable(t_data *data, int j)
 {
 	if (j > 0 && (ft_strncmp(data->token[j - 1], "<", 1) == 0
-		|| ft_strncmp(data->token[j - 1], ">", 1) == 0
-		|| ft_strncmp(data->token[j - 1], "|", 1) == 0))
+		|| ft_strncmp(data->token[j - 1], ">", 1) == 0))
 		return (false);
 	if ((j < data->token_count)
 		&& (ft_strncmp(data->token[j], "|", 1) != 0)

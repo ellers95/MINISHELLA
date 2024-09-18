@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:10:23 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 18:30:44 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:38:51 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,10 @@ void	handle_child_process(t_data *data, char **envp,
 {
 	struct sigaction	dfl;
 
-	sigaction(SIGQUIT, &dfl, NULL);
+	ft_memset(&dfl, 0, sizeof(dfl));
 	dfl.sa_handler = SIG_DFL;
 	dfl.sa_flags = 0;
+	sigaction(SIGQUIT, &dfl, NULL);
 	if (data->has_redirection)
 	{
 		if (!redirect_file_input(data))

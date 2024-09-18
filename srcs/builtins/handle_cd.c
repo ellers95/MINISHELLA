@@ -6,7 +6,7 @@
 /*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 15:11:50 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/18 18:16:16 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:40:37 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static inline void	old_pwd_update(t_node *env, char *old_pwd)
 */
 static char	*new_pwd_update(t_node *env, t_data *data)
 {
-	char	*old_pwd;
-	char	buf[2048];
+	static char	buf[2048];
+	char		*old_pwd;
 
 	old_pwd = NULL;
 	while (env)
