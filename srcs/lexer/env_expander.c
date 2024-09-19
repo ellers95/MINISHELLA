@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   env_expander.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 18:05:09 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:28:43 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+* Searches for an environment variable in the linked list of environment nodes.
+*/
 static inline t_node	*find_env_variable(char *key, t_node *env)
 {
 	while (env)
@@ -24,6 +27,10 @@ static inline t_node	*find_env_variable(char *key, t_node *env)
 	return (NULL);
 }
 
+/*
+* Extracts the name of an environment variable from a string.
+* Assumes the string starts with '$' and extracts until a space, quote, or dot.
+*/
 static char	*extract_variable_name(const char *str)
 {
 	int	i;
@@ -35,6 +42,9 @@ static char	*extract_variable_name(const char *str)
 	return (ft_substr(str, 1, i - 1));
 }
 
+/*
+ * Handles special shell variables like $?.
+*/
 static char	*handle_special_variable(const char *var_name, t_data *data)
 {
 	if (ft_strcmp(var_name, "?") == 0)
@@ -42,6 +52,9 @@ static char	*handle_special_variable(const char *var_name, t_data *data)
 	return (NULL);
 }
 
+/*
+* Expands a single environment variable in a string.
+*/
 static inline char	*expand_single_env_variable(char *str, t_node *env,
 						t_data *data)
 {

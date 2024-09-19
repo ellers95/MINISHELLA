@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 19:12:28 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/17 18:58:06 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:08:49 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ void	clean_data(t_data *data)
 }
 
 /*
-
+ * Frees the memory allocated for input and output file descriptors.
+ * This function is part of the cleanup process, ensuring that all
+ * file-related resources are properly released.
 */
 static inline void	clean_files(t_data *data)
 {

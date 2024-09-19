@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:02:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 19:11:23 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:16:55 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+ * Manages the process of handling a heredoc redirection.
+ * Sets heredoc status, finds the delimiter, processes heredoc content,
+ * and updates the shell state accordingly.
+*/
 static void	handle_heredoc_redirection(t_data *data)
 {
 	char	*delimiter;
@@ -30,10 +35,11 @@ static void	handle_heredoc_redirection(t_data *data)
 }
 
 /*
- * Opens an input file for redirection or handles here-document setup.
- * If the token indicates a here-document (<<), it sets up the here-document.
- * Otherwise, it opens the specified file for input redirection.
- * Updates the data structure with the new file descriptor.
+ * Sets up input redirection for a command,
+ * handling both file input and heredocs.
+ * If the token indicates a heredoc (<<),
+ * it calls handle_heredoc_redirection.
+ * For regular file input, it opens the file and stores the file descriptor.
 */
 void	setup_input_redirection(t_data *data, int i)
 {
@@ -61,9 +67,10 @@ void	setup_input_redirection(t_data *data, int i)
 }
 
 /*
- * Opens an output file for redirection, either in truncate or append mode.
- * Creates the file if it doesn't exist, or opens it if it does.
- * Updates the data structure with the new file descriptor.
+ * Sets up output redirection for a command,
+ * handling both truncate and append modes.
+ * Opens the specified file (creating it if necessary)
+ * and stores the file descriptor.
 */
 void	setup_output_redirection(t_data *data, int i, bool append)
 {
@@ -82,6 +89,12 @@ void	setup_output_redirection(t_data *data, int i, bool append)
 	data->output_file_count++;
 }
 
+/*
+ * Closes all open file descriptors used
+ * for input and output redirection.
+ * This function should be called after
+ * command execution to clean up resources.
+*/
 void	close_files(t_data *data)
 {
 	size_t	i;

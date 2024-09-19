@@ -3,15 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:32:34 by jbremser          #+#    #+#             */
-/*   Updated: 2024/09/18 16:21:05 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:25:26 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+* This function performs the following steps:
+ * 1. Iterates through each character of the token
+ * 2. When a quote (single or double) is found:
+ *    a. Removes the opening quote
+ *    b. Shifts the rest of the string to fill the gap
+ *    c. Searches for the closing quote
+ *    d. If found, removes the closing quote and shifts the string again
+ * 3. Continues until the end of the string is reached
+*/
 static inline void	remove_quotes_from_token(char *token)
 {
 	int		char_index;
@@ -56,6 +66,13 @@ static inline void	delete_quotes(t_data *data)
 	}
 }
 
+/*
+ * Processes the content of a token, handling quoted sections.
+ * This function:
+ * 1. Iterates through characters until whitespace is found (outside quotes)
+ * 2. Tracks the state of quoting (single or double quotes)
+ * 3. Handles nested quotes and quote switching
+*/
 static inline int	handle_token_content(char *input_str,
 					int i, char *current_quote)
 {
@@ -82,6 +99,14 @@ static inline int	handle_token_content(char *input_str,
 	return (i);
 }
 
+/*
+ * Extracts a token from the input string and adds it to the data structure.
+ * This function:
+ * 1. Calls handle_token_content to determine the token's boundaries
+ * 2. Allocates memory for the new token
+ * 3. Copies the token content from the input string
+ * 4. Expands environment variables within the token
+*/
 static bool	process_token(t_data *data, char *input_str, int *char_index,
 			char *current_quote)
 {

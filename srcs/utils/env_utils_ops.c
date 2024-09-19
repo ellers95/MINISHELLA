@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_ops.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:37:22 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 18:16:38 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:11:43 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ int	add_end(t_node **stack, char *str)
 	return (0);
 }
 
+/*
+* Creates a string representation of an environment variable.
+* This function combines the key and value of a node into a single string
+* in the format "key=value". If the node has no value, it returns "key=".
+*/
 static inline char	*create_env_string(t_node *node)
 {
 	char	*temp;
@@ -91,6 +96,11 @@ char	**env_list_to_array(t_node **env)
 	return (eepie);
 }
 
+/*
+* Custom implementation of getenv for the minishell environment.
+* Searches for an environment variable in the linked list
+* of environment nodes.
+*/
 char	*msh_getenv(const char *var, t_node *env)
 {
 	size_t	len;

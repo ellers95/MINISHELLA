@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 10:52:32 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 16:22:00 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:26:44 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@ int	is_whitespace(char c)
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
+/*
+ * Parses the content of a token, handling quoted sections and whitespace.
+ * 1. Iterates through the input string until it finds
+ * unquoted whitespace or the end of the string
+ * 2. Manages the state of quoting, tracking whether we're inside or outside quotes
+ * 3. Handles both single and double quotes, allowing for nested quoting
+
+*/
 static inline int	parse_token_content(char *input_str, int i, int *quotes,
 						char *current)
 {

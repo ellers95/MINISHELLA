@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 10:43:50 by iniska            #+#    #+#             */
-/*   Updated: 2024/09/18 18:09:59 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:07:57 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
- * The main entry point for the minishell program.
- * Initializes the shell, sets up the environment,
- * and runs the main command loop.
+* Sets up the initial shell environment
 */
 static inline void	initialize_shell(t_data *data, char **envp,
 	struct termios *original_termios)
@@ -31,6 +29,9 @@ static inline void	initialize_shell(t_data *data, char **envp,
 	signaling();
 }
 
+/*
+* Handles lexing, parsing, and execution of user commands
+*/
 static inline void	process_input(t_data *data, char *user_input)
 {
 	add_history(user_input);
@@ -44,6 +45,9 @@ static inline void	process_input(t_data *data, char *user_input)
 	free(user_input);
 }
 
+/*
+* Implements the main command loop
+*/
 static inline void	run_shell(t_data *data)
 {
 	char	*user_input;
@@ -69,7 +73,14 @@ static inline void	run_shell(t_data *data)
 		}
 	}
 }
-
+/*
+ * This file contains the main entry point
+ * and core logic for the minishell program.
+ * It initializes the shell environment,
+ * sets up signal handling and terminal settings,
+ * and implements the main command loop for
+ * reading and processing user input.
+*/
 int	main(int argv, char **argc, char **envp)
 {
 	t_data			data;

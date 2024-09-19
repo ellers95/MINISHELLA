@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: etaattol <etaattol@student.42.fr>          +#+  +:+       +#+        */
+/*   By: etaattol <etaattol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:46:37 by etaattol          #+#    #+#             */
-/*   Updated: 2024/09/18 16:26:46 by etaattol         ###   ########.fr       */
+/*   Updated: 2024/09/19 08:22:07 by etaattol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@ static inline bool	init_command_paths(t_data *data)
 	return (true);
 }
 
+/*
+ * This function performs the following steps:
+ * 1. Splits the token into command and arguments
+ * 2. Finds the full path of the command using the PATH environment variable
+ * 3. Stores the command path in the data structure
+ * 4. Increments the index for the next command
+*/
 static bool	process_command_token(t_data *data, char **envp,
 			int i, int *new_index)
 {

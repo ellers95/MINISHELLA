@@ -13,8 +13,10 @@
 #include "minishell.h"
 
 /*
- * A wrapper function for readline to handle
- * interrupts during here-document input.
+ * A wrapper function for readline to handle interrupts
+ * during here-document input.
+ * It checks for interruption flags after reading a line
+ * and handles them appropriately.
 */
 char	*readline_wrapper(const char *prompt, t_data *data)
 {
@@ -30,6 +32,12 @@ char	*readline_wrapper(const char *prompt, t_data *data)
 	return (line);
 }
 
+/*
+ * Reads input for a heredoc until the delimiter
+ * is encountered or EOF is reached.
+ * Handles interruptions and writes the heredoc content
+ * to the provided file descriptor.
+*/
 static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data)
 {
 	char	*line;
@@ -58,6 +66,11 @@ static bool	read_heredoc_input(const char *delimiter, int fd, t_data *data)
 	return (eof_encountered);
 }
 
+/*
+* Finalizes the heredoc process after all input has been read.
+ * Handles cleanup, error reporting,
+ * and setting up file descriptors for the heredoc content.
+*/
 static void	handle_heredoc_completion(int fd[2], bool eof_encountered,
 			const char *delimiter, t_data *data)
 {
@@ -83,9 +96,9 @@ static void	handle_heredoc_completion(int fd[2], bool eof_encountered,
 }
 
 /*
- * Handles the here-document input process.
- * Reads input lines until the delimiter is encountered, storing the content.
- * Sets up file descriptors for the here-document content.
+ * Main function for processing a heredoc.
+ * Sets up the necessary pipes and file descriptors, reads the heredoc input,
+ * and handles the completion of the heredoc process.
 */
 void	handle_heredoc(const char *delimiter, t_data *data)
 {
@@ -112,9 +125,9 @@ void	handle_heredoc(const char *delimiter, t_data *data)
 }
 
 /*
- * Locates and processes a here-document in the command.
- * Identifies the delimiter and initiates the here-document 
- * handling process.
+ * Identifies a heredoc in the command tokens and initiates its processing.
+ * Determines the delimiter and calls handle_heredoc
+ * to process the heredoc content.
 */
 void	find_heredoc(t_data *data, int token_index)
 {
